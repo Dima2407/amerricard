@@ -10,23 +10,23 @@
 
     <ImageView
         android:id="@+id/drawer_nav_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:src="@drawable/ic_profile_image" />
 
     <TextView
         android:id="@+id/drawer_nav_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="User"
+        android:text="Oleksii"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/drawer_nav_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user@android.com" />
+        android:text="climb.develop@gmail.com" />
 
 </LinearLayout>
