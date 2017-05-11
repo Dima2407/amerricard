@@ -56,6 +56,14 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         tourFragments.put(position, fragment);
         return fragment;
     }
+
+    public Fragment getCardFragment() {
+        return tourFragments.get(0);
+    }
+
+    public Fragment getCalendarFragment() {
+        return tourFragments.get(1);
+    }
 }
 
 

@@ -16,4 +16,9 @@
     <string name="manage_holidays">Manage holidays</string>
     <string name="settings">Settings</string>
     <string name="become_vip">Become VIP</string>
+    <string name="error_no_internet">Проверьте интернет соединение</string>
+    <string name="no_cards_available">No cards available</string>
+    <string name="no_cards_in_this_category">No cards in this category</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_favorite_cards">No favorite cards</string>
 </resources>

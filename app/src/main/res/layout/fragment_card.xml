@@ -1,181 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@android:color/white">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_height="match_parent"/>
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Birthdays"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ProgressBar
+        android:id="@+id/progress"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_height="10dp"
+        android:background="@color/colorAccent"
+        android:indeterminate="true"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_alignParentTop="true"/>
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Holidays"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Romantic"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Wedding"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Congratulation"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="Baby"/>
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-
-            android:src="@android:drawable/ic_menu_report_image"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="For Her"/>
-    </LinearLayout>
-</LinearLayout>
+    <TextView
+        android:id="@+id/card_empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextDefault"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/text_size_normal"
+        android:text="@string/no_cards_in_this_category" />
+</RelativeLayout>

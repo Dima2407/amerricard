@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.devtonix.amerricard.AmerriCardsApp;
+import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.model.ListItem;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Preferences {
     private static Preferences instance;
@@ -14,6 +20,8 @@ public class Preferences {
         String LOGGED_IN = "loggedIn";
         String USER_ID = "userId";
         String TOKEN = "token";
+        String CARDS = "cards";
+        String FAVORITES = "favorites";
     }
 
     private Preferences() {
@@ -107,5 +115,25 @@ public class Preferences {
         editor.putLong(key, value);
         editor.commit();
     }
+
+    public void saveCards(List<Item> items) {
+        set(Fields.CARDS, new Gson().toJson(new ListItem(items)));
+    }
+
+    public List<Item> getCards() {
+        ListItem li = new Gson().fromJson(getString(Fields.CARDS), ListItem.class);
+        return li==null? new ArrayList<Item>(): li.data;
+    }
+
+    public void saveFavorites(List<Item> items) {
+        set(Fields.FAVORITES, new Gson().toJson(new ListItem(items)));
+    }
+
+    public List<Item> getFavorites() {
+        ListItem li = new Gson().fromJson(getString(Fields.FAVORITES), ListItem.class);
+
+        return li==null? new ArrayList<Item>(): li.data;
+    }
 }
+
 

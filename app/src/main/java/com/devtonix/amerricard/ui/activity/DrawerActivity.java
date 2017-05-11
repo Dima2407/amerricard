@@ -22,7 +22,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private TextView headerTitle;
     private TextView headerEmail;
     private ImageView headerImage;
-
+    private TextView name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +44,13 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        name = (TextView) findViewById(R.id.drawer_nav_name);
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         getSupportActionBar().setTitle("amerricard");
     }
@@ -54,15 +61,13 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         headerEmail = (TextView) findViewById(R.id.drawer_nav_email);
         headerImage = (ImageView) findViewById(R.id.drawer_nav_image);
 
-        addItem(R.id.drawer_cards, getString(R.string.cards), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_calendar, getString(R.string.calendar), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_sent_cards, getString(R.string.sent_cards), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_manage_birthday, getString(R.string.manage_birthdays), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_manage_holidays, getString(R.string.manage_holidays), android.R.drawable.ic_menu_report_image);
-
-        addItem(R.id.drawer_vip, getString(R.string.become_vip), android.R.drawable.ic_menu_report_image);
-        addItem(R.id.drawer_settings, getString(R.string.settings), android.R.drawable.ic_menu_report_image);
+        addItem(R.id.drawer_cards, getString(R.string.cards), R.drawable.ic_birthday);
+        addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
+        addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
+        addItem(R.id.drawer_manage_birthday, getString(R.string.manage_birthdays), R.drawable.ic_edit);
+        addItem(R.id.drawer_manage_holidays, getString(R.string.manage_holidays), R.drawable.ic_profile_settings);
+        addItem(R.id.drawer_vip, getString(R.string.become_vip), R.drawable.ic_crown);
+        addItem(R.id.drawer_settings, getString(R.string.settings), R.drawable.ic_settings);
     }
 
 
@@ -87,16 +92,17 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.drawer_cards:
-                startActivity(new Intent(this, MainActivity.class));
+                Intent cardIntent = new Intent(this, MainActivity.class);
+                cardIntent.putExtra("position", 0);
+                startActivity(cardIntent);
                 break;
             case R.id.drawer_calendar:
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("position", 1);
+                startActivity(intent);
                 break;
             case R.id.drawer_favorites:
                 startActivity(new Intent(this, FavoriteActivity.class));
-                break;
-            case R.id.drawer_sent_cards:
-                startActivity(new Intent(this, SentCardsActivity.class));
                 break;
             case R.id.drawer_manage_birthday:
                 startActivity(new Intent(this, ManageActivity.class));
@@ -105,11 +111,11 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                 startActivity(new Intent(this, ManageActivity.class));
                 break;
             case R.id.drawer_vip:
-
                 break;
             case R.id.drawer_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
+        this.finish();
     }
 }
