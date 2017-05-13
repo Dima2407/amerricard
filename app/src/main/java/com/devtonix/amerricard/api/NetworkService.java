@@ -10,7 +10,6 @@ import com.devtonix.amerricard.api.event.EventSuccessEvent;
 import com.devtonix.amerricard.api.event.FailureEvent;
 import com.devtonix.amerricard.api.event.RxBus;
 import com.devtonix.amerricard.api.response.ServerResponse;
-import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.Utils;
 
@@ -62,7 +61,7 @@ public class NetworkService {
 
             provider.service.getEvents().subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ServerResponse<EventItem>>() {
+                    .subscribe(new Subscriber<ServerResponse<Item>>() {
                         @Override
                         public final void onCompleted() {}
 
@@ -72,7 +71,7 @@ public class NetworkService {
                         }
 
                         @Override
-                        public final void onNext(ServerResponse<EventItem> response) {
+                        public final void onNext(ServerResponse<Item> response) {
                             RxBus.getInstance().send(new EventSuccessEvent(response.data));
                         }
                     });

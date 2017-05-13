@@ -21,7 +21,11 @@ public class Preferences {
         String USER_ID = "userId";
         String TOKEN = "token";
         String CARDS = "cards";
+        String EVENTS = "events";
         String FAVORITES = "favorites";
+        String LANGUAGE = "language";
+        String NOTIFICATION = "notification";
+        String CELEBRITIES = "celebrities";
     }
 
     private Preferences() {
@@ -67,6 +71,7 @@ public class Preferences {
     public void setFirstTime(boolean isFirstTime) {
         set(Fields.FIRST_TIME, isFirstTime);
     }
+
 
 
     /**-------------------------------------------------------------------------------------------*/
@@ -125,6 +130,15 @@ public class Preferences {
         return li==null? new ArrayList<Item>(): li.data;
     }
 
+    public void saveEvents(List<Item> items) {
+        set(Fields.EVENTS, new Gson().toJson(new ListItem(items)));
+    }
+
+    public List<Item> getEvents() {
+        ListItem li = new Gson().fromJson(getString(Fields.EVENTS), ListItem.class);
+        return li==null? new ArrayList<Item>(): li.data;
+    }
+
     public void saveFavorites(List<Item> items) {
         set(Fields.FAVORITES, new Gson().toJson(new ListItem(items)));
     }
@@ -134,6 +148,32 @@ public class Preferences {
 
         return li==null? new ArrayList<Item>(): li.data;
     }
+
+    public void setNotification(boolean isEnabled) {
+        set(Fields.NOTIFICATION, isEnabled);
+    }
+
+    public boolean getNotification() {
+        return getBoolean(Fields.NOTIFICATION, true);
+    }
+
+    public void setCelebrities(boolean isEnabled) {
+        set(Fields.CELEBRITIES, isEnabled);
+    }
+
+    public boolean getCelebrities() {
+        return getBoolean(Fields.CELEBRITIES, true);
+    }
+
+    public void setLanguage(String token) {
+        set(Fields.LANGUAGE, token);
+    }
+
+    public String getLanguage() {
+        return getString(Fields.LANGUAGE, "");
+    }
+
+
 }
 
 

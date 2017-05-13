@@ -8,9 +8,9 @@ import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
-import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
+import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
 import com.devtonix.amerricard.utils.Preferences;
 
@@ -31,7 +31,7 @@ public class MainActivity extends DrawerActivity {
         pager.setAdapter(adapter);
 
         tab = (TabLayout) findViewById(R.id.main_tab_layout);
-        tab.setTabTextColors(Color.WHITE, Color.WHITE);
+        tab.setTabTextColors(getResources().getColor(R.color.tabGray), getResources().getColor(android.R.color.white));
         tab.setSelectedTabIndicatorColor(Color.WHITE);
         tab.setupWithViewPager(pager);
 
@@ -50,9 +50,9 @@ public class MainActivity extends DrawerActivity {
     }
 
     @Override
-    protected void handleEventSuccessEvent(List<EventItem> item) {
-//        Preferences.getInstance().saveCards(items);
-//        ((CalendarFragment) adapter.getCalendarFragment()).updateData(items);
+    protected void handleEventSuccessEvent(List<Item> items) {
+        Preferences.getInstance().saveEvents(items);
+        ((CalendarFragment) adapter.getCalendarFragment()).updateData(items);
     }
 
     @Override

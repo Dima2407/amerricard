@@ -65,7 +65,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
         addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
         addItem(R.id.drawer_manage_birthday, getString(R.string.manage_birthdays), R.drawable.ic_edit);
-        addItem(R.id.drawer_manage_holidays, getString(R.string.manage_holidays), R.drawable.ic_profile_settings);
+//        addItem(R.id.drawer_manage_holidays, getString(R.string.manage_holidays), R.drawable.ic_profile_settings);
         addItem(R.id.drawer_vip, getString(R.string.become_vip), R.drawable.ic_crown);
         addItem(R.id.drawer_settings, getString(R.string.settings), R.drawable.ic_settings);
     }
@@ -107,10 +107,8 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
             case R.id.drawer_manage_birthday:
                 startActivity(new Intent(this, ManageActivity.class));
                 break;
-            case R.id.drawer_manage_holidays:
-                startActivity(new Intent(this, ManageActivity.class));
-                break;
             case R.id.drawer_vip:
+                startActivity(new Intent(this, VipActivity.class));
                 break;
             case R.id.drawer_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

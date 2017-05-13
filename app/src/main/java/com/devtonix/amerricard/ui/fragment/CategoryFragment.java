@@ -18,6 +18,8 @@ import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 
+import java.util.ArrayList;
+
 /**
  * Created by Oleksii on 10.05.17.
  */
@@ -46,7 +48,9 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        int countRow = 2;
+
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), countRow));
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
@@ -55,8 +59,16 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
                     Log.d("CategoryFragment", "visible");
                     manageVisible(true);
 
-                    int width = (recyclerView.getWidth())/2;
-                    int height = (int) (width*1.6);
+                    int width;
+                    int height;
+                    if (recyclerView.getWidth() > recyclerView.getHeight()) {
+                        width = (recyclerView.getWidth()) / 4;
+                    } else {
+                        width = (recyclerView.getWidth()) / 2;
+
+                    }
+                    height = (int) (width * 1.6);
+
                     adapter = new CategoryGridAdapter(getActivity(), ((CategoryActivity) getActivity()).getCategories(position),
                             CategoryFragment.this, width, height);
                     recyclerView.setAdapter(adapter);
@@ -72,10 +84,10 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
 
     @Override
     public void onItemClicked(int pos) {
-        Item item = ((CategoryActivity) getActivity()).getCategories(position).get(pos);
 
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra("item", item);
+        intent.putExtra("list",new ArrayList<Item>(((CategoryActivity) getActivity()).getCategories(position)));
+        intent.putExtra("position", pos);
         startActivity(intent);
     }
 

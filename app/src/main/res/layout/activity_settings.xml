@@ -22,98 +22,141 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_marginTop="?actionBarSize"
-    android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/settings_item_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
-
-        <TextView
-            android:id="@+id/settings_item_title"
+        <LinearLayout
+            android:id="@+id/settings_notification_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/settings_item_switch"
-            android:layout_toStartOf="@id/settings_item_switch"
-            android:layout_centerVertical="true"
-            android:text="Daily Birthday Notification"
-            android:textColor="@android:color/black"/>
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical">
 
-    </RelativeLayout>
+            <ImageView
+                android:tint="@color/colorIconsActive"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_notification"
+                android:padding="@dimen/small_padding"/>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/daily_notification"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/settings_item_notif"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/settings_notification_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <TextView
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/settings_celebrity_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/settings_item_notif"
-            android:layout_toStartOf="@id/settings_item_notif"
-            android:layout_centerVertical="true"
-            android:text="Celebreties"
-            android:textColor="@android:color/black"/>
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical">
 
-    </RelativeLayout>
+            <ImageView
+                android:tint="@color/colorIconsActive"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_star"
+                android:padding="@dimen/small_padding"/>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/celebrities"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big" />
 
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/settings_celebrity_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:text="Scheduled time                                                               8:00"
-        android:textColor="@android:color/black"/>
-
-</RelativeLayout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/settings_timer_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Language                                                                     English"
-            android:textColor="@android:color/black"/>
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical">
 
-    </RelativeLayout>
-</LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
+            <ImageView
+                android:id="@+id/setting_timer_icon"
+                android:tint="@color/colorIconsActive"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_alarm"
+                android:padding="@dimen/small_padding"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/scheduled_time"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big" />
+
+            <TextView
+                android:id="@+id/setting_timer_value"
+                android:text="8:00"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/language_container"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/setting_language_icon"
+                android:tint="@color/colorIconsActive"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_language"
+                android:padding="@dimen/small_padding"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big" />
+            
+            <TextView
+                android:id="@+id/setting_language_value"
+                android:text="English"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

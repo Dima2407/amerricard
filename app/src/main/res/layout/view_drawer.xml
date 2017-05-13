@@ -14,7 +14,7 @@
         <include android:id="@+id/drawer_favorites" layout="@layout/view_drawer_item"/>
         <!--<include android:id="@+id/drawer_sent_cards" layout="@layout/view_drawer_item"/>-->
         <include android:id="@+id/drawer_manage_birthday" layout="@layout/view_drawer_item"/>
-        <include android:id="@+id/drawer_manage_holidays" layout="@layout/view_drawer_item"/>
+        <!--<include android:id="@+id/drawer_manage_holidays" layout="@layout/view_drawer_item"/>-->
 
         <View
             android:layout_width="match_parent"

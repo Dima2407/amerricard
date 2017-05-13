@@ -1,6 +1,5 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,7 @@ import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.devtonix.amerricard.utils.Preferences;
+import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,11 @@ public class CategoryActivity extends BaseActivity {
 
         List<Item> items = Preferences.getInstance().getCards();
 
-        position = getIntent().getIntExtra("position", 0);
-
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt("pos");
+        } else {
+            position = getIntent().getIntExtra("position", 0);
+        }
         Item item = items.get(position);
         setTitle(item.name == null ? "" : item.name);
 
@@ -65,10 +68,13 @@ public class CategoryActivity extends BaseActivity {
             adapter = new CategoryAdapter(this, getSupportFragmentManager(), categories);
             pager.setAdapter(adapter);
 
-            tab = (TabLayout) findViewById(R.id.category_tab_layout);
-            tab.setTabTextColors(Color.WHITE, Color.WHITE);
-            tab.setSelectedTabIndicatorColor(Color.WHITE);
-            tab.setupWithViewPager(pager);
+            RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout)
+                    findViewById(R.id.category_tab_layout);
+            recyclerTabLayout.setUpWithViewPager(pager);
+//            tab = (TabLayout) findViewById(R.id.category_tab_layout);
+//            tab.setTabTextColors(getResources().getColor(R.color.tabGray), getResources().getColor(android.R.color.white));
+//            tab.setSelectedTabIndicatorColor(Color.WHITE);
+//            tab.setupWithViewPager(pager);
 
         } else {
             findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
@@ -104,5 +110,11 @@ public class CategoryActivity extends BaseActivity {
             return categories;
         }
         return categories.get(position).data;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("pos", position);
     }
 }

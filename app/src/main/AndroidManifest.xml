@@ -30,6 +30,7 @@
         <activity android:name="com.devtonix.amerricard.ui.activity.SettingsActivity"/>
         <activity android:name="com.devtonix.amerricard.ui.activity.CategoryActivity"/>
         <activity android:name="com.devtonix.amerricard.ui.activity.DetailActivity"/>
+        <activity android:name="com.devtonix.amerricard.ui.activity.VipActivity"/>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
@@ -37,6 +38,19 @@
             android:authorities="@string/facebook_app_id"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.devtonix.amerricard.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9708d256499eeaa8df2d268aac2e6b6b39cf4f47" />
     </application>
 
 </manifest>

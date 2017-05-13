@@ -33,7 +33,7 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), this);
+        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), true, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

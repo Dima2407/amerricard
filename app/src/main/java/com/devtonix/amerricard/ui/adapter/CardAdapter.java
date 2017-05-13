@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.utils.CircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +21,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
 
     private List<Item> items = new ArrayList<>();
     private Context context;
+    private boolean isCard = true;
     private OnFavoriteClickListener listener;
 
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
     }
 
-    public CardAdapter(Context mContext, List<Item> items, OnFavoriteClickListener listener) {
+    public CardAdapter(Context mContext, List<Item> items, boolean isCard, OnFavoriteClickListener listener) {
         this.context = mContext;
         this.items = items;
+        this.isCard = isCard;
         this.listener = listener;
     }
 
@@ -52,10 +55,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         Item item = items.get(position);
         holder.text.setText(item.name == null ? "" : item.name);
 
-        String url = NetworkServiceProvider.BASE_URL + NetworkServiceProvider.CATEGORY_SUFFIX + item.id + "/image?width=100&height=200&type=fit";
 
-        Glide.with(context).load(url)
-                .into(holder.icon);
+        String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
+
+        if (isCard) {
+            holder.subtext.setVisibility(View.GONE);
+            Glide.with(context).load(url)
+                    .into(holder.icon);
+        } else {
+            holder.subtext.setVisibility(View.VISIBLE);
+            holder.subtext.setText(item.getDate());
+            Glide.with(context).load(url)
+                    .transform(new CircleTransform(context))
+                    .into(holder.icon);
+        }
     }
 
     @Override
@@ -66,6 +79,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
     public class MainHolder extends RecyclerView.ViewHolder  {
 
         TextView text;
+        TextView subtext;
         ImageView icon;
 
         public MainHolder(View itemView) {
@@ -77,6 +91,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
                 }
             });
             text = (TextView) itemView.findViewById(R.id.card_text);
+            subtext = (TextView) itemView.findViewById(R.id.card_sub_text);
             icon = (ImageView) itemView.findViewById(R.id.card_icon);
         }
     }

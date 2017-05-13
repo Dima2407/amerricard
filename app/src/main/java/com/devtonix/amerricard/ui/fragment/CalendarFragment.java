@@ -38,7 +38,7 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), this);
+        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), false, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -62,6 +62,15 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void updateData(List<Item> items) {
+        if (items == null || items.size()==0) {
+            manageVisible(false);
+        } else {
+            manageVisible(true);
+        }
+        adapter.updateData(items);
     }
 
     private Cursor getContactsBirthdays() {

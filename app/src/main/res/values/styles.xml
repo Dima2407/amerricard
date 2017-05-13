@@ -23,4 +23,10 @@
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
+
+    <style name="rtl_RecyclerTabLayout.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/categoryGray</item>
+        <item name="textAllCaps">true</item>
+    </style>
 </resources>

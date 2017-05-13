@@ -16,6 +16,7 @@ public class NetworkServiceProvider {
     public static final String BASE_URL = "http://188.226.178.46:8888/amerricards/api/";
     public static final String CATEGORY_SUFFIX = "category/";
     public static final String CARD_SUFFIX = "card/";
+    public static final String EVENT_SUFFIX = "event/";
 
     public IBackendService service;
 

@@ -68,7 +68,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
             holder.favoriteContainer.setBackgroundResource(R.drawable.shape_red_circle);
         }
         String url = NetworkServiceProvider.BASE_URL
-                + (item.isItemCategory() ? NetworkServiceProvider.CATEGORY_SUFFIX : NetworkServiceProvider.CARD_SUFFIX)
+                + (item.getUrlByType())
                 + item.id + "/image?width="+width+"&height="+height+"&type=fit";
 
         Glide.with(context).load(url)
