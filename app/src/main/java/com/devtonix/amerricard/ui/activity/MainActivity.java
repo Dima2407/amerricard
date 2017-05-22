@@ -13,6 +13,8 @@ import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
 import com.devtonix.amerricard.utils.Preferences;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MainActivity extends DrawerActivity {
 
     private MainPagerAdapter adapter;
     private TabLayout tab;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +38,12 @@ public class MainActivity extends DrawerActivity {
         tab.setSelectedTabIndicatorColor(Color.WHITE);
         tab.setupWithViewPager(pager);
 
-        NetworkService.getCards(this);
-        NetworkService.getEvents(this);
-
         int position = getIntent().getIntExtra("position", 0);
         pager.setCurrentItem(position);
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -47,6 +51,15 @@ public class MainActivity extends DrawerActivity {
         Log.d("handleCardSuccessEvent", "data "+items.size());
         Preferences.getInstance().saveCards(items);
         ((CardFragment) adapter.getCardFragment()).updateData(items);
+    }
+
+    @Override
+    protected void handleFailureFound(String message) {
+        super.handleFailureFound(message);
+
+        ((CardFragment) adapter.getCardFragment()).updateData(Preferences.getInstance().getCards());
+        ((CardFragment) adapter.getCalendarFragment()).updateData(Preferences.getInstance().getEvents());
+
     }
 
     @Override
@@ -58,5 +71,7 @@ public class MainActivity extends DrawerActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        NetworkService.getCards(this);
+        NetworkService.getEvents(this);
     }
 }

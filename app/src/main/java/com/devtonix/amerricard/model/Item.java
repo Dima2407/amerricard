@@ -1,5 +1,7 @@
 package com.devtonix.amerricard.model;
 
+import android.text.TextUtils;
+
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 
 import java.io.Serializable;
@@ -58,5 +60,15 @@ public class Item implements Serializable {
         long d = dates.get(0);
 
         return dateFormat.format(new Date(d));
+    }
+
+    public boolean isCardFree() {
+        if (TextUtils.isEmpty(cardType)) return true;
+
+        if (cardType.toLowerCase().equals("free")) {
+            return true;
+        }
+
+        return false;
     }
 }

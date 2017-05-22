@@ -12,6 +12,7 @@ import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 import com.devtonix.amerricard.utils.Preferences;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteActivity extends DrawerActivity implements CategoryGridAdapter.OnFavoriteClickListener {
@@ -59,7 +60,8 @@ public class FavoriteActivity extends DrawerActivity implements CategoryGridAdap
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("item", items.get(position));
+        intent.putExtra("list",new ArrayList<Item>(items));
+        intent.putExtra("position", position);
         startActivity(intent);
     }
 

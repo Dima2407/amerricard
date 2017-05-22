@@ -51,6 +51,8 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
 //            getContactNames();
 //        }
 
+
+
         return view;
     }
 
@@ -111,6 +113,22 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
         // Get the ContentResolver
         ContentResolver cr = getActivity().getContentResolver();
         // Get the Cursor of all the contacts
+
+        String[] projection = new String[]{
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Event.START_DATE
+        };
+
+        String where =
+                ContactsContract.Data.MIMETYPE + "= ? AND " +
+                        ContactsContract.CommonDataKinds.Event.TYPE + "=" +
+                        ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
+        String[] selectionArgs = new String[]{
+                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        };
+        String sortOrder = null;
+
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 
         // Move the cursor to first. Also check whether the cursor is empty or not.
@@ -119,7 +137,9 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
             do {
                 // Get the contacts name
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                int birthday = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
                 contacts.add(name);
+                Log.d("Cursor", "name: " + name + " birthday:" + birthday);
             } while (cursor.moveToNext());
         }
         // Close the curosor
@@ -128,15 +148,6 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
         return contacts;
     }
 
-    private void processBirthday() {
-
-        Cursor cursor = getContactsBirthdays();
-        int bDayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-        while(cursor.moveToNext()) {
-            String bDay = cursor.getString(bDayColumn);
-            Log.d("Birthday", "Birthday: " + bDay);
-        }
-    }
 
     @Override
     public void onItemClicked(int position) {

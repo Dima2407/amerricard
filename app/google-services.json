@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "361022897853",
+    "firebase_url": "https://amerricard-3503a.firebaseio.com",
+    "project_id": "amerricard-3503a",
+    "storage_bucket": "amerricard-3503a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361022897853:android:9005d09f69393119",
+        "android_client_info": {
+          "package_name": "com.devtonix.amerricard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361022897853-9cu0pg9as90t6ovsh12lumjpik643id0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devtonix.amerricard",
+            "certificate_hash": "364fd1abc7d52025a2dbd9a7d0eb31dbc65322a9"
+          }
+        },
+        {
+          "client_id": "361022897853-sgn5adk40cq930gfq1gfpehjs5rhnins.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-qXqnft_9ViyfSkgbgZ6h1BQb49d7q8Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361022897853-sgn5adk40cq930gfq1gfpehjs5rhnins.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
