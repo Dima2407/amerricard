@@ -25,6 +25,7 @@ android {
         targetSdkVersion 25
         versionCode 7
         versionName "0.0.7"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -42,19 +43,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // retrofit
-    
-
-    // Rx
-    
-    // Material dialog
-    
-    // material time picker
-    
-    // image loader
-    
-    // infinite tab layout
-    
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }

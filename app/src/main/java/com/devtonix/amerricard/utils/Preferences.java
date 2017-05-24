@@ -22,6 +22,7 @@ public class Preferences {
         String TOKEN = "token";
         String CARDS = "cards";
         String EVENTS = "events";
+        String EVENTS_FOR_HIDE = "events_for_hide";
         String FAVORITES = "favorites";
         String LANGUAGE = "language";
         String NOTIFICATION = "notification";
@@ -73,8 +74,9 @@ public class Preferences {
     }
 
 
-
-    /**-------------------------------------------------------------------------------------------*/
+    /**
+     * -------------------------------------------------------------------------------------------
+     */
     private String getString(String key) {
         return getString(key, null);
     }
@@ -127,7 +129,7 @@ public class Preferences {
 
     public List<Item> getCards() {
         ListItem li = new Gson().fromJson(getString(Fields.CARDS), ListItem.class);
-        return li==null? new ArrayList<Item>(): li.data;
+        return li == null ? new ArrayList<Item>() : li.data;
     }
 
     public void saveEvents(List<Item> items) {
@@ -136,7 +138,16 @@ public class Preferences {
 
     public List<Item> getEvents() {
         ListItem li = new Gson().fromJson(getString(Fields.EVENTS), ListItem.class);
-        return li==null? new ArrayList<Item>(): li.data;
+        return li == null ? new ArrayList<Item>() : li.data;
+    }
+
+    public void saveEventsForHide(List<Item> items) {
+        set(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListItem(items)));
+    }
+
+    public List<Item> getEventsForHide() {
+        ListItem listItem = new Gson().fromJson(getString(Fields.EVENTS_FOR_HIDE), ListItem.class);
+        return listItem == null ? new ArrayList<Item>() : listItem.data;
     }
 
     public void saveFavorites(List<Item> items) {
@@ -145,8 +156,7 @@ public class Preferences {
 
     public List<Item> getFavorites() {
         ListItem li = new Gson().fromJson(getString(Fields.FAVORITES), ListItem.class);
-
-        return li==null? new ArrayList<Item>(): li.data;
+        return li == null ? new ArrayList<Item>() : li.data;
     }
 
     public void setNotification(boolean isEnabled) {
