@@ -3,10 +3,11 @@ package com.devtonix.amerricard.ui.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,15 +17,19 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
+import com.devtonix.amerricard.utils.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.HolidaysVH> {
 
+    private static final String TAG = HolidaysAdapter.class.getSimpleName();
     private List<Item> items = new ArrayList<>();
     private Context context;
     private OnSwitchClickListener listener;
+    private List<Item> cancelledHolidays = new ArrayList<>();
+    private List<Long> cancelledIds = new ArrayList<>();
 
     public interface OnSwitchClickListener {
         void onItemClicked(int position);
@@ -37,6 +42,23 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
 
     public void updateData(List<Item> items) {
         this.items = items;
+
+        cancelledHolidays = Preferences.getInstance().getEventsForHide();
+
+        if (cancelledHolidays != null && cancelledHolidays.size() == 0) {
+            cancelledIds.clear();
+        }
+
+        if (items != null && items.size() != 0) {
+            for (int i = 0; i < items.size(); i++) {
+                for (int j = 0; j < cancelledHolidays.size(); j++) {
+                    if (items.get(i).id == cancelledHolidays.get(j).id) {
+                        cancelledIds.add(items.get(i).id);
+                    }
+                }
+            }
+        }
+
         notifyDataSetChanged();
     }
 
@@ -57,19 +79,39 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
 
         holder.tvHolidayTitle.setText(item.name == null ? "" : item.name);
         Glide.with(context).load(url).transform(new CircleTransform(context)).into(holder.ivHolidayIcon);
-        holder.swHoliday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.swHoliday.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(context, "switch", Toast.LENGTH_SHORT).show();
-                //нужно записать в шареды массив тех праздников, кторые пользователь отметил как ненужные
-                //в CalendarFragment их вытаскивать и вытаскивать список из сервака и сравнивать
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (holder.swHoliday.isChecked()) {
+                        holder.swHoliday.setChecked(false);
 
-                if (!isChecked){
+                        if (!cancelledHolidays.contains(item)) {
+                            cancelledHolidays.add(item);
+                        }
 
+                    } else {
+                        holder.swHoliday.setChecked(true);
+
+                        cancelledHolidays.remove(item);
+                    }
+
+                    for (int i = 0; i < cancelledHolidays.size(); i++) {
+                        Log.d(TAG, "onTouch: i=" + i + " item=" + cancelledHolidays.get(i).name);
+                    }
+
+                    Preferences.getInstance().saveEventsForHide(cancelledHolidays);
                 }
+
+                return false;
             }
         });
 
+        for (int i = 0; i < cancelledIds.size(); i++) {
+            if (item.id == cancelledIds.get(i)) {
+                holder.swHoliday.setChecked(false);
+            }
+        }
     }
 
     @Override
@@ -88,7 +130,7 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onSelected(getAdapterPosition());
+                    listener.onItemClicked(getAdapterPosition());
                 }
             });
             tvHolidayTitle = (TextView) itemView.findViewById(R.id.tv_holiday_title);
@@ -97,9 +139,11 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
         }
     }
 
-    private void onSelected(int adapterPosition) {
-        if (listener != null) {
-            listener.onItemClicked(adapterPosition);
-        }
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public List<Item> getCancelledHolidays() {
+        return cancelledHolidays;
     }
 }

@@ -71,4 +71,44 @@ public class Item implements Serializable {
 
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (id != item.id) return false;
+        if (type != null ? !type.equals(item.type) : item.type != null) return false;
+        if (data != null ? !data.equals(item.data) : item.data != null) return false;
+        if (dates != null ? !dates.equals(item.dates) : item.dates != null) return false;
+        if (name != null ? !name.equals(item.name) : item.name != null) return false;
+        if (image != null ? !image.equals(item.image) : item.image != null) return false;
+        if (author != null ? !author.equals(item.author) : item.author != null) return false;
+        if (owner != null ? !owner.equals(item.owner) : item.owner != null) return false;
+        if (price != null ? !price.equals(item.price) : item.price != null) return false;
+        if (likes != null ? !likes.equals(item.likes) : item.likes != null) return false;
+        if (downloads != null ? !downloads.equals(item.downloads) : item.downloads != null)
+            return false;
+        return cardType != null ? cardType.equals(item.cardType) : item.cardType == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (dates != null ? dates.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (likes != null ? likes.hashCode() : 0);
+        result = 31 * result + (downloads != null ? downloads.hashCode() : 0);
+        result = 31 * result + (cardType != null ? cardType.hashCode() : 0);
+        return result;
+    }
 }

@@ -3,6 +3,7 @@ package com.devtonix.amerricard.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
@@ -17,7 +18,6 @@ public class ManageActivity extends DrawerActivity {
 
     private HolidaysAdapter adapter;
     private RecyclerView rvHolidays;
-    private List<Item> holidaysForHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +29,6 @@ public class ManageActivity extends DrawerActivity {
         adapter = new HolidaysAdapter(this, new MyOnSwitchClickListener());
         rvHolidays.setLayoutManager(new LinearLayoutManager(ManageActivity.this));
         rvHolidays.setAdapter(adapter);
-        final List<Item> holidaysForHide = Preferences.getInstance().getEventsForHide();
-
-
     }
 
     @Override
@@ -51,7 +48,7 @@ public class ManageActivity extends DrawerActivity {
     protected void handleFailureFound(String message) {
         super.handleFailureFound(message);
 
-        adapter.updateData(Preferences.getInstance().getEvents());
+//        adapter.updateData(Preferences.getInstance().getEvents());
     }
 
     @Override
@@ -64,7 +61,7 @@ public class ManageActivity extends DrawerActivity {
     private class MyOnSwitchClickListener implements HolidaysAdapter.OnSwitchClickListener {
         @Override
         public void onItemClicked(int position) {
-            Toast.makeText(ManageActivity.this, "click on " + position, Toast.LENGTH_SHORT).show();
+
         }
     }
 }

@@ -111,6 +111,10 @@ public class Preferences {
         editor.commit();
     }
 
+    private void setForHide(String key, String value) {
+        sharedPreferences.edit().putString(key, value).apply();
+    }
+
     private void set(String key, boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
@@ -142,7 +146,7 @@ public class Preferences {
     }
 
     public void saveEventsForHide(List<Item> items) {
-        set(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListItem(items)));
+        setForHide(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListItem(items)));
     }
 
     public List<Item> getEventsForHide() {
