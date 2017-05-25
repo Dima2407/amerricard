@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.devtonix.amerricard">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="com.android.vending.BILLING" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="com.devtonix.amerricard.AmerriCardsApp"
@@ -24,20 +27,32 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.devtonix.amerricard.ui.activity.FavoriteActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.SentCardsActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.ManageActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.SettingsActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.CategoryActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.DetailActivity"/>
-        <activity android:name="com.devtonix.amerricard.ui.activity.VipActivity"/>
+        <activity android:name="com.devtonix.amerricard.ui.activity.FavoriteActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.SentCardsActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.ManageActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.SettingsActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.CategoryActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.DetailActivity" />
+        <activity android:name="com.devtonix.amerricard.ui.activity.VipActivity" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <receiver android:name=".receivers.HolidaysBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".services.HolidaysNotificationService"
+            android:enabled="true" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <provider
-            android:authorities="@string/facebook_app_id"
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="@string/facebook_app_id"
+            android:exported="true" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -48,6 +63,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9708d256499eeaa8df2d268aac2e6b6b39cf4f47" />

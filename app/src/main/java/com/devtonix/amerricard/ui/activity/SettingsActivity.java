@@ -1,15 +1,19 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -17,8 +21,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 public class SettingsActivity extends DrawerActivity {
 
-
-
+    private static final String TAG = SettingsActivity.class.getSimpleName();
     private SwitchCompat notificationSwitch;
     private SwitchCompat celebritiesSwitch;
     private ViewGroup timerContainer;
@@ -87,7 +90,13 @@ public class SettingsActivity extends DrawerActivity {
         TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                timerText.setText(hourOfDay+":"+ (minute<10?"0"+minute:minute));
+                final String time = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute);
+                timerText.setText(time);
+                Preferences.getInstance().saveNotificationsTime(time);
+
+                //todo read from shared last time for notification
+
+                startNotificationReceiver();
             }
         }, 8, 0, true);
         timePickerDialog.setAccentColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -116,5 +125,11 @@ public class SettingsActivity extends DrawerActivity {
 
     private void setLanguageSelected(String language) {
         languageText.setText(LanguageUtils.getLanguageByCode(this, language));
+    }
+
+    private void startNotificationReceiver(){
+        Log.d(TAG, "startNotificationReceiver @(^_^)@");
+        Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
+        getApplicationContext().sendBroadcast(startReceiver);
     }
 }

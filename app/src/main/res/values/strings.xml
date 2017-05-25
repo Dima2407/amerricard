@@ -27,6 +27,9 @@
     <string name="premium">Premium</string>
     <string name="vip">Vip</string>
 
+    <!--Notifications-->
+    <string name="notifications_title">New event!</string>
+
 
     <!-- Languages -->
     <string name="english">English</string>
