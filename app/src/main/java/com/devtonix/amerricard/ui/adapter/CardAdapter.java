@@ -13,16 +13,19 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
+import com.devtonix.amerricard.utils.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
 
+    private static final String TAG = CardAdapter.class.getSimpleName();
     private List<Item> items = new ArrayList<>();
     private Context context;
     private boolean isCard = true;
     private OnFavoriteClickListener listener;
+    private List<Item> cancelledHolidays = new ArrayList<>();
 
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
@@ -35,8 +38,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         this.listener = listener;
     }
 
-    public void updateData(List<Item> items) {
-        this.items = items;
+    public void updateData(List<Item> holidaysList) {
+        items = holidaysList;
+
+        if (!isCard) {
+            cancelledHolidays = Preferences.getInstance().getEventsForHide();
+
+            for (int i = 0; i < holidaysList.size(); i++) {
+                for (int j = 0; j < cancelledHolidays.size(); j++) {
+                    if (holidaysList.get(i).id == cancelledHolidays.get(j).id) {
+                        items.remove(holidaysList.get(i));
+                    }
+                }
+            }
+        }
+
         notifyDataSetChanged();
     }
 
@@ -76,7 +92,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         return items.size();
     }
 
-    public class MainHolder extends RecyclerView.ViewHolder  {
+    public class MainHolder extends RecyclerView.ViewHolder {
 
         TextView text;
         TextView subtext;
