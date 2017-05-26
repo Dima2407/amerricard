@@ -5,12 +5,16 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
 import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.TimeUtils;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 
@@ -24,14 +28,26 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
         final boolean isNotificationEnabled = Preferences.getInstance().getNotification();
         final Intent notificationIntent = new Intent(context, HolidaysNotificationService.class);
         final PendingIntent pendingIntent = PendingIntent.getService(context, 1234, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final Calendar currentCalendar = Calendar.getInstance();
+
+        boolean isShowNeeded = false;
+
+        final List<Item> events = Preferences.getInstance().getEvents();
+        final String currentDate = TimeUtils.calDateToString(currentCalendar);
+
+        for (Item item : events) {
+            if (TextUtils.equals(item.getDate(), currentDate)) {
+                isShowNeeded = true;
+                break;
+            }
+        }
 
         alarmManager.cancel(pendingIntent);
 
-        if (isNotificationEnabled) {
+        if (isNotificationEnabled & isShowNeeded) {
 
             final String timeForNotification = Preferences.getInstance().getNotificationsTime();
             final Calendar triggeredCalendar = getNotificationTriggeredCalendar(timeForNotification);
-            final Calendar currentCalendar = Calendar.getInstance();
             long intendedTime = triggeredCalendar.getTimeInMillis();
             final long currentTime = currentCalendar.getTimeInMillis();
 
@@ -49,8 +65,8 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, getMinute(time));
-        calendar.set(Calendar.HOUR_OF_DAY, getHour(time));
+        calendar.set(Calendar.MINUTE, TimeUtils.getMinute(time));
+        calendar.set(Calendar.HOUR_OF_DAY, TimeUtils.getHour(time));
         return calendar;
     }
 
@@ -62,15 +78,5 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
                 intendedTime,
                 AlarmManager.INTERVAL_DAY,
                 pendingIntent);
-    }
-
-    public static int getHour(String time) {
-        String[] pieces = time.split(":");
-        return Integer.parseInt(pieces[0]);
-    }
-
-    public static int getMinute(String time) {
-        String[] pieces = time.split(":");
-        return Integer.parseInt(pieces[1]);
     }
 }

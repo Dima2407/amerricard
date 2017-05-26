@@ -48,6 +48,8 @@ public class MainActivity extends DrawerActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+
+        //todo perhaps, needs check isAppFirstLaunch
         startNotificationReceiver();
     }
 
