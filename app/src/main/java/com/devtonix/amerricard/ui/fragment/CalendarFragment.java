@@ -1,9 +1,11 @@
 package com.devtonix.amerricard.ui.fragment;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -18,17 +20,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.ui.adapter.CardAdapter;
+import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarFragment extends Fragment implements CardAdapter.OnFavoriteClickListener {
+public class CalendarFragment extends Fragment implements CalendarAdapter.OnCalendarItemClickListener {
 
-    private CardAdapter adapter;
+    private static final String TAG = CalendarFragment.class.getSimpleName();
+    private CalendarAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
+    private ContentResolver contentResolver;
 
     @Nullable
     @Override
@@ -38,19 +43,23 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), false, this);
+        adapter = new CalendarAdapter(getActivity(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
+        contentResolver = getActivity().getContentResolver();
+
         manageVisible(false);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-//                && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
-//        } else {
-//            getContactNames();
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
+        } else {
 
+            for (Contact contact : getContactsWithBirthday()) {
+                Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
+            }
+        }
 
 
         return view;
@@ -67,87 +76,76 @@ public class CalendarFragment extends Fragment implements CardAdapter.OnFavorite
     }
 
     public void updateData(List<Item> items) {
-        if (items == null || items.size()==0) {
+
+        final List<Contact> contacts = getContactsWithBirthday();
+        final List<Object> objects = new ArrayList<>();
+
+        objects.addAll(items);
+        objects.addAll(contacts);
+
+        if (objects.size() == 0) {
             manageVisible(false);
         } else {
             manageVisible(true);
         }
-        adapter.updateData(items);
+
+        adapter.updateData(objects);
     }
-
-    private Cursor getContactsBirthdays() {
-        Uri uri = ContactsContract.Data.CONTENT_URI;
-
-        String[] projection = new String[]{
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Event.START_DATE
-        };
-
-        String where =
-                ContactsContract.Data.MIMETYPE + "= ? AND " +
-                        ContactsContract.CommonDataKinds.Event.TYPE + "=" +
-                        ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
-        String[] selectionArgs = new String[]{
-                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        };
-        String sortOrder = null;
-        return getActivity().getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getContactNames();
+                for (Contact contact : getContactsWithBirthday()) {
+                    Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
+                }
             } else {
                 Toast.makeText(getActivity(), "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private List<String> getContactNames() {
-        List<String> contacts = new ArrayList<>();
-        // Get the ContentResolver
-        ContentResolver cr = getActivity().getContentResolver();
-        // Get the Cursor of all the contacts
+    private List<Contact> getContactsWithBirthday() {
+        final long startQuery = System.currentTimeMillis();
+        final List<Contact> contactsAndBirthdays = new ArrayList<>(50);
+        final Uri uri = ContactsContract.Data.CONTENT_URI;
 
-        String[] projection = new String[]{
+        final String[] projection = new String[]{
                 ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Event.PHOTO_URI,
                 ContactsContract.CommonDataKinds.Event.START_DATE
         };
 
-        String where =
-                ContactsContract.Data.MIMETYPE + "= ? AND " +
-                        ContactsContract.CommonDataKinds.Event.TYPE + "=" +
-                        ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
-        String[] selectionArgs = new String[]{
-                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        };
-        String sortOrder = null;
+        final String where = ContactsContract.Data.MIMETYPE + "= ? AND " +
+                ContactsContract.CommonDataKinds.Event.TYPE + "=" +
+                ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
 
-        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        final String[] selection = new String[]{ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE};
 
-        // Move the cursor to first. Also check whether the cursor is empty or not.
-        if (cursor.moveToFirst()) {
-            // Iterate through the cursor
-            do {
-                // Get the contacts name
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                int birthday = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-                contacts.add(name);
-                Log.d("Cursor", "name: " + name + " birthday:" + birthday);
-            } while (cursor.moveToNext());
+        final String order = null;
+
+        Cursor cursor = contentResolver.query(uri, projection, where, selection, order);
+
+        final int birthdayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+        final int contactNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+        final int photoUriColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
+
+        while (cursor.moveToNext()) {
+            final Contact contact = new Contact();
+                    contact.setName(cursor.getString(contactNameColumn));
+                    contact.setBirthday(cursor.getString(birthdayColumn));
+                    contact.setPhotoUri(cursor.getString(photoUriColumn));
+
+            contactsAndBirthdays.add(contact);
         }
-        // Close the curosor
+
         cursor.close();
 
-        return contacts;
+        Log.d(TAG, "getContactsWithBirthday: selection time = " + (System.currentTimeMillis() - startQuery) + " ms");
+        return contactsAndBirthdays;
     }
-
 
     @Override
     public void onItemClicked(int position) {

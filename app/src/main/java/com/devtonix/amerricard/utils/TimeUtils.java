@@ -19,17 +19,17 @@ public class TimeUtils {
         return Integer.parseInt(s[1]);
     }
 
-    public static int getDayOfMonth(String date){
+    public static int getDayOfMonth(String date) {
         String[] s = date.split(REGEX_DOT_SYMBOL);
         return Integer.parseInt(s[1]);
     }
 
-    public static int getMonth(String date){
+    public static int getMonth(String date) {
         String[] s = date.split(REGEX_DOT_SYMBOL);
         return Integer.parseInt(s[0]);
     }
 
-    public static int getYear(String date){
+    public static int getYear(String date) {
         String[] s = date.split(REGEX_DOT_SYMBOL);
         return Integer.parseInt(s[2]);
     }

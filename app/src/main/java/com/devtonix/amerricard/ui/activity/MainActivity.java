@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.devtonix.amerricard.AmerriCardsApp;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;

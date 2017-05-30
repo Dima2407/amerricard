@@ -12,52 +12,30 @@ import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.CircleTransform;
-import com.devtonix.amerricard.utils.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
-
     private static final String TAG = CardAdapter.class.getSimpleName();
     private List<Item> items = new ArrayList<>();
     private Context context;
-    private boolean isCard = true;
     private OnFavoriteClickListener listener;
-    private List<Item> cancelledHolidays = new ArrayList<>();
 
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
     }
 
-    public CardAdapter(Context mContext, List<Item> items, boolean isCard, OnFavoriteClickListener listener) {
+    public CardAdapter(Context mContext, List<Item> items, OnFavoriteClickListener listener) {
         this.context = mContext;
         this.items = items;
-        this.isCard = isCard;
         this.listener = listener;
     }
 
-    public void updateData(List<Item> holidaysList) {
-        items = holidaysList;
-
-        if (!isCard) {
-            cancelledHolidays = Preferences.getInstance().getEventsForHide();
-
-            for (int i = 0; i < holidaysList.size(); i++) {
-                for (int j = 0; j < cancelledHolidays.size(); j++) {
-                    if (holidaysList.get(i).id == cancelledHolidays.get(j).id) {
-                        items.remove(holidaysList.get(i));
-                    }
-                }
-            }
-        }
+    public void updateData(List<Item> cardsList) {
+        items = cardsList;
 
         notifyDataSetChanged();
-    }
-
-    public long getIdByPosition(int position) {
-        return items.get(position).id;
     }
 
     @Override
@@ -71,20 +49,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         Item item = items.get(position);
         holder.text.setText(item.name == null ? "" : item.name);
 
-
         String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
-        if (isCard) {
-            holder.subtext.setVisibility(View.GONE);
-            Glide.with(context).load(url)
-                    .into(holder.icon);
-        } else {
-            holder.subtext.setVisibility(View.VISIBLE);
-            holder.subtext.setText(item.getDate());
-            Glide.with(context).load(url)
-                    .transform(new CircleTransform(context))
-                    .into(holder.icon);
-        }
+        holder.subtext.setVisibility(View.GONE);
+        Glide.with(context).load(url).into(holder.icon);
     }
 
     @Override
