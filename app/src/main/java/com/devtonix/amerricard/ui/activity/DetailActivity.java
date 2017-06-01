@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 
@@ -66,6 +67,7 @@ public class DetailActivity extends BaseActivity {
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
                 onShareItem(adapter.getImage(pager.getCurrentItem()));
+                NetworkService.shareCard(getApplicationContext(), items.get(position).id);
             }
         });
 
