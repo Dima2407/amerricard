@@ -23,6 +23,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
+import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     private RecyclerView recyclerView;
     private TextView emptyText;
     private ContentResolver contentResolver;
+    private List<Contact> contacts = new ArrayList<>();
 
     @Nullable
     @Override
@@ -51,16 +53,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
 
         manageVisible(false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        if (SystemUtils.isPermissionGranted(getActivity())) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
-
-            for (Contact contact : getContactsWithBirthday()) {
-                Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
-            }
+            contacts = getContactsWithBirthday();
         }
-
 
         return view;
     }
@@ -76,8 +73,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     }
 
     public void updateData(List<Item> items) {
-
-        final List<Contact> contacts = getContactsWithBirthday();
         final List<Object> objects = new ArrayList<>();
 
         objects.addAll(items);
@@ -97,11 +92,9 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
                                            int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                for (Contact contact : getContactsWithBirthday()) {
-                    Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
-                }
+                contacts = getContactsWithBirthday();
             } else {
-                Toast.makeText(getActivity(), "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }

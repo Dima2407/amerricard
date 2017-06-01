@@ -13,7 +13,7 @@ import com.devtonix.amerricard.api.event.RxBus;
 import com.devtonix.amerricard.api.response.ServerResponse;
 import com.devtonix.amerricard.api.response.SimpleResponse;
 import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.Utils;
+import com.devtonix.amerricard.utils.SystemUtils;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,7 +27,7 @@ public class NetworkService {
         try {
             NetworkServiceProvider provider = new NetworkServiceProvider();
 
-            if (!Utils.isNetworkConnected(context)) {
+            if (!SystemUtils.isNetworkConnected(context)) {
                 showErrorConnection();
                 return;
             }
@@ -59,7 +59,7 @@ public class NetworkService {
         try {
             NetworkServiceProvider provider = new NetworkServiceProvider();
 
-            if (!Utils.isNetworkConnected(context)) {
+            if (!SystemUtils.isNetworkConnected(context)) {
                 showErrorConnection();
                 return;
             }
@@ -91,7 +91,7 @@ public class NetworkService {
         try {
             final NetworkServiceProvider provider = new NetworkServiceProvider();
 
-            if (!Utils.isNetworkConnected(context)) {
+            if (!SystemUtils.isNetworkConnected(context)) {
                 showErrorConnection();
                 return;
             }
