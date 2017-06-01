@@ -1,5 +1,6 @@
 package com.devtonix.amerricard.model;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.devtonix.amerricard.api.NetworkServiceProvider;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class Item implements Serializable {
 
+    @SuppressLint("SimpleDateFormat")
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy");
 
     public String type;

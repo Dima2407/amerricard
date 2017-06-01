@@ -1,15 +1,19 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -17,8 +21,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 public class SettingsActivity extends DrawerActivity {
 
-
-
+    private static final String TAG = SettingsActivity.class.getSimpleName();
     private SwitchCompat notificationSwitch;
     private SwitchCompat celebritiesSwitch;
     private ViewGroup timerContainer;
@@ -30,18 +33,34 @@ public class SettingsActivity extends DrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(R.layout.activity_settings);
+        setTitle(getString(R.string.settings));
 
+        initViews();
+        initListeners();
+        manageNotifications();
+        manageCelebrities();
+        setLanguageSelected((Preferences.getInstance().getLanguage()));
+
+        timerText.setText(Preferences.getInstance().getNotificationsTime());
+    }
+
+    private void initViews(){
+        languageText = (TextView) findViewById(R.id.setting_language_value);
+        languageContainer = (ViewGroup) findViewById(R.id.language_container);
+        timerContainer = (ViewGroup) findViewById(R.id.settings_timer_container);
+        celebritiesSwitch = (SwitchCompat) findViewById(R.id.settings_celebrity_switcher);
         notificationSwitch = (SwitchCompat) findViewById(R.id.settings_notification_switcher);
-        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        timerText = (TextView) findViewById(R.id.setting_timer_value);
+
+    }
+
+    private void initListeners(){
+        timerContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Preferences.getInstance().setNotification(b);
-                manageNotifications();
+            public void onClick(View view) {
+                onTimeClick();
             }
         });
-        manageNotifications();
-
-        celebritiesSwitch = (SwitchCompat) findViewById(R.id.settings_celebrity_switcher);
         celebritiesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -49,29 +68,19 @@ public class SettingsActivity extends DrawerActivity {
                 manageCelebrities();
             }
         });
-        manageCelebrities();
-
-        timerContainer = (ViewGroup) findViewById(R.id.settings_timer_container);
-        timerContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onTimeClick();
-            }
-        });
-        timerText = (TextView) findViewById(R.id.setting_timer_value);
-
-        languageContainer = (ViewGroup) findViewById(R.id.language_container);
         languageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onLanguageClick();
             }
         });
-        languageText = (TextView) findViewById(R.id.setting_language_value);
-
-        setTitle(getString(R.string.settings));
-
-        setLanguageSelected((Preferences.getInstance().getLanguage()));
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Preferences.getInstance().setNotification(b);
+                manageNotifications();
+            }
+        });
     }
 
     private void manageNotifications() {
@@ -83,11 +92,14 @@ public class SettingsActivity extends DrawerActivity {
     }
 
     private void onTimeClick() {
-
         TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                timerText.setText(hourOfDay+":"+ (minute<10?"0"+minute:minute));
+                final String time = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute);
+                timerText.setText(time);
+                Preferences.getInstance().saveNotificationsTime(time);
+
+                startNotificationReceiver();
             }
         }, 8, 0, true);
         timePickerDialog.setAccentColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -116,5 +128,11 @@ public class SettingsActivity extends DrawerActivity {
 
     private void setLanguageSelected(String language) {
         languageText.setText(LanguageUtils.getLanguageByCode(this, language));
+    }
+
+    private void startNotificationReceiver(){
+        Log.d(TAG, "startNotificationReceiver @(^_^)@");
+        Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
+        getApplicationContext().sendBroadcast(startReceiver);
     }
 }

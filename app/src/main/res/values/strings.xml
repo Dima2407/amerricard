@@ -16,7 +16,6 @@
     <string name="favorite_cards">Favorite cards</string>
     <string name="sent_cards">Sent cards</string>
     <string name="manage_birthdays">Manage birthdays</string>
-    <string name="manage_holidays">Manage holidays</string>
     <string name="settings">Settings</string>
     <string name="become_vip">Become VIP</string>
     <string name="error_no_internet">Check your internet connection</string>
@@ -26,6 +25,9 @@
     <string name="no_favorite_cards">No favorite cards</string>
     <string name="premium">Premium</string>
     <string name="vip">Vip</string>
+
+    <!--Notifications-->
+    <string name="notifications_title">New event!</string>
 
 
     <!-- Languages -->

@@ -1,17 +1,20 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.devtonix.amerricard.AmerriCardsApp;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
+import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.Preferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -20,6 +23,7 @@ import java.util.List;
 
 public class MainActivity extends DrawerActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private MainPagerAdapter adapter;
     private TabLayout tab;
     private AdView mAdView;
@@ -44,6 +48,10 @@ public class MainActivity extends DrawerActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+
+        //todo perhaps, needs check isAppFirstLaunch
+        startNotificationReceiver();
     }
 
     @Override
@@ -73,5 +81,11 @@ public class MainActivity extends DrawerActivity {
         super.onResume();
         NetworkService.getCards(this);
         NetworkService.getEvents(this);
+    }
+
+    private void startNotificationReceiver(){
+        Log.d(TAG, "startNotificationReceiver @(^_^)@");
+        Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
+        getApplicationContext().sendBroadcast(startReceiver);
     }
 }

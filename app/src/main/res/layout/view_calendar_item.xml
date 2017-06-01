@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/small_padding">
+
+        <ImageView
+            android:id="@+id/card_icon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_report_image" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/card_text"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_biggest"
+                android:layout_marginLeft="@dimen/base_padding"
+                android:gravity="center_vertical"
+                android:text="Birthdays"/>
+
+            <TextView
+                android:id="@+id/card_sub_text"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:textSize="@dimen/text_size_big"
+                android:layout_marginLeft="@dimen/base_padding"
+                android:gravity="center_vertical"
+                android:layout_height="26dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="72dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider"/>
+</RelativeLayout>

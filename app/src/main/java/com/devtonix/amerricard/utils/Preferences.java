@@ -26,6 +26,7 @@ public class Preferences {
         String FAVORITES = "favorites";
         String LANGUAGE = "language";
         String NOTIFICATION = "notification";
+        String NOTIFICATION_TIME = "notification_time";
         String CELEBRITIES = "celebrities";
     }
 
@@ -161,6 +162,14 @@ public class Preferences {
     public List<Item> getFavorites() {
         ListItem li = new Gson().fromJson(getString(Fields.FAVORITES), ListItem.class);
         return li == null ? new ArrayList<Item>() : li.data;
+    }
+
+    public void saveNotificationsTime(String time){
+        sharedPreferences.edit().putString(Fields.NOTIFICATION_TIME, time).apply();
+    }
+
+    public String getNotificationsTime(){
+        return sharedPreferences.getString(Fields.NOTIFICATION_TIME, "08:00");
     }
 
     public void setNotification(boolean isEnabled) {

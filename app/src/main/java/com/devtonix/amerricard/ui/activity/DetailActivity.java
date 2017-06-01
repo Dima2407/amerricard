@@ -1,6 +1,8 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
@@ -136,9 +139,11 @@ public class DetailActivity extends BaseActivity {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "From Amerricards");
                 shareIntent.setType("image/*");
 
                 startActivity(Intent.createChooser(shareIntent, "Share Image"));
+
             }
             progress.setVisibility(View.GONE);
         }

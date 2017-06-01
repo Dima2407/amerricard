@@ -23,7 +23,7 @@ public class ManageActivity extends DrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(R.layout.activity_manage_holidays);
-        setTitle("Manage holidays");
+        setTitle(getResources().getString(R.string.manage_birthdays));
 
         rvHolidays = (RecyclerView) findViewById(R.id.rv_holidays);
         adapter = new HolidaysAdapter(this, new MyOnSwitchClickListener());
