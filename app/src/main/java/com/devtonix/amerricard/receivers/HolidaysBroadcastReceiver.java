@@ -8,11 +8,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
 import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.TimeUtils;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -39,6 +42,29 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
             if (TextUtils.equals(item.getDate(), currentDate)) {
                 isShowNeeded = true;
                 break;
+            }
+        }
+
+        final List<Contact> contacts = Preferences.getInstance().getContacts();
+
+        for (Contact c : contacts) {
+            try {
+                Log.d(TAG, "onCreate: contact = " + c.getName());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getBirthday()));
+
+                final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                final int month = calendar.get(Calendar.MONTH);
+
+                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
+                final int currentMonth = currentCalendar.get(Calendar.MONTH);
+
+                if (day == currentDay & month == currentMonth) {
+                    isShowNeeded = true;
+                    break;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
 

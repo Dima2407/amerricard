@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -23,10 +22,18 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
+import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.SystemUtils;
+import com.google.gson.Gson;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnCalendarItemClickListener {
 
@@ -127,14 +134,22 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
 
         while (cursor.moveToNext()) {
             final Contact contact = new Contact();
-                    contact.setName(cursor.getString(contactNameColumn));
-                    contact.setBirthday(cursor.getString(birthdayColumn));
-                    contact.setPhotoUri(cursor.getString(photoUriColumn));
+            contact.setName(cursor.getString(contactNameColumn));
+            contact.setPhotoUri(cursor.getString(photoUriColumn));
+
+            final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
+            final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
+
+            contact.setBirthday(formatterBirthday);
 
             contactsAndBirthdays.add(contact);
+
+            Log.d(TAG, "getContactsWithBirthday: dateInMillis = " + dateInMillis + " date = " + formatterBirthday);
         }
 
         cursor.close();
+
+        Preferences.getInstance().saveContacts(contactsAndBirthdays);
 
         Log.d(TAG, "getContactsWithBirthday: selection time = " + (System.currentTimeMillis() - startQuery) + " ms");
         return contactsAndBirthdays;

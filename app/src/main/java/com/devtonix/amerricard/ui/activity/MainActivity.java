@@ -51,7 +51,7 @@ public class MainActivity extends DrawerActivity {
 
 
         //todo perhaps, needs check isAppFirstLaunch
-        startNotificationReceiver();
+//        startNotificationReceiver();
     }
 
     @Override
