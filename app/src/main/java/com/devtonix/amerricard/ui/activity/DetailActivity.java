@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +32,8 @@ import java.util.List;
 
 public class DetailActivity extends BaseActivity {
 
+    private static final String TAG = DetailActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
     private AppBarLayout bar;
@@ -125,6 +128,17 @@ public class DetailActivity extends BaseActivity {
         return bmpUri;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SHARE) {
+            Log.d(TAG, "onActivityResult: 2002");
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            }
+        }
+    }
 
     class LoadImageTask extends AsyncTask<ImageView, Void, Uri> {
 
@@ -144,11 +158,7 @@ public class DetailActivity extends BaseActivity {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "From Amerricards");
                 shareIntent.setType("image/*");
 
-                startActivity(Intent.createChooser(shareIntent, "Share Image"));
-
-//                if (interstitialAd.isLoaded()) {
-//                    interstitialAd.show();
-//                }
+                startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);
             }
             progress.setVisibility(View.GONE);
         }
