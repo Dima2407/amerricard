@@ -25,15 +25,10 @@ import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 import com.devtonix.amerricard.utils.Preferences;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.SystemUtils;
-import com.google.gson.Gson;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnCalendarItemClickListener {
 
@@ -64,6 +59,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
             contacts = getContactsWithBirthday();
+            updateData(null);
         }
 
         return view;
@@ -82,7 +78,9 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     public void updateData(List<Item> items) {
         final List<Object> objects = new ArrayList<>();
 
-        objects.addAll(items);
+        if (items != null) {
+            objects.addAll(items);
+        }
         objects.addAll(contacts);
 
         if (objects.size() == 0) {
@@ -100,6 +98,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 contacts = getContactsWithBirthday();
+                updateData(null);
             } else {
                 Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }

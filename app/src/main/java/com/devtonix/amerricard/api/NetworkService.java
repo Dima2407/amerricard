@@ -41,7 +41,7 @@ public class NetworkService {
 
                         @Override
                         public final void onError(Throwable e) {
-                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
                         }
 
                         @Override
@@ -73,7 +73,7 @@ public class NetworkService {
 
                         @Override
                         public final void onError(Throwable e) {
-                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
                         }
 
                         @Override
@@ -107,7 +107,7 @@ public class NetworkService {
 
                         @Override
                         public void onError(Throwable e) {
-                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
                         }
 
                         @Override

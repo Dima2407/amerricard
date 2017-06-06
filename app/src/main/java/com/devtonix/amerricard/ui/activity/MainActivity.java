@@ -7,17 +7,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import com.devtonix.amerricard.AmerriCardsApp;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
-import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.Preferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.List;
 
@@ -51,12 +51,12 @@ public class MainActivity extends DrawerActivity {
 
 
         //todo perhaps, needs check isAppFirstLaunch
-//        startNotificationReceiver();
+        startNotificationReceiver();
     }
 
     @Override
     protected void handleCardSuccessEvent(List<Item> items) {
-        Log.d("handleCardSuccessEvent", "data "+items.size());
+        Log.d("handleCardSuccessEvent", "data " + items.size());
         Preferences.getInstance().saveCards(items);
         ((CardFragment) adapter.getCardFragment()).updateData(items);
     }
@@ -83,7 +83,7 @@ public class MainActivity extends DrawerActivity {
         NetworkService.getEvents(this);
     }
 
-    private void startNotificationReceiver(){
+    private void startNotificationReceiver() {
         Log.d(TAG, "startNotificationReceiver @(^_^)@");
         Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
         getApplicationContext().sendBroadcast(startReceiver);

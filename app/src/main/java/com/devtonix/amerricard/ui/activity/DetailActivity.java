@@ -1,8 +1,6 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -17,22 +15,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by Oleksii on 02.02.17.
- */
 public class DetailActivity extends BaseActivity {
 
     private boolean isFullScreen = false;
@@ -40,6 +36,7 @@ public class DetailActivity extends BaseActivity {
     private AppBarLayout bar;
     private ProgressBar progress;
     private DetailPagerAdapter adapter;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +72,11 @@ public class DetailActivity extends BaseActivity {
         });
 
         pager.setCurrentItem(position);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -108,9 +110,9 @@ public class DetailActivity extends BaseActivity {
 
         try {
             Drawable drawable = imageView.getDrawable();
-            Bitmap bmp = ((GlideBitmapDrawable)drawable).getBitmap();
+            Bitmap bmp = ((GlideBitmapDrawable) drawable).getBitmap();
 
-            File file =  new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
 
             FileOutputStream out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
@@ -144,6 +146,9 @@ public class DetailActivity extends BaseActivity {
 
                 startActivity(Intent.createChooser(shareIntent, "Share Image"));
 
+//                if (interstitialAd.isLoaded()) {
+//                    interstitialAd.show();
+//                }
             }
             progress.setVisibility(View.GONE);
         }
