@@ -2,12 +2,14 @@ package com.devtonix.amerricard.ui.fragment;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 import com.devtonix.amerricard.utils.Preferences;
 import com.devtonix.amerricard.utils.RegexDateUtils;
@@ -42,7 +45,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card, null);
+        View view = inflater.inflate(R.layout.fragment_calendar, null);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
@@ -63,6 +66,19 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
         }
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabCalendar);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+            }
+        });
     }
 
     private void manageVisible(boolean isListVisible) {

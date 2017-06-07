@@ -26,4 +26,6 @@
     <string name="ok">ОК</string>
     <string name="scheduled_time">Устанленое врея</string>
     <string name="send_card">Отправить открытку</string>
+    <string name="name">Имя и фамилия</string>
+    <string name="add_birthday">Добавить день рождения</string>
 </resources>

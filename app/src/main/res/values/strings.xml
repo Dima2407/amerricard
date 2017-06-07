@@ -40,6 +40,8 @@
     <string name="celebrities">Celebrities</string>
     <string name="daily_notification">Daily birthday notification</string>
     <string name="send_card">Send a card</string>
+    <string name="name">Name and Surname</string>
+    <string name="add_birthday">Add birthday</string>
 
     <string-array name="languages">
         <item>@string/english</item>
