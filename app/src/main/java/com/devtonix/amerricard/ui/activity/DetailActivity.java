@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,24 +19,27 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by Oleksii on 02.02.17.
- */
 public class DetailActivity extends BaseActivity {
 
+    private static final String TAG = DetailActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
     private AppBarLayout bar;
     private ProgressBar progress;
     private DetailPagerAdapter adapter;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +70,16 @@ public class DetailActivity extends BaseActivity {
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
                 onShareItem(adapter.getImage(pager.getCurrentItem()));
+                NetworkService.shareCard(getApplicationContext(), items.get(position).id);
             }
         });
 
         pager.setCurrentItem(position);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -103,9 +113,9 @@ public class DetailActivity extends BaseActivity {
 
         try {
             Drawable drawable = imageView.getDrawable();
-            Bitmap bmp = ((GlideBitmapDrawable)drawable).getBitmap();
+            Bitmap bmp = ((GlideBitmapDrawable) drawable).getBitmap();
 
-            File file =  new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
 
             FileOutputStream out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
@@ -118,6 +128,17 @@ public class DetailActivity extends BaseActivity {
         return bmpUri;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SHARE) {
+            Log.d(TAG, "onActivityResult: 2002");
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            }
+        }
+    }
 
     class LoadImageTask extends AsyncTask<ImageView, Void, Uri> {
 
@@ -134,9 +155,10 @@ public class DetailActivity extends BaseActivity {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "From Amerricards");
                 shareIntent.setType("image/*");
 
-                startActivity(Intent.createChooser(shareIntent, "Share Image"));
+                startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);
             }
             progress.setVisibility(View.GONE);
         }

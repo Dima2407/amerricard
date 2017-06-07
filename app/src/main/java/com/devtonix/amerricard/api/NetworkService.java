@@ -1,6 +1,7 @@
 package com.devtonix.amerricard.api;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.devtonix.amerricard.AmerriCardsApp;
@@ -10,8 +11,9 @@ import com.devtonix.amerricard.api.event.EventSuccessEvent;
 import com.devtonix.amerricard.api.event.FailureEvent;
 import com.devtonix.amerricard.api.event.RxBus;
 import com.devtonix.amerricard.api.response.ServerResponse;
+import com.devtonix.amerricard.api.response.SimpleResponse;
 import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.Utils;
+import com.devtonix.amerricard.utils.SystemUtils;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,12 +21,13 @@ import rx.schedulers.Schedulers;
 
 
 public class NetworkService {
+    private static final String TAG = NetworkService.class.getSimpleName();
 
     public static void getCards(Context context) {
         try {
             NetworkServiceProvider provider = new NetworkServiceProvider();
 
-            if (!Utils.isNetworkConnected(context)) {
+            if (!SystemUtils.isNetworkConnected(context)) {
                 showErrorConnection();
                 return;
             }
@@ -33,11 +36,12 @@ public class NetworkService {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<ServerResponse<Item>>() {
                         @Override
-                        public final void onCompleted() {}
+                        public final void onCompleted() {
+                        }
 
                         @Override
                         public final void onError(Throwable e) {
-                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
                         }
 
                         @Override
@@ -46,6 +50,7 @@ public class NetworkService {
                         }
                     });
         } catch (Exception e) {
+            e.printStackTrace();
             RxBus.getInstance().send(new FailureEvent(e.getMessage()));
         }
     }
@@ -54,7 +59,7 @@ public class NetworkService {
         try {
             NetworkServiceProvider provider = new NetworkServiceProvider();
 
-            if (!Utils.isNetworkConnected(context)) {
+            if (!SystemUtils.isNetworkConnected(context)) {
                 showErrorConnection();
                 return;
             }
@@ -63,11 +68,12 @@ public class NetworkService {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<ServerResponse<Item>>() {
                         @Override
-                        public final void onCompleted() {}
+                        public final void onCompleted() {
+                        }
 
                         @Override
                         public final void onError(Throwable e) {
-                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
                         }
 
                         @Override
@@ -76,7 +82,45 @@ public class NetworkService {
                         }
                     });
         } catch (Exception e) {
+            e.printStackTrace();
             RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+        }
+    }
+
+    public static void shareCard(Context context, long cardId) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.shareCard(cardId)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+//                            RxBus.getInstance().send(new FailureEvent(e.getMessage()));
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse response) {
+//                            RxBus.getInstance().send();
+                            Log.d(TAG, "getStatus = " + response.getStatus() + "  getCode = " + response.getCode());
+
+                        }
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
         }
     }
 

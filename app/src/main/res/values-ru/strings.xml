@@ -7,7 +7,6 @@
     <string name="favorite_cards">Избранные открытки</string>
     <string name="favorites">Избранное</string>
     <string name="manage_birthdays">Управлени днями рождениями</string>
-    <string name="manage_holidays">Управление выходными</string>
     <string name="navigation_drawer_close">Закрыть боковое меню</string>
     <string name="navigation_drawer_open">Открыть боковое меню</string>
     <string name="no_cards_available">Нет доступных отрыток</string>
@@ -27,4 +26,6 @@
     <string name="ok">ОК</string>
     <string name="scheduled_time">Устанленое врея</string>
     <string name="send_card">Отправить открытку</string>
+    <string name="name">Имя и фамилия</string>
+    <string name="add_birthday">Добавить день рождения</string>
 </resources>

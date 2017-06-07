@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 
 public class Contact {
 
-    @SuppressLint("SimpleDateFormat")
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy");
-
     private String name;
     private String birthday;
     private String photoUri;
@@ -27,11 +24,6 @@ public class Contact {
     public String getBirthday() {
         return birthday;
     }
-
-//    public String getFormattedDate() {
-//        long d = ;
-//        return dateFormat.format(new Date(d));
-//    }
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;

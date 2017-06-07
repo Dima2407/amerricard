@@ -1,19 +1,15 @@
 package com.devtonix.amerricard.model;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.devtonix.amerricard.api.NetworkServiceProvider;
+import com.devtonix.amerricard.utils.RegexDateUtils;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public class Item implements Serializable {
-
-    @SuppressLint("SimpleDateFormat")
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy");
 
     public String type;
 
@@ -61,7 +57,7 @@ public class Item implements Serializable {
 
         long d = dates.get(0);
 
-        return dateFormat.format(new Date(d));
+        return RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(d));
     }
 
     public boolean isCardFree() {

@@ -1,0 +1,96 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_placeholder2"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_name_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_photo"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_timer_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@+id/ll_name_container"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/iv_timer_icon"
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/small_padding"
+            android:src="@drawable/ic_alarm"
+            android:tint="@color/colorIconsActive"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/scheduled_time"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="@dimen/text_size_big"/>
+
+        <TextView
+            android:id="@+id/tv_timer_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8:00"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="@dimen/text_size_big"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_timer_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_for_button"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Save"
+            android:textColor="@color/mdtp_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

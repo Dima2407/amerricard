@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.devtonix.amerricard.AmerriCardsApp;
+import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.model.ListContact;
 import com.devtonix.amerricard.model.ListItem;
 import com.google.gson.Gson;
 
@@ -27,6 +29,7 @@ public class Preferences {
         String LANGUAGE = "language";
         String NOTIFICATION = "notification";
         String NOTIFICATION_TIME = "notification_time";
+        String CONTACTS = "contacts";
         String CELEBRITIES = "celebrities";
     }
 
@@ -130,6 +133,15 @@ public class Preferences {
 
     public void saveCards(List<Item> items) {
         set(Fields.CARDS, new Gson().toJson(new ListItem(items)));
+    }
+
+    public void saveContacts(List<Contact> contacts){
+        set(Fields.CONTACTS, new Gson().toJson(new ListContact(contacts)));
+    }
+
+    public List<Contact> getContacts(){
+        ListContact listContact = new Gson().fromJson(getString(Fields.CONTACTS), ListContact.class);
+        return listContact == null ? new ArrayList<Contact>() : listContact.contacts;
     }
 
     public List<Item> getCards() {

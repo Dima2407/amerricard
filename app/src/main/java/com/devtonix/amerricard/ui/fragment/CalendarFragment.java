@@ -2,13 +2,14 @@ package com.devtonix.amerricard.ui.fragment;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +23,14 @@ import android.widget.Toast;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
+import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.RegexDateUtils;
+import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnCalendarItemClickListener {
@@ -34,11 +40,12 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     private RecyclerView recyclerView;
     private TextView emptyText;
     private ContentResolver contentResolver;
+    private List<Contact> contacts = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card, null);
+        View view = inflater.inflate(R.layout.fragment_calendar, null);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
@@ -51,18 +58,27 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
 
         manageVisible(false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        if (SystemUtils.isPermissionGranted(getActivity())) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
-
-            for (Contact contact : getContactsWithBirthday()) {
-                Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
-            }
+            contacts = getContactsWithBirthday();
+            updateData(null);
         }
 
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabCalendar);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+            }
+        });
     }
 
     private void manageVisible(boolean isListVisible) {
@@ -76,11 +92,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
     }
 
     public void updateData(List<Item> items) {
-
-        final List<Contact> contacts = getContactsWithBirthday();
         final List<Object> objects = new ArrayList<>();
 
-        objects.addAll(items);
+        if (items != null) {
+            objects.addAll(items);
+        }
         objects.addAll(contacts);
 
         if (objects.size() == 0) {
@@ -97,11 +113,10 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
                                            int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                for (Contact contact : getContactsWithBirthday()) {
-                    Log.d(TAG, "name= " + contact.getName() + " " + contact.getBirthday() + " " + contact.getPhotoUri());
-                }
+                contacts = getContactsWithBirthday();
+                updateData(null);
             } else {
-                Toast.makeText(getActivity(), "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -134,14 +149,22 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
 
         while (cursor.moveToNext()) {
             final Contact contact = new Contact();
-                    contact.setName(cursor.getString(contactNameColumn));
-                    contact.setBirthday(cursor.getString(birthdayColumn));
-                    contact.setPhotoUri(cursor.getString(photoUriColumn));
+            contact.setName(cursor.getString(contactNameColumn));
+            contact.setPhotoUri(cursor.getString(photoUriColumn));
+
+            final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
+            final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
+
+            contact.setBirthday(formatterBirthday);
 
             contactsAndBirthdays.add(contact);
+
+            Log.d(TAG, "getContactsWithBirthday: dateInMillis = " + dateInMillis + " date = " + formatterBirthday);
         }
 
         cursor.close();
+
+        Preferences.getInstance().saveContacts(contactsAndBirthdays);
 
         Log.d(TAG, "getContactsWithBirthday: selection time = " + (System.currentTimeMillis() - startQuery) + " ms");
         return contactsAndBirthdays;
