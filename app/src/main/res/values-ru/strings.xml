@@ -28,4 +28,5 @@
     <string name="send_card">Отправить открытку</string>
     <string name="name">Имя и фамилия</string>
     <string name="add_birthday">Добавить день рождения</string>
+    <string name="birthday">День рождения</string>
 </resources>
