@@ -40,7 +40,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        return LanguageUtils.getCardNameAccordingLang(categories.get(position).name);
+        return LanguageUtils.cardNameWrapper(categories.get(position).getName());
 
     }
 

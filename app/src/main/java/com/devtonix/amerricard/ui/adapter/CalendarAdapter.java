@@ -2,7 +2,6 @@ package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.icu.text.DateFormat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +17,8 @@ import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
-import com.devtonix.amerricard.utils.TimeUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHolder> {
@@ -49,10 +44,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     public void updateData(List<Object> objects) {
         this.objects = objects;
 
-        for (Object o : objects){
-            if (o instanceof Item){
+        for (Object o : objects) {
+            if (o instanceof Item) {
                 holidays.add((Item) o);
-            } else if (o instanceof Contact){
+            } else if (o instanceof Contact) {
                 contacts.add((Contact) o);
             }
         }
@@ -82,19 +77,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     public void onBindViewHolder(final CalendarAdapter.MainHolder holder, int position) {
         Object o = objects.get(position);
 
-        if (o instanceof Item){
+        if (o instanceof Item) {
             final Item item = (Item) o;
-//            final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
+            final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
-            holder.text.setText(LanguageUtils.getCardNameAccordingLang(item.name));
+            holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
             holder.subtext.setVisibility(View.VISIBLE);
             holder.subtext.setText(item.getDate());
-//            Glide.with(context)
-//                    .load(url)
-//                    .transform(new CircleTransform(context))
-//                    .into(holder.icon);
+            Glide.with(context)
+                    .load(url)
+                    .transform(new CircleTransform(context))
+                    .into(holder.icon);
 
-        } else if (o instanceof Contact){
+        } else if (o instanceof Contact) {
             final Contact contact = (Contact) o;
 
             holder.text.setText(contact.getName());

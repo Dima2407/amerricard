@@ -52,7 +52,7 @@ public class HolidaysNotificationService extends Service {
         inboxStyle.setBigContentTitle("Today celebrate:");
 
         for (Item item : itemsForDisplay) {
-            inboxStyle.addLine(item.name + " (" + item.getDate() + ")");
+            inboxStyle.addLine(item.getName() + " (" + item.getDate() + ")");
         }
 
         final List<Contact> contacts = Preferences.getInstance().getContacts();
@@ -86,7 +86,7 @@ public class HolidaysNotificationService extends Service {
 
         final String forDisplay = itemsForDisplay.size()==0
                 ? contacts.get(0).getName() + " happy birthday!"
-                : itemsForDisplay.get(0).name + "is celebrated today";
+                : itemsForDisplay.get(0).getName() + "is celebrated today";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setContentText(forDisplay)

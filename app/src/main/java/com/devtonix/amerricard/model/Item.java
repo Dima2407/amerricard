@@ -1,16 +1,30 @@
 package com.devtonix.amerricard.model;
 
+import android.support.annotation.StringDef;
 import android.text.TextUtils;
 
 import com.devtonix.amerricard.api.NetworkServiceProvider;
+import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.RegexDateUtils;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 import java.util.List;
 
 public class Item implements Serializable {
+
+    private static final String TAG = Item.class.getSimpleName();
+    private static final String CATEGORY = "category";
+    private static final String CARD = "card";
+    private static final String CURRENT_LANG = LanguageUtils.getLanguage(); //can be: "en", "es", "ru", "ua", "fr"
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({CATEGORY, CARD})
+    @interface ItemType {
+    }
 
     public String type;
 
@@ -20,7 +34,7 @@ public class Item implements Serializable {
 
     public long id;
 
-    public JsonObject name;
+    private JsonElement name;
 
     public String image;
 
@@ -36,18 +50,27 @@ public class Item implements Serializable {
 
     public String cardType;
 
+    public String getName() {
+        return name.getAsJsonObject().get(CURRENT_LANG).toString();
+    }
+
     public boolean isItemCategory() {
         if (type != null && type.equals("category")) return true;
         return false;
     }
 
+    //todo As I understand, parameter "event" does not exist
     public String getUrlByType() {
-        if (type.equals("category")) {
-            return NetworkServiceProvider.CATEGORY_SUFFIX;
-        } else if (type.equals("event")) {
-            return NetworkServiceProvider.EVENT_SUFFIX;
+        if (type != null){
+            if (type.equals("category")) {
+                return NetworkServiceProvider.CATEGORY_SUFFIX;
+            } else if (type.equals("event")) {
+                return NetworkServiceProvider.EVENT_SUFFIX;
+            } else {
+                return NetworkServiceProvider.CARD_SUFFIX;
+            }
         } else {
-            return NetworkServiceProvider.CARD_SUFFIX;
+            return "";
         }
     }
 

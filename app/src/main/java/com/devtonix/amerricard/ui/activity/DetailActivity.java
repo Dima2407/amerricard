@@ -22,12 +22,14 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkService;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
+import com.devtonix.amerricard.utils.Preferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends BaseActivity {
@@ -58,10 +60,20 @@ public class DetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        final List<Item> items = (List<Item>) getIntent().getSerializableExtra("list");
+        NetworkService.getCards(this);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
+    }
+
+    @Override
+    protected void handleCardSuccessEvent(final List<Item> items) {
+        super.handleCardSuccessEvent(items);
+
         final int position = getIntent().getIntExtra("position", 0);
         final ViewPager pager = (ViewPager) findViewById(R.id.detail_view_pager);
-
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), items);
         pager.setAdapter(adapter);
 
@@ -75,11 +87,6 @@ public class DetailActivity extends BaseActivity {
         });
 
         pager.setCurrentItem(position);
-
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
-        AdRequest adRequest = new AdRequest.Builder().build();
-        interstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -87,6 +94,8 @@ public class DetailActivity extends BaseActivity {
         onBackPressed();
         return true;
     }
+
+
 
     public void changeMode() {
         isFullScreen = !isFullScreen;
