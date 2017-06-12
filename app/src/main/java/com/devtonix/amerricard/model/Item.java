@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.utils.RegexDateUtils;
+import com.google.gson.JsonObject;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class Item implements Serializable {
 
     public long id;
 
-    public Name name;
+    public JsonObject name;
 
     public String image;
 
