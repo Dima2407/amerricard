@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.utils.LanguageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
         Item item = items.get(position);
-        holder.text.setText(item.name == null ? "" : item.name);
+        holder.text.setText(LanguageUtils.getCardNameAccordingLang(item.name));
 
         String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 

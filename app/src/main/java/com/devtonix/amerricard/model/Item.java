@@ -19,7 +19,7 @@ public class Item implements Serializable {
 
     public long id;
 
-    public String name;
+    public Name name;
 
     public String image;
 

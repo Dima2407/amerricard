@@ -16,6 +16,7 @@ import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
+import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
 import com.devtonix.amerricard.utils.TimeUtils;
 
@@ -83,15 +84,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
 
         if (o instanceof Item){
             final Item item = (Item) o;
-            final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
+//            final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
-            holder.text.setText(item.name == null ? "" : item.name);
+            holder.text.setText(LanguageUtils.getCardNameAccordingLang(item.name));
             holder.subtext.setVisibility(View.VISIBLE);
             holder.subtext.setText(item.getDate());
-            Glide.with(context)
-                    .load(url)
-                    .transform(new CircleTransform(context))
-                    .into(holder.icon);
+//            Glide.with(context)
+//                    .load(url)
+//                    .transform(new CircleTransform(context))
+//                    .into(holder.icon);
 
         } else if (o instanceof Contact){
             final Contact contact = (Contact) o;
