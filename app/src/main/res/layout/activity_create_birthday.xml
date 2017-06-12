@@ -23,6 +23,7 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"/>
@@ -46,22 +47,22 @@
             android:layout_width="49dp"
             android:layout_height="match_parent"
             android:padding="@dimen/small_padding"
-            android:src="@drawable/ic_alarm"
+            android:src="@drawable/ic_birthday"
             android:tint="@color/colorIconsActive"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/scheduled_time"
+            android:text="@string/birthday"
             android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/text_size_big"/>
 
         <TextView
-            android:id="@+id/tv_timer_value"
+            android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="8:00"
+            android:text="01.01.2017"
             android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/text_size_big"/>
 

@@ -17,6 +17,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.api.NetworkServiceProvider;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
+import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
 
 import java.util.ArrayList;
@@ -77,7 +78,8 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
         final Item item = items.get(position);
         final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
-        holder.tvHolidayTitle.setText(item.name == null ? "" : item.name);
+        holder.tvHolidayTitle.setText(LanguageUtils.getCardNameAccordingLang(item.name));
+
         Glide.with(context).load(url).transform(new CircleTransform(context)).into(holder.ivHolidayIcon);
         holder.swHoliday.setOnTouchListener(new View.OnTouchListener() {
             @Override

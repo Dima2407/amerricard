@@ -13,6 +13,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.utils.LanguageUtils;
 import com.devtonix.amerricard.utils.Preferences;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
@@ -45,7 +46,10 @@ public class CategoryActivity extends BaseActivity {
             position = getIntent().getIntExtra("position", 0);
         }
         Item item = items.get(position);
-        setTitle(item.name == null ? "" : item.name);
+
+
+        setTitle(LanguageUtils.getCardNameAccordingLang(item.name));
+
 
         categories = new ArrayList<>();
         if (item.data != null && item.data.size()!=0) {

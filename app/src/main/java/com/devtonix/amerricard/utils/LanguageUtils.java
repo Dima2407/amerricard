@@ -7,6 +7,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.model.Name;
+import com.google.gson.JsonObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,8 +40,28 @@ public class LanguageUtils {
         } else {
             lang = Preferences.getInstance().getLanguage();
         }
-        Log.d("LanguageUtils", "language:"+ lang);
+        Log.d("LanguageUtils", "language:" + lang);
         return lang;
+    }
+
+//    public static String getCardNameAccordingLang(Name name) {
+//        final String currentLang = getLanguage();
+//
+//        if (TextUtils.equals("en", currentLang)) {
+//            return name.getEn();
+//        } else if (TextUtils.equals("fr", currentLang)) {
+//            return name.getFr();
+//        } else if (TextUtils.equals("es", currentLang)) {
+//            return name.getEs();
+//        } else if (TextUtils.equals("ru", currentLang)) {
+//            return name.getRu();
+//        } else {
+//            return name.getUa();
+//        }
+//    }
+
+    public static String getCardNameAccordingLang(JsonObject object) {
+        return object.toString();
     }
 
     public static int getLanguagePositionInList(Context context) {

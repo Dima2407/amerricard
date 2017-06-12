@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.utils.LanguageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,9 @@ public class CategoryAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return categories.get(position).name;
+
+        return LanguageUtils.getCardNameAccordingLang(categories.get(position).name);
+
     }
 
 

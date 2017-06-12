@@ -10,6 +10,8 @@ import com.devtonix.amerricard.api.event.CardSuccessEvent;
 import com.devtonix.amerricard.api.event.EventSuccessEvent;
 import com.devtonix.amerricard.api.event.FailureEvent;
 import com.devtonix.amerricard.api.event.RxBus;
+import com.devtonix.amerricard.api.request.CreateEventRequest;
+import com.devtonix.amerricard.api.request.EditEventRequest;
 import com.devtonix.amerricard.api.response.ServerResponse;
 import com.devtonix.amerricard.api.response.SimpleResponse;
 import com.devtonix.amerricard.model.Item;
@@ -118,6 +120,171 @@ public class NetworkService {
                         }
                     });
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
+        }
+    }
+
+    public static void createEvent(CreateEventRequest createEventRequest, Context context) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.createEvent(createEventRequest)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse simpleResponse) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
+        }
+    }
+
+    public static void editEvent(EditEventRequest editEventRequest, Context context) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.editEvent(editEventRequest)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse simpleResponse) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
+        }
+    }
+
+    public static void deleteEvent(long id, Context context) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.deleteEvent(id)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse simpleResponse) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
+        }
+    }
+
+    public static void addFavoriteCard(long id, Context context) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.addFavoriteCard(id)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse simpleResponse) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            RxBus.getInstance().send(e.getMessage());
+        }
+    }
+
+    public static void deleteFavoriteCard(long id, Context context) {
+        try {
+            final NetworkServiceProvider provider = new NetworkServiceProvider();
+            if (!SystemUtils.isNetworkConnected(context)) {
+                showErrorConnection();
+                return;
+            }
+
+            provider.service.deleteFavoriteCard(id)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<SimpleResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(SimpleResponse simpleResponse) {
+
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
             RxBus.getInstance().send(e.getMessage());
