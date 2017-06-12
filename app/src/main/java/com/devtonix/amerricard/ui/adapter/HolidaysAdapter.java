@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
@@ -78,7 +77,7 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
         final Item item = items.get(position);
         final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
-        holder.tvHolidayTitle.setText(LanguageUtils.getCardNameAccordingLang(item.name));
+        holder.tvHolidayTitle.setText(LanguageUtils.cardNameWrapper(item.getName()));
 
         Glide.with(context).load(url).transform(new CircleTransform(context)).into(holder.ivHolidayIcon);
         holder.swHoliday.setOnTouchListener(new View.OnTouchListener() {
@@ -99,7 +98,7 @@ public class HolidaysAdapter extends RecyclerView.Adapter<HolidaysAdapter.Holida
                     }
 
                     for (int i = 0; i < cancelledHolidays.size(); i++) {
-                        Log.d(TAG, "onTouch: i=" + i + " item=" + cancelledHolidays.get(i).name);
+                        Log.d(TAG, "onTouch: i=" + i + " item=" + cancelledHolidays.get(i).getName());
                     }
 
                     Preferences.getInstance().saveEventsForHide(cancelledHolidays);

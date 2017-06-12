@@ -18,7 +18,9 @@ import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Oleksii on 10.05.17.
@@ -84,9 +86,7 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
 
     @Override
     public void onItemClicked(int pos) {
-
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra("list",new ArrayList<Item>(((CategoryActivity) getActivity()).getCategories(position)));
         intent.putExtra("position", pos);
         startActivity(intent);
     }

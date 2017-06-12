@@ -48,7 +48,7 @@ public class CategoryActivity extends BaseActivity {
         Item item = items.get(position);
 
 
-        setTitle(LanguageUtils.getCardNameAccordingLang(item.name));
+        setTitle(LanguageUtils.cardNameWrapper(item.getName()));
 
 
         categories = new ArrayList<>();

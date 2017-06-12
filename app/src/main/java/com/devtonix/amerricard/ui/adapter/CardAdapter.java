@@ -48,7 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
         Item item = items.get(position);
-        holder.text.setText(LanguageUtils.getCardNameAccordingLang(item.name));
+        holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
 
         String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 
