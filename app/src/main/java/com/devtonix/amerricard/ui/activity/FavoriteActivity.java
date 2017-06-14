@@ -8,19 +8,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteActivity extends DrawerActivity implements CategoryGridAdapter.OnFavoriteClickListener {
+public class FavoriteActivity extends DrawerActivity /*implements CategoryGridAdapter.OnFavoriteClickListener*/ {
 
     private CategoryGridAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private List<Item> items;
+//    private List<Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +42,32 @@ public class FavoriteActivity extends DrawerActivity implements CategoryGridAdap
     }
 
     private void manageRecycler() {
-        items = Preferences.getInstance().getFavorites();
-        if (items != null && items.size() != 0) {
-            manageVisible(true);
-
-            int width = (recyclerView.getWidth())/2;
-            int height = (int) (width*1.6);
-            adapter = new CategoryGridAdapter(FavoriteActivity.this, items,
-                    FavoriteActivity.this, width, height);
-            recyclerView.setAdapter(adapter);
-        } else {
-            manageVisible(false);
-        }
+//        items = SharedHelper.getInstance().getFavorites();
+//        if (items != null && items.size() != 0) {
+//            manageVisible(true);
+//
+//            int width = (recyclerView.getWidth())/2;
+//            int height = (int) (width*1.6);
+//            adapter = new CategoryGridAdapter(FavoriteActivity.this, items,
+//                    FavoriteActivity.this, width, height);
+//            recyclerView.setAdapter(adapter);
+//        } else {
+//            manageVisible(false);
+//        }
     }
 
-    @Override
-    public void onItemClicked(int position) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("list",new ArrayList<Item>(items));
-        intent.putExtra("position", position);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onItemClicked(int position) {
+//        Intent intent = new Intent(this, DetailActivity.class);
+//        intent.putExtra("list",new ArrayList<Item>(items));
+//        intent.putExtra("position", position);
+//        startActivity(intent);
+//    }
 
-    @Override
-    public void onFavoriteClicked(int position) {
-        manageRecycler();
-    }
+//    @Override
+//    public void onFavoriteClicked(int position) {
+//        manageRecycler();
+//    }
 
 
     private void manageVisible(boolean isListVisible) {

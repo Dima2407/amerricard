@@ -11,12 +11,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkServiceProvider;
+import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 
-/**
- * Created by Oleksii on 11.05.17.
- */
 public class DetailFragment extends Fragment {
 
     private ViewGroup detailContainer;
@@ -42,8 +39,8 @@ public class DetailFragment extends Fragment {
         image.post(new Runnable() {
             @Override
             public void run() {
-                String url = NetworkServiceProvider.BASE_URL
-                        + NetworkServiceProvider.CARD_SUFFIX
+                String url = NetworkModule.BASE_URL
+                        + NetworkModule.CARD_SUFFIX
                         + getArguments().getString("id") + "/image?width="+image.getHeight()+"&height="+image.getWidth()+"&type=fit";
 
                 Log.d("detail", "url "+ url);

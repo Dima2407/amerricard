@@ -1,4 +1,4 @@
-package com.devtonix.amerricard.api.response;
+package com.devtonix.amerricard.network.response;
 
 public class SimpleResponse {
     private Integer code;

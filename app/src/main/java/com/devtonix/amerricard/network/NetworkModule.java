@@ -1,60 +1,48 @@
-package com.devtonix.amerricard.api;
+package com.devtonix.amerricard.network;
 
-import java.io.IOException;
+import android.content.Context;
 
-import okhttp3.Interceptor;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NetworkServiceProvider {
+@Module
+public class NetworkModule {
 
     public static final String BASE_URL = "http://188.226.178.46:8888/amerricards/api/";
     public static final String CATEGORY_SUFFIX = "category/";
     public static final String CARD_SUFFIX = "card/";
     public static final String EVENT_SUFFIX = "event/";
+    public static final String UNKNOWN_ERROR = "unknown error";
 
-    public IBackendService service;
 
-    public NetworkServiceProvider() {
-        this("");
-    }
+    @Provides
+    @Singleton
+    final API provideNetworkService(Context context) {
 
-    public NetworkServiceProvider(String url) {
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        Interceptor headerInterceptor = new Interceptor() {
-              @Override
-              public Response intercept(Interceptor.Chain chain) throws IOException {
-                  Request original = chain.request();
-
-                  Request request = original.newBuilder()
-                          .header("Content-Type", "application/json; charset=utf-8")
-                          .method(original.method(), original.body())
-                          .build();
-
-                  return chain.proceed(request);
-              }
-        };
-
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(headerInterceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url.isEmpty() ? BASE_URL : url)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .readTimeout(100, TimeUnit.SECONDS)
+                .connectTimeout(2, TimeUnit.MINUTES)
                 .build();
 
-        service = retrofit.create(IBackendService.class);
-    }
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        return retrofit.create(API.class);
+    }
 
     /** Ignore it. this for testing only. Use it in case our certificate is not valid */
 //    private static OkHttpClient getUnsafeOkHttpClient() {

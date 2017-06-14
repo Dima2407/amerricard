@@ -8,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -36,12 +35,12 @@ public class SettingsActivity extends DrawerActivity {
         setTitle(getString(R.string.settings));
 
         initViews();
-        initListeners();
-        manageNotifications();
-        manageCelebrities();
-        setLanguageSelected((Preferences.getInstance().getLanguage()));
+//        initListeners();
+//        manageNotifications();
+//        manageCelebrities();
+//        setLanguageSelected((SharedHelper.getInstance().getLanguage()));
 
-        timerText.setText(Preferences.getInstance().getNotificationsTime());
+//        timerText.setText(SharedHelper.getInstance().getNotificationsTime());
     }
 
     private void initViews(){
@@ -54,57 +53,57 @@ public class SettingsActivity extends DrawerActivity {
 
     }
 
-    private void initListeners(){
-        timerContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onTimeClick();
-            }
-        });
-        celebritiesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Preferences.getInstance().setCelebrities(b);
-                manageCelebrities();
-            }
-        });
-        languageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onLanguageClick();
-            }
-        });
-        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Preferences.getInstance().setNotification(b);
-                manageNotifications();
-            }
-        });
-    }
+//    private void initListeners(){
+//        timerContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onTimeClick();
+//            }
+//        });
+//        celebritiesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                SharedHelper.getInstance().setCelebrities(b);
+//                manageCelebrities();
+//            }
+//        });
+//        languageContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onLanguageClick();
+//            }
+//        });
+//        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                SharedHelper.getInstance().setNotification(b);
+//                manageNotifications();
+//            }
+//        });
+//    }
+//
+//    private void manageNotifications() {
+//        notificationSwitch.setChecked(SharedHelper.getInstance().getNotification());
+//    }
+//
+//    private void manageCelebrities() {
+//        celebritiesSwitch.setChecked(SharedHelper.getInstance().getCelebrities());
+//    }
 
-    private void manageNotifications() {
-        notificationSwitch.setChecked(Preferences.getInstance().getNotification());
-    }
-
-    private void manageCelebrities() {
-        celebritiesSwitch.setChecked(Preferences.getInstance().getCelebrities());
-    }
-
-    private void onTimeClick() {
-        TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                final String time = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute);
-                timerText.setText(time);
-                Preferences.getInstance().saveNotificationsTime(time);
-
-                startNotificationReceiver();
-            }
-        }, 8, 0, true);
-        timePickerDialog.setAccentColor(getResources().getColor(R.color.colorPrimaryDark));
-        timePickerDialog.show(getFragmentManager(), "timer");
-    }
+//    private void onTimeClick() {
+//        TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+//            @Override
+//            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+//                final String time = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute);
+//                timerText.setText(time);
+//                SharedHelper.getInstance().saveNotificationsTime(time);
+//
+//                startNotificationReceiver();
+//            }
+//        }, 8, 0, true);
+//        timePickerDialog.setAccentColor(getResources().getColor(R.color.colorPrimaryDark));
+//        timePickerDialog.show(getFragmentManager(), "timer");
+//    }
 
     private void onLanguageClick() {
         new MaterialDialog.Builder(this)

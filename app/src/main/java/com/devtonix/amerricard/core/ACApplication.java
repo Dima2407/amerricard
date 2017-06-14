@@ -1,4 +1,4 @@
-package com.devtonix.amerricard;
+package com.devtonix.amerricard.core;
 
 import android.app.Application;
 import com.crashlytics.android.Crashlytics;
@@ -6,28 +6,26 @@ import com.devtonix.amerricard.utils.LanguageUtils;
 
 import io.fabric.sdk.android.Fabric;
 
-public class AmerriCardsApp extends Application {
+public class ACApplication extends Application {
 
-    private static AmerriCardsApp instance;
+    private static MainComponent mainComponent;
 
-    public AmerriCardsApp() {
-        instance = this;
-    }
-
-    public static AmerriCardsApp getInstance() {
-        return instance;
+    public static MainComponent getMainComponent() {
+        return mainComponent;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
 
+        Fabric.with(this, new Crashlytics());
         LanguageUtils.setupLanguage(this);
+
+
+        mainComponent = DaggerMainComponent.builder().appModule(new AppModule(this)).build();
 
         // Facebook init
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
-
     }
 }

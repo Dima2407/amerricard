@@ -11,12 +11,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkServiceProvider;
+import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.utils.CircleTransform;
 import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     private static final String TAG = CalendarAdapter.class.getSimpleName();
 
     private List<Object> objects = new ArrayList<>();
-    private List<Item> holidays = new ArrayList<>();
+//    private List<Item> holidays = new ArrayList<>();
     private List<Contact> contacts = new ArrayList<>();
 
     private Context context;
@@ -42,29 +41,29 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     }
 
     public void updateData(List<Object> objects) {
-        this.objects = objects;
-
-        for (Object o : objects) {
-            if (o instanceof Item) {
-                holidays.add((Item) o);
-            } else if (o instanceof Contact) {
-                contacts.add((Contact) o);
-            }
-        }
-
-        final List<Item> cancelledHolidays = Preferences.getInstance().getEventsForHide();
-        final List<Item> copyOfHolidays = new ArrayList<>(holidays.size());
-        copyOfHolidays.addAll(holidays);
-
-        for (int i = 0; i < copyOfHolidays.size(); i++) {
-            for (int j = 0; j < cancelledHolidays.size(); j++) {
-                if (copyOfHolidays.get(i).id == cancelledHolidays.get(j).id) {
-                    holidays.remove(copyOfHolidays.get(i));
-                }
-            }
-        }
-
-        notifyDataSetChanged();
+//        this.objects = objects;
+//
+//        for (Object o : objects) {
+//            if (o instanceof Item) {
+//                holidays.add((Item) o);
+//            } else if (o instanceof Contact) {
+//                contacts.add((Contact) o);
+//            }
+//        }
+//
+//        final List<Item> cancelledHolidays = SharedHelper.getInstance().getEventsForHide();
+//        final List<Item> copyOfHolidays = new ArrayList<>(holidays.size());
+//        copyOfHolidays.addAll(holidays);
+//
+//        for (int i = 0; i < copyOfHolidays.size(); i++) {
+//            for (int j = 0; j < cancelledHolidays.size(); j++) {
+//                if (copyOfHolidays.get(i).id == cancelledHolidays.get(j).id) {
+//                    holidays.remove(copyOfHolidays.get(i));
+//                }
+//            }
+//        }
+//
+//        notifyDataSetChanged();
     }
 
     @Override
@@ -77,30 +76,30 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     public void onBindViewHolder(final CalendarAdapter.MainHolder holder, int position) {
         Object o = objects.get(position);
 
-        if (o instanceof Item) {
-            final Item item = (Item) o;
-            final String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
-
-            holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
-            holder.subtext.setVisibility(View.VISIBLE);
-            holder.subtext.setText(item.getDate());
-            Glide.with(context)
-                    .load(url)
-                    .transform(new CircleTransform(context))
-                    .into(holder.icon);
-
-        } else if (o instanceof Contact) {
-            final Contact contact = (Contact) o;
-
-            holder.text.setText(contact.getName());
-            holder.subtext.setText(contact.getBirthday());
-            holder.subtext.setVisibility(View.VISIBLE);
-            Glide.with(context)
-                    .load(contact.getPhotoUri())
-                    .transform(new CircleTransform(context))
-                    .error(Color.BLUE)
-                    .into(holder.icon);
-        }
+//        if (o instanceof Item) {
+//            final Item item = (Item) o;
+//            final String url = NetworkModule.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
+//
+//            holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
+//            holder.subtext.setVisibility(View.VISIBLE);
+//            holder.subtext.setText(item.getDate());
+//            Glide.with(context)
+//                    .load(url)
+//                    .transform(new CircleTransform(context))
+//                    .into(holder.icon);
+//
+//        } else if (o instanceof Contact) {
+//            final Contact contact = (Contact) o;
+//
+//            holder.text.setText(contact.getName());
+//            holder.subtext.setText(contact.getBirthday());
+//            holder.subtext.setVisibility(View.VISIBLE);
+//            Glide.with(context)
+//                    .load(contact.getPhotoUri())
+//                    .transform(new CircleTransform(context))
+//                    .error(Color.BLUE)
+//                    .into(holder.icon);
+//        }
     }
 
     @Override

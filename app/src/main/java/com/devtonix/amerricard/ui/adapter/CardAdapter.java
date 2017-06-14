@@ -10,16 +10,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkServiceProvider;
-import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.LanguageUtils;
+import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.network.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
     private static final String TAG = CardAdapter.class.getSimpleName();
-    private List<Item> items = new ArrayList<>();
+    private List<CategoryItemFirstLevel> items = new ArrayList<>();
     private Context context;
     private OnFavoriteClickListener listener;
 
@@ -27,13 +26,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         void onItemClicked(int position);
     }
 
-    public CardAdapter(Context mContext, List<Item> items, OnFavoriteClickListener listener) {
+    public CardAdapter(Context mContext, List<CategoryItemFirstLevel> items, OnFavoriteClickListener listener) {
         this.context = mContext;
         this.items = items;
         this.listener = listener;
     }
 
-    public void updateData(List<Item> cardsList) {
+    public void updateData(List<CategoryItemFirstLevel> cardsList) {
         items = cardsList;
 
         notifyDataSetChanged();
@@ -47,10 +46,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
 
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
-        Item item = items.get(position);
-        holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
+        CategoryItemFirstLevel item = items.get(position);
+        holder.text.setText(item.getName().getEn()); //todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
-        String url = NetworkServiceProvider.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
+        String url = NetworkModule.BASE_URL + NetworkModule.CATEGORY_SUFFIX + item.getId() + "/image?width=100&height=200&type=fit";
 
         holder.subtext.setVisibility(View.GONE);
         Glide.with(context).load(url).into(holder.icon);

@@ -1,21 +1,21 @@
-package com.devtonix.amerricard.api.request;
+package com.devtonix.amerricard.network.request;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CreateEventRequest {
+public class EditEventRequest {
 
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("dates")
     @Expose
-    private List<Long> dates = null;
+    private List<Integer> dates = null;
     @SerializedName("cards")
     @Expose
-    private List<Long> cards = null;
+    private List<Integer> cards = null;
 
     public String getName() {
         return name;
@@ -25,19 +25,19 @@ public class CreateEventRequest {
         this.name = name;
     }
 
-    public List<Long> getDates() {
+    public List<Integer> getDates() {
         return dates;
     }
 
-    public void setDates(List<Long> dates) {
+    public void setDates(List<Integer> dates) {
         this.dates = dates;
     }
 
-    public List<Long> getCards() {
+    public List<Integer> getCards() {
         return cards;
     }
 
-    public void setCards(List<Long> cards) {
+    public void setCards(List<Integer> cards) {
         this.cards = cards;
     }
 

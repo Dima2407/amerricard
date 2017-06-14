@@ -22,10 +22,9 @@ import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.SystemUtils;
 
@@ -62,7 +61,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
             contacts = getContactsWithBirthday();
-            updateData(null);
+//            updateData(null);
         }
 
         return view;
@@ -91,22 +90,22 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
         }
     }
 
-    public void updateData(List<Item> items) {
-        final List<Object> objects = new ArrayList<>();
-
-        if (items != null) {
-            objects.addAll(items);
-        }
-        objects.addAll(contacts);
-
-        if (objects.size() == 0) {
-            manageVisible(false);
-        } else {
-            manageVisible(true);
-        }
-
-        adapter.updateData(objects);
-    }
+//    public void updateData(List<Item> items) {
+//        final List<Object> objects = new ArrayList<>();
+//
+//        if (items != null) {
+//            objects.addAll(items);
+//        }
+//        objects.addAll(contacts);
+//
+//        if (objects.size() == 0) {
+//            manageVisible(false);
+//        } else {
+//            manageVisible(true);
+//        }
+//
+//        adapter.updateData(objects);
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -114,7 +113,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 contacts = getContactsWithBirthday();
-                updateData(null);
+//                updateData(null);
             } else {
                 Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }
@@ -164,7 +163,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnCale
 
         cursor.close();
 
-        Preferences.getInstance().saveContacts(contactsAndBirthdays);
+//        SharedHelper.getInstance().saveContacts(contactsAndBirthdays);
 
         Log.d(TAG, "getContactsWithBirthday: selection time = " + (System.currentTimeMillis() - startQuery) + " ms");
         return contactsAndBirthdays;

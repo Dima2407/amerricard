@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.devtonix.amerricard.R;
 
-/**
- * Created by Oleksii on 11.05.17.
- */
 public class PremiumFragment extends Fragment {
 
     public static CategoryFragment getInstance(String url) {

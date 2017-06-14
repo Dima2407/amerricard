@@ -9,9 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.TimeUtils;
 
@@ -26,65 +25,65 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        final boolean isNotificationEnabled = Preferences.getInstance().getNotification();
-        final Intent notificationIntent = new Intent(context, HolidaysNotificationService.class);
-        final PendingIntent pendingIntent = PendingIntent.getService(context, 1234, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        final Calendar currentCalendar = Calendar.getInstance();
-
-        boolean isShowNeeded = false;
-
-        final List<Item> events = Preferences.getInstance().getEvents();
-        final String currentDate = TimeUtils.calDateToString(currentCalendar);
-
-        for (Item item : events) {
-            if (TextUtils.equals(item.getDate(), currentDate)) {
-                isShowNeeded = true;
-                break;
-            }
-        }
-
-        final List<Contact> contacts = Preferences.getInstance().getContacts();
-
-        for (Contact c : contacts) {
-            try {
-                Log.d(TAG, "onCreate: contact = " + c.getName());
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getBirthday()));
-
-                final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                final int month = calendar.get(Calendar.MONTH);
-
-                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
-                final int currentMonth = currentCalendar.get(Calendar.MONTH);
-
-                if (day == currentDay & month == currentMonth) {
-                    isShowNeeded = true;
-                    break;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-        alarmManager.cancel(pendingIntent);
-
-        if (isNotificationEnabled & isShowNeeded) {
-
-            final String timeForNotification = Preferences.getInstance().getNotificationsTime();
-            final Calendar triggeredCalendar = getNotificationTriggeredCalendar(timeForNotification);
-            long intendedTime = triggeredCalendar.getTimeInMillis();
-            final long currentTime = currentCalendar.getTimeInMillis();
-
-            if (intendedTime >= currentTime) {
-                setNotificationAlarm(pendingIntent, alarmManager, intendedTime);
-            } else {
-                triggeredCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                intendedTime = triggeredCalendar.getTimeInMillis();
-                setNotificationAlarm(pendingIntent, alarmManager, intendedTime);
-            }
-        }
+//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//
+//        final boolean isNotificationEnabled = SharedHelper.getInstance().getNotification();
+//        final Intent notificationIntent = new Intent(context, HolidaysNotificationService.class);
+//        final PendingIntent pendingIntent = PendingIntent.getService(context, 1234, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        final Calendar currentCalendar = Calendar.getInstance();
+//
+//        boolean isShowNeeded = false;
+//
+//        final List<Item> events = SharedHelper.getInstance().getEvents();
+//        final String currentDate = TimeUtils.calDateToString(currentCalendar);
+//
+//        for (Item item : events) {
+//            if (TextUtils.equals(item.getDate(), currentDate)) {
+//                isShowNeeded = true;
+//                break;
+//            }
+//        }
+//
+//        final List<Contact> contacts = SharedHelper.getInstance().getContacts();
+//
+//        for (Contact c : contacts) {
+//            try {
+//                Log.d(TAG, "onCreate: contact = " + c.getName());
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getBirthday()));
+//
+//                final int day = calendar.get(Calendar.DAY_OF_MONTH);
+//                final int month = calendar.get(Calendar.MONTH);
+//
+//                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
+//                final int currentMonth = currentCalendar.get(Calendar.MONTH);
+//
+//                if (day == currentDay & month == currentMonth) {
+//                    isShowNeeded = true;
+//                    break;
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        alarmManager.cancel(pendingIntent);
+//
+//        if (isNotificationEnabled & isShowNeeded) {
+//
+//            final String timeForNotification = SharedHelper.getInstance().getNotificationsTime();
+//            final Calendar triggeredCalendar = getNotificationTriggeredCalendar(timeForNotification);
+//            long intendedTime = triggeredCalendar.getTimeInMillis();
+//            final long currentTime = currentCalendar.getTimeInMillis();
+//
+//            if (intendedTime >= currentTime) {
+//                setNotificationAlarm(pendingIntent, alarmManager, intendedTime);
+//            } else {
+//                triggeredCalendar.add(Calendar.DAY_OF_MONTH, 1);
+//                intendedTime = triggeredCalendar.getTimeInMillis();
+//                setNotificationAlarm(pendingIntent, alarmManager, intendedTime);
+//            }
+//        }
     }
 
     private Calendar getNotificationTriggeredCalendar(String time) {

@@ -5,14 +5,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class CategoryItemFirstLevel {
 
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("data")
-    @Expose
-    private List<Datum_> data = null;
+//    @SerializedName("data")
+//    @Expose
+//    private List<CategoryItemSecondLevel> data = null;
     @SerializedName("name")
     @Expose
     private Name name;
@@ -34,13 +34,13 @@ public class Datum {
         this.type = type;
     }
 
-    public List<Datum_> getData() {
-        return data;
-    }
-
-    public void setData(List<Datum_> data) {
-        this.data = data;
-    }
+//    public List<CategoryItemSecondLevel> getData() {
+//        return data;
+//    }
+//
+//    public void setData(List<CategoryItemSecondLevel> data) {
+//        this.data = data;
+//    }
 
     public Name getName() {
         return name;

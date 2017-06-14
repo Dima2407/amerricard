@@ -9,10 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkService;
-import com.devtonix.amerricard.api.request.CreateEventRequest;
-import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.network.request.CreateEventRequest;
+import com.devtonix.amerricard.utils.SharedHelper;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
@@ -51,22 +49,21 @@ public class CreateBirthdayActivity extends BaseActivity {
 
                 if (!isValid()) return;
 
-
-                final List<Item> cards = Preferences.getInstance().getCards();
-                final List<Long> cardIds = new ArrayList<Long>();
-                for (Item item : cards) {
-                    cardIds.add(item.id);
-                }
-
-                CreateEventRequest request = new CreateEventRequest();
-                request.setName(etUsername.getText().toString().trim());
-                request.setDates(birthdays);
-                request.setCards(cardIds);
-
-                NetworkService.createEvent(request, CreateBirthdayActivity.this);
-
-                Toast.makeText(CreateBirthdayActivity.this, "save birthday", Toast.LENGTH_SHORT).show();
-                finish();
+//                final List<Item> cards = SharedHelper.getInstance().getCards();
+//                final List<Long> cardIds = new ArrayList<Long>();
+//                for (Item item : cards) {
+//                    cardIds.add(item.id);
+//                }
+//
+//                CreateEventRequest request = new CreateEventRequest();
+//                request.setName(etUsername.getText().toString().trim());
+//                request.setDates(birthdays);
+//                request.setCards(cardIds);
+//
+//                NetworkService.createEvent(request, CreateBirthdayActivity.this);
+//
+//                Toast.makeText(CreateBirthdayActivity.this, "save birthday", Toast.LENGTH_SHORT).show();
+//                finish();
             }
         });
     }

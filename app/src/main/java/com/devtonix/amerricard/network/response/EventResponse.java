@@ -1,11 +1,13 @@
 
-package com.devtonix.amerricard.model;
+package com.devtonix.amerricard.network.response;
 
 import java.util.List;
+
+import com.devtonix.amerricard.model.EventItem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CardResponse {
+public class EventResponse {
 
     @SerializedName("status")
     @Expose
@@ -15,7 +17,7 @@ public class CardResponse {
     private Integer code;
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+    private List<EventItem> data = null;
 
     public String getStatus() {
         return status;
@@ -33,11 +35,11 @@ public class CardResponse {
         this.code = code;
     }
 
-    public List<Datum> getData() {
+    public List<EventItem> getData() {
         return data;
     }
 
-    public void setData(List<Datum> data) {
+    public void setData(List<EventItem> data) {
         this.data = data;
     }
 

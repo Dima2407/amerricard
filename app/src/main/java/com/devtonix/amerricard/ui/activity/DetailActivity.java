@@ -19,20 +19,23 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkService;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
-import com.devtonix.amerricard.utils.Preferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class DetailActivity extends BaseActivity {
+
+    @Inject
+    CardRepository cardRepository;
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SHARE = 2002;
@@ -48,6 +51,8 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        ACApplication.getMainComponent().inject(this);
+
         setTitle(getString(R.string.send_card));
 
         bar = (AppBarLayout) findViewById(R.id.detail_appbar);
@@ -60,7 +65,7 @@ public class DetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        NetworkService.getCards(this);
+//        cardRepository.getCards(this);
 
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
@@ -68,26 +73,26 @@ public class DetailActivity extends BaseActivity {
         interstitialAd.loadAd(adRequest);
     }
 
-    @Override
-    protected void handleCardSuccessEvent(final List<Item> items) {
-        super.handleCardSuccessEvent(items);
-
-        final int position = getIntent().getIntExtra("position", 0);
-        final ViewPager pager = (ViewPager) findViewById(R.id.detail_view_pager);
-        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), items);
-        pager.setAdapter(adapter);
-
-        findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
-                onShareItem(adapter.getImage(pager.getCurrentItem()));
-                NetworkService.shareCard(getApplicationContext(), items.get(position).id);
-            }
-        });
-
-        pager.setCurrentItem(position);
-    }
+//    @Override
+//    protected void handleCardSuccessEvent(final List<Item> items) {
+//        super.handleCardSuccessEvent(items);
+//
+//        final int position = getIntent().getIntExtra("position", 0);
+//        final ViewPager pager = (ViewPager) findViewById(R.id.detail_view_pager);
+//        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), items);
+//        pager.setAdapter(adapter);
+//
+//        findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                progress.setVisibility(View.VISIBLE);
+//                onShareItem(adapter.getImage(pager.getCurrentItem()));
+//                NetworkService.shareCard(getApplicationContext(), items.get(position).id);
+//            }
+//        });
+//
+//        pager.setCurrentItem(position);
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {

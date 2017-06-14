@@ -10,11 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.model.Item;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.utils.SharedHelper;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.ArrayList;
@@ -22,10 +21,10 @@ import java.util.List;
 
 public class CategoryActivity extends BaseActivity {
 
-    private TabLayout tab;
-    public List<Item> categories;
-    private CategoryAdapter adapter;
-    private int position;
+//    private TabLayout tab;
+//    public List<Item> categories;
+//    private CategoryAdapter adapter;
+//    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,60 +37,60 @@ public class CategoryActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        List<Item> items = Preferences.getInstance().getCards();
-
-        if (savedInstanceState != null) {
-            position = savedInstanceState.getInt("pos");
-        } else {
-            position = getIntent().getIntExtra("position", 0);
-        }
-        Item item = items.get(position);
-
-
-        setTitle(LanguageUtils.cardNameWrapper(item.getName()));
-
-
-        categories = new ArrayList<>();
-        if (item.data != null && item.data.size()!=0) {
-            categories = item.data;
-        }
-
-        int containsCategory = 0;
-        for (Item i: categories) {
-            if (i.isItemCategory()) {
-                containsCategory++;
-            }
-        }
-
-        if (containsCategory>0) {
-            findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
-            findViewById(R.id.single_fragment).setVisibility(View.GONE);
-
-            ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
-
-            adapter = new CategoryAdapter(this, getSupportFragmentManager(), categories);
-            pager.setAdapter(adapter);
-
-            RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout)
-                    findViewById(R.id.category_tab_layout);
-            recyclerTabLayout.setUpWithViewPager(pager);
-//            tab = (TabLayout) findViewById(R.id.category_tab_layout);
-//            tab.setTabTextColors(getResources().getColor(R.color.tabGray), getResources().getColor(android.R.color.white));
-//            tab.setSelectedTabIndicatorColor(Color.WHITE);
-//            tab.setupWithViewPager(pager);
-
-        } else {
-            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
-            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
-
-            FragmentManager fragMan = getSupportFragmentManager();
-            FragmentTransaction fragTransaction = fragMan.beginTransaction();
-
-            Fragment categoryFragment = CategoryFragment.getInstance(-1);
-
-            fragTransaction.add(R.id.single_fragment, categoryFragment , "single");
-            fragTransaction.commit();
-        }
+//        List<Item> items = SharedHelper.getInstance().getCards();
+//
+//        if (savedInstanceState != null) {
+//            position = savedInstanceState.getInt("pos");
+//        } else {
+//            position = getIntent().getIntExtra("position", 0);
+//        }
+//        Item item = items.get(position);
+//
+//
+//        setTitle(LanguageUtils.cardNameWrapper(item.getName()));
+//
+//
+//        categories = new ArrayList<>();
+//        if (item.data != null && item.data.size()!=0) {
+//            categories = item.data;
+//        }
+//
+//        int containsCategory = 0;
+//        for (Item i: categories) {
+//            if (i.isItemCategory()) {
+//                containsCategory++;
+//            }
+//        }
+//
+//        if (containsCategory>0) {
+//            findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
+//            findViewById(R.id.single_fragment).setVisibility(View.GONE);
+//
+//            ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
+//
+//            adapter = new CategoryAdapter(this, getSupportFragmentManager(), categories);
+//            pager.setAdapter(adapter);
+//
+//            RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout)
+//                    findViewById(R.id.category_tab_layout);
+//            recyclerTabLayout.setUpWithViewPager(pager);
+////            tab = (TabLayout) findViewById(R.id.category_tab_layout);
+////            tab.setTabTextColors(getResources().getColor(R.color.tabGray), getResources().getColor(android.R.color.white));
+////            tab.setSelectedTabIndicatorColor(Color.WHITE);
+////            tab.setupWithViewPager(pager);
+//
+//        } else {
+//            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
+//            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+//
+//            FragmentManager fragMan = getSupportFragmentManager();
+//            FragmentTransaction fragTransaction = fragMan.beginTransaction();
+//
+//            Fragment categoryFragment = CategoryFragment.getInstance(-1);
+//
+//            fragTransaction.add(R.id.single_fragment, categoryFragment , "single");
+//            fragTransaction.commit();
+//        }
     }
 
 //    @Override
@@ -109,16 +108,16 @@ public class CategoryActivity extends BaseActivity {
         return true;
     }
 
-    public List<Item> getCategories(int position) {
-        if (position==-1) {
-            return categories;
-        }
-        return categories.get(position).data;
-    }
+//    public List<Item> getCategories(int position) {
+//        if (position==-1) {
+//            return categories;
+//        }
+//        return categories.get(position).data;
+//    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("pos", position);
+//        outState.putInt("pos", position);
     }
 }

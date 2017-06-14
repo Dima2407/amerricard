@@ -15,9 +15,6 @@ import com.devtonix.amerricard.ui.fragment.VipFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Oleksii on 11.05.17.
- */
 public class VipPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
@@ -59,7 +56,6 @@ public class VipPagerAdapter extends FragmentPagerAdapter {
         vipFragments.put(position, fragment);
         return fragment;
     }
-
 }
 
 

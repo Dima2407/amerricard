@@ -4,7 +4,7 @@ package com.devtonix.amerricard.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum__ {
+public class CardItem {
 
     @SerializedName("type")
     @Expose
