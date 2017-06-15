@@ -13,11 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 
-public class CategoryFragment extends Fragment /*implements CategoryGridAdapter.OnFavoriteClickListener*/ {
+import java.util.List;
+
+public class CategoryFragment extends Fragment implements CategoryGridAdapter.OnFavoriteClickListener {
 
 
     private CategoryGridAdapter adapter;
@@ -48,44 +51,56 @@ public class CategoryFragment extends Fragment /*implements CategoryGridAdapter.
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
-//                if (((CategoryActivity) getActivity()).getCategories(position).size() != 0) {
-//
-//                    Log.d("CategoryFragment", "visible");
-//                    manageVisible(true);
-//
-//                    int width;
-//                    int height;
-//                    if (recyclerView.getWidth() > recyclerView.getHeight()) {
-//                        width = (recyclerView.getWidth()) / 4;
-//                    } else {
-//                        width = (recyclerView.getWidth()) / 2;
-//
-//                    }
-//                    height = (int) (width * 1.6);
-//
-//                    adapter = new CategoryGridAdapter(getActivity(), ((CategoryActivity) getActivity()).getCategories(position),
-//                            CategoryFragment.this, width, height);
-//                    recyclerView.setAdapter(adapter);
-//                } else {
-//                    manageVisible(false);
-//                    Log.d("CategoryFragment", "not visible");
-//                }
+
+                final List<CardItem> cards = ((CategoryActivity) getActivity()).getCategories(position);
+
+                try {
+                    if (cards.size() != 0) {
+                        Log.d("CategoryFragment", "visible");
+                        manageVisible(true);
+
+                        int width;
+                        int height;
+
+                        if (recyclerView.getWidth() > recyclerView.getHeight()) {
+                            width = (recyclerView.getWidth()) / 4;
+                        } else {
+                            width = (recyclerView.getWidth()) / 2;
+                        }
+                        height = (int) (width * 1.6);
+
+                        adapter = new CategoryGridAdapter(
+                                getActivity(),
+                                cards,
+                                CategoryFragment.this,
+                                width,
+                                height);
+
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        manageVisible(false);
+                        Log.d("CategoryFragment", "not visible");
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         return view;
     }
 
-//    @Override
-//    public void onItemClicked(int pos) {
-//        Intent intent = new Intent(getActivity(), DetailActivity.class);
-//        intent.putExtra("position", pos);
-//        startActivity(intent);
-//    }
+    @Override
+    public void onItemClicked(int pos) {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra("position", pos);
+        startActivity(intent);
+    }
 
-//    @Override
-//    public void onFavoriteClicked(int position) {}
+    @Override
+    public void onFavoriteClicked(int position) {
 
+    }
 
     private void manageVisible(boolean isListVisible) {
         if (isListVisible) {

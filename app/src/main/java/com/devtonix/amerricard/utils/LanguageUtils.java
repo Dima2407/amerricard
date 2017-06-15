@@ -38,7 +38,7 @@ public class LanguageUtils {
     public static String getLanguage(Context context) {
 //        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 //        String currentLang = prefs.getString(SharedHelper.Fields.LANGUAGE, "");
-
+        //todo FIX THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         String currentLang = "en";
 
         if (currentLang.isEmpty()) {
@@ -65,20 +65,20 @@ public class LanguageUtils {
     }
 
 
-    //todo FIX IT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //todo TRY-CATCH for logic is very bad solution, but server return bad json-structure
     public static String convertLang(JsonElement jsonElementName, Context context){
 
         final String currLang = getLanguage(context);
 
-        switch (currLang){
-            case "en": return jsonElementName.toString();
-            case "fr": return jsonElementName.toString();
-            case "es": return jsonElementName.toString();
-            case "ru": return jsonElementName.toString();
-            case "ua": return jsonElementName.toString();
-            default:
-                return "en";
+        String output = "";
+        try{
+            output = jsonElementName.getAsJsonObject().get(currLang).toString();
+        } catch (IllegalStateException e){
+            output = jsonElementName.toString();
+            e.printStackTrace();
         }
+
+        return output;
     }
 
     public static int getLanguagePositionInList(Context context) {

@@ -117,6 +117,5 @@ public class CardRepository {
     public void saveCardsToStorage(List<CategoryItemFirstLevel> itemFirstLevels) {
 
         sharedHelper.saveCards(itemFirstLevels);
-
     }
 }
