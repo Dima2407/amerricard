@@ -24,7 +24,6 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
-import com.devtonix.amerricard.utils.SharedHelper;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.SystemUtils;
 

@@ -1,23 +1,15 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
-import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
-import com.devtonix.amerricard.ui.fragment.CalendarFragment;
-import com.devtonix.amerricard.ui.fragment.CardFragment;
-import com.devtonix.amerricard.utils.SharedHelper;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-import java.util.List;
 
 public class MainActivity extends DrawerActivity {
 
@@ -62,7 +54,7 @@ public class MainActivity extends DrawerActivity {
 //    @Override
 //    protected void handleCardSuccessEvent(List<Item> items) {
 //        Log.d("handleCardSuccessEvent", "data " + items.size());
-//        SharedHelper.getInstance().saveCards(items);
+//        SharedHelper.getInstance().saveCardsToStorage(items);
 //        ((CardFragment) adapter.getCardFragment()).updateData(items);
 //    }
 

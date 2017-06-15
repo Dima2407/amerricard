@@ -1,7 +1,6 @@
 package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.utils.CircleTransform;
-import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.SharedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +74,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
 //            final Item item = (Item) o;
 //            final String url = NetworkModule.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 //
-//            holder.text.setText(LanguageUtils.cardNameWrapper(item.getName()));
+//            holder.text.setText(LanguageUtils.cardNameWrapper(item.getNameJsonEl()));
 //            holder.subtext.setVisibility(View.VISIBLE);
 //            holder.subtext.setText(item.getDate());
 //            Glide.with(context)
@@ -91,7 +85,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
 //        } else if (o instanceof Contact) {
 //            final Contact contact = (Contact) o;
 //
-//            holder.text.setText(contact.getName());
+//            holder.text.setText(contact.getNameJsonEl());
 //            holder.subtext.setText(contact.getBirthday());
 //            holder.subtext.setVisibility(View.VISIBLE);
 //            Glide.with(context)

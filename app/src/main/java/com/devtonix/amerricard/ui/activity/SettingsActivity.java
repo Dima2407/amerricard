@@ -6,7 +6,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -14,9 +13,6 @@ import com.afollestad.materialdialogs.Theme;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.SharedHelper;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 public class SettingsActivity extends DrawerActivity {
 

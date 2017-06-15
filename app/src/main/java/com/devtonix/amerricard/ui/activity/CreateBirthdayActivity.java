@@ -6,11 +6,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.network.request.CreateEventRequest;
-import com.devtonix.amerricard.utils.SharedHelper;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;

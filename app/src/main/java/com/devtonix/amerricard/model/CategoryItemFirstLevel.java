@@ -2,6 +2,8 @@
 package com.devtonix.amerricard.model;
 
 import java.util.List;
+
+import com.devtonix.amerricard.utils.LanguageUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,9 +12,9 @@ public class CategoryItemFirstLevel {
     @SerializedName("type")
     @Expose
     private String type;
-//    @SerializedName("data")
-//    @Expose
-//    private List<CategoryItemSecondLevel> data = null;
+    @SerializedName("data")
+    @Expose
+    private List<CategoryItemSecondLevel> data = null;
     @SerializedName("name")
     @Expose
     private Name name;
@@ -34,15 +36,18 @@ public class CategoryItemFirstLevel {
         this.type = type;
     }
 
-//    public List<CategoryItemSecondLevel> getData() {
-//        return data;
-//    }
-//
-//    public void setData(List<CategoryItemSecondLevel> data) {
-//        this.data = data;
-//    }
+    public List<CategoryItemSecondLevel> getData() {
+        return data;
+    }
+
+    public void setData(List<CategoryItemSecondLevel> data) {
+        this.data = data;
+    }
 
     public Name getName() {
+
+        //todo write utils for convert string lang;
+
         return name;
     }
 

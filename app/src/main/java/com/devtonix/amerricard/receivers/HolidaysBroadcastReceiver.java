@@ -5,18 +5,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.services.HolidaysNotificationService;
-import com.devtonix.amerricard.utils.SharedHelper;
-import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.TimeUtils;
 
-import java.text.ParseException;
 import java.util.Calendar;
-import java.util.List;
 
 public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 
@@ -48,7 +41,7 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 //
 //        for (Contact c : contacts) {
 //            try {
-//                Log.d(TAG, "onCreate: contact = " + c.getName());
+//                Log.d(TAG, "onCreate: contact = " + c.getNameJsonEl());
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getBirthday()));
 //

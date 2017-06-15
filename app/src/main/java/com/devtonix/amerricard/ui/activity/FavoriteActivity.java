@@ -1,6 +1,5 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +8,6 @@ import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
-import com.devtonix.amerricard.utils.SharedHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FavoriteActivity extends DrawerActivity /*implements CategoryGridAdapter.OnFavoriteClickListener*/ {
 

@@ -1,26 +1,5 @@
 package com.devtonix.amerricard.ui.adapter;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.network.NetworkModule;
-import com.devtonix.amerricard.utils.CircleTransform;
-import com.devtonix.amerricard.utils.LanguageUtils;
-import com.devtonix.amerricard.utils.SharedHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class HolidaysAdapter /*extends RecyclerView.Adapter<HolidaysAdapter.HolidaysVH>*/ {
 
 //    private static final String TAG = HolidaysAdapter.class.getSimpleName();
@@ -76,7 +55,7 @@ public class HolidaysAdapter /*extends RecyclerView.Adapter<HolidaysAdapter.Holi
 //        final Item item = items.get(position);
 //        final String url = NetworkModule.BASE_URL + item.getUrlByType() + item.id + "/image?width=100&height=200&type=fit";
 //
-//        holder.tvHolidayTitle.setText(LanguageUtils.cardNameWrapper(item.getName()));
+//        holder.tvHolidayTitle.setText(LanguageUtils.cardNameWrapper(item.getNameJsonEl()));
 //
 //        Glide.with(context).load(url).transform(new CircleTransform(context)).into(holder.ivHolidayIcon);
 //        holder.swHoliday.setOnTouchListener(new View.OnTouchListener() {
@@ -97,7 +76,7 @@ public class HolidaysAdapter /*extends RecyclerView.Adapter<HolidaysAdapter.Holi
 //                    }
 //
 //                    for (int i = 0; i < cancelledHolidays.size(); i++) {
-//                        Log.d(TAG, "onTouch: i=" + i + " item=" + cancelledHolidays.get(i).getName());
+//                        Log.d(TAG, "onTouch: i=" + i + " item=" + cancelledHolidays.get(i).getNameJsonEl());
 //                    }
 //
 //                    SharedHelper.getInstance().saveEventsForHide(cancelledHolidays);
