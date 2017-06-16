@@ -1,12 +1,15 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -43,46 +46,12 @@ public class MainActivity extends DrawerActivity {
 
 
         //todo perhaps, needs check isAppFirstLaunch
-//        startNotificationReceiver();
-
-
-
-
-
+        startNotificationReceiver();
     }
 
-//    @Override
-//    protected void handleCardSuccessEvent(List<Item> items) {
-//        Log.d("handleCardSuccessEvent", "data " + items.size());
-//        SharedHelper.getInstance().saveCardsToStorage(items);
-//        ((CardFragment) adapter.getCardFragment()).updateData(items);
-//    }
-
-//    @Override
-//    protected void handleFailureFound(String message) {
-//        super.handleFailureFound(message);
-//
-//        ((CardFragment) adapter.getCardFragment()).updateData(SharedHelper.getInstance().getCards());
-//        ((CardFragment) adapter.getCalendarFragment()).updateData(SharedHelper.getInstance().getEvents());
-//
-//    }
-
-//    @Override
-//    protected void handleEventSuccessEvent(List<Item> items) {
-//        SharedHelper.getInstance().saveEvents(items);
-//        ((CalendarFragment) adapter.getCalendarFragment()).updateData(items);
-//    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        NetworkService.getCards(this);
-//        NetworkService.getEvents(this);
-//    }
-
-//    private void startNotificationReceiver() {
-//        Log.d(TAG, "startNotificationReceiver @(^_^)@");
-//        Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
-//        getApplicationContext().sendBroadcast(startReceiver);
-//    }
+    private void startNotificationReceiver() {
+        Log.d(TAG, "startNotificationReceiver @(^_^)@");
+        Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
+        getApplicationContext().sendBroadcast(startReceiver);
+    }
 }

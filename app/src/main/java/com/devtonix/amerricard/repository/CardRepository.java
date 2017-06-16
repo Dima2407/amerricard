@@ -124,10 +124,6 @@ public class CardRepository {
         return sharedHelper.getFavorites();
     }
 
-    public void saveFavoriteCardToStorage(List<CardItem> items){
-        sharedHelper.saveFavorites(items);
-    }
-
     public void addCardToFavorites(CardItem item){
         List<CardItem> oldItems = sharedHelper.getFavorites();
         oldItems.add(item);

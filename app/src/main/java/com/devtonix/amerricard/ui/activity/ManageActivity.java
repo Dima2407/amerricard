@@ -36,14 +36,14 @@ public class ManageActivity extends DrawerActivity {
 //    protected void handleEventSuccessEvent(List<Item> holidays) {
 //        super.handleEventSuccessEvent(holidays);
 //
-//        adapter.updateData(holidays);
+//        adapter.updateEvents(holidays);
 //    }
 //
 //    @Override
 //    protected void handleFailureFound(String message) {
 //        super.handleFailureFound(message);
 //
-////        adapter.updateData(SharedHelper.getInstance().getEvents());
+////        adapter.updateEvents(SharedHelper.getInstance().getEvents());
 //    }
 
 //    @Override

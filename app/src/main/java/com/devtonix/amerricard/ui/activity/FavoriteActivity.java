@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 
 public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdapter.OnFavoriteClickListener {
 
+    private static final String TAG = FavoriteActivity.class.getSimpleName();
     @Inject
     CardRepository cardRepository;
 
@@ -72,8 +74,10 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("list", new ArrayList<CardItem>(cards));
-        intent.putExtra("position", position);
+        intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<CardItem>(cards));
+        intent.putExtra(DetailActivity.POSITION_FOR_FAVORITE_CARD, position);
+        Log.d(TAG, "onItemClicked: currPosition = " + position);
+        intent.setAction(DetailActivity.ACTION_SHOW_FAVORITE_CARDS);
         startActivity(intent);
     }
 

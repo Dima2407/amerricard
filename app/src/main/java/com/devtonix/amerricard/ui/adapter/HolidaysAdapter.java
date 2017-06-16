@@ -18,7 +18,7 @@ public class HolidaysAdapter /*extends RecyclerView.Adapter<HolidaysAdapter.Holi
 //        this.listener = listener;
 //    }
 //
-//    public void updateData(List<Item> items) {
+//    public void updateEvents(List<Item> items) {
 //        this.items = items;
 //
 //        cancelledHolidays = SharedHelper.getInstance().getEventsForHide();

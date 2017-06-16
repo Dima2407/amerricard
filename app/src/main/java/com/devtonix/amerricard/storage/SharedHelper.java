@@ -7,13 +7,16 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.Contact;
+import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.model.ListCardItem;
 import com.devtonix.amerricard.model.ListCategoryItem;
 import com.devtonix.amerricard.model.ListContact;
+import com.devtonix.amerricard.model.ListEventItem;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SharedHelper {
 
@@ -51,33 +54,34 @@ public class SharedHelper {
         return listCategoryItem == null ? new ArrayList<CategoryItemFirstLevel>() : listCategoryItem.data;
     }
 
-    public void saveContacts(List<Contact> contacts){
+    public void saveContacts(List<Contact> contacts) {
         sharedPreferences.edit().putString(Fields.CONTACTS, new Gson().toJson(new ListContact(contacts))).apply();
     }
 
-    public List<Contact> getContacts(){
+    public List<Contact> getContacts() {
         ListContact listContact = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACTS, ""), ListContact.class);
         return listContact == null ? new ArrayList<Contact>() : listContact.contacts;
     }
-//
-//    public void saveEvents(List<Item> items) {
-//        set(Fields.EVENTS, new Gson().toJson(new ListCategoryItem(items)));
-//    }
-//
-//    public List<Item> getEvents() {
-//        ListCategoryItem li = new Gson().fromJson(getString(Fields.EVENTS), ListCategoryItem.class);
-//        return li == null ? new ArrayList<Item>() : li.data;
-//    }
-//
-//    public void saveEventsForHide(List<Item> items) {
-//        setForHide(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListCategoryItem(items)));
-//    }
-//
-//    public List<Item> getEventsForHide() {
-//        ListCategoryItem listCategoryItem = new Gson().fromJson(getString(Fields.EVENTS_FOR_HIDE), ListCategoryItem.class);
-//        return listCategoryItem == null ? new ArrayList<Item>() : listCategoryItem.data;
-//    }
-//
+
+    public void saveEvents(List<EventItem> items) {
+        sharedPreferences.edit().putString(Fields.EVENTS, new Gson().toJson(new ListEventItem(items))).apply();
+    }
+
+    public List<EventItem> getEvents() {
+        ListEventItem li = new Gson().fromJson(sharedPreferences.getString(Fields.EVENTS, ""), ListEventItem.class);
+        return li == null ? new ArrayList<EventItem>() : li.getEvents();
+    }
+
+
+    public void saveEventsForHide(List<EventItem> items) {
+        sharedPreferences.edit().putString(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListEventItem(items))).apply();
+    }
+
+    public List<EventItem> getEventsForHide() {
+        ListEventItem events = new Gson().fromJson(sharedPreferences.getString(Fields.EVENTS_FOR_HIDE, ""), ListEventItem.class);
+        return events == null ? new ArrayList<EventItem>() : events.getEvents();
+    }
+
     public void saveFavorites(List<CardItem> items) {
         sharedPreferences.edit().putString(Fields.FAVORITES, new Gson().toJson(new ListCardItem(items))).apply();
     }
@@ -116,7 +120,7 @@ public class SharedHelper {
     }
 
     public String getLanguage() {
-        return sharedPreferences.getString(Fields.LANGUAGE, "");
+        return sharedPreferences.getString(Fields.LANGUAGE, Locale.getDefault().getLanguage());
     }
 
 

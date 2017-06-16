@@ -2,6 +2,9 @@ package com.devtonix.amerricard.core;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.devtonix.amerricard.storage.SharedHelper;
 
 import javax.inject.Singleton;
 

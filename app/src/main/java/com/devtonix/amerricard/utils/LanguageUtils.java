@@ -19,46 +19,48 @@ import java.util.Locale;
 
 public class LanguageUtils {
 
-    public static void setupLanguage(Context context) {
-        Log.d("LanguageUtils", "setupLanguage");
-        setLanguage(context, getLanguage(context));
-    }
+//    public static void setupLanguage(Context context) {
+//        Log.d("LanguageUtils", "setupLanguage");
+//        setLanguage(context, getLanguage(context));
+//    }
 
-    public static void setLanguage(Context context, String lang) {
-        if (TextUtils.isEmpty(lang)) lang = "en";
-        final Resources res = context.getResources();
-        final DisplayMetrics dm = res.getDisplayMetrics();
-        final Configuration conf = res.getConfiguration();
-        conf.locale = new Locale(lang.toLowerCase());
-        res.updateConfiguration(conf, dm);
-        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        prefs.edit().putString(SharedHelper.Fields.LANGUAGE, lang.toLowerCase()).apply();
-    }
-
-    public static String getLanguage(Context context) {
+//    public static void setLanguage(Context context, String lang) {
+//        if (TextUtils.isEmpty(lang)) lang = "en";
+//        final Resources res = context.getResources();
+//        final DisplayMetrics dm = res.getDisplayMetrics();
+//        final Configuration conf = res.getConfiguration();
+//        conf.locale = new Locale(lang.toLowerCase());
+//        res.updateConfiguration(conf, dm);
 //        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-//        String currentLang = prefs.getString(SharedHelper.Fields.LANGUAGE, "");
-        //todo FIX THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        String currentLang = "en";
+//        prefs.edit().putString(SharedHelper.Fields.LANGUAGE, lang.toLowerCase()).apply();
+//    }
 
-        if (currentLang.isEmpty()) {
-            currentLang = Locale.getDefault().getLanguage();
-        }
-        Log.d("LanguageUtils", "language:" + currentLang);
+//    public static String getLanguage(Context context) {
+////        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+////        String currentLang = prefs.getString(SharedHelper.Fields.LANGUAGE, "");
+//        //todo FIX THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        String currentLang = "en";
+//
+//        if (currentLang.isEmpty()) {
+//            currentLang = Locale.getDefault().getLanguage();
+//        }
+//        Log.d("LanguageUtils", "language:" + currentLang);
+//
+//        return currentLang;
+//    }
 
-        return currentLang;
-    }
-
-    public static String convertLang(Name name, Context context){
-
-        final String currLang = getLanguage(context);
-
-        switch (currLang){
-            case "en": return name.getEn();
-            case "fr": return name.getFr();
-            case "es": return name.getEs();
-            case "ru": return name.getRu();
-            case "ua": return name.getUa();
+    public static String convertLang(Name name, String currLang) {
+        switch (currLang) {
+            case "en":
+                return name.getEn();
+            case "fr":
+                return name.getFr();
+            case "es":
+                return name.getEs();
+            case "ru":
+                return name.getRu();
+            case "ua":
+                return name.getUa();
             default:
                 return "en";
         }
@@ -66,14 +68,12 @@ public class LanguageUtils {
 
 
     //todo TRY-CATCH for logic is very bad solution, but server return bad json-structure
-    public static String convertLang(JsonElement jsonElementName, Context context){
-
-        final String currLang = getLanguage(context);
+    public static String convertLang(JsonElement jsonElementName, String currLang) {
 
         String output = "";
-        try{
+        try {
             output = jsonElementName.getAsJsonObject().get(currLang).toString();
-        } catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             output = jsonElementName.toString();
             e.printStackTrace();
         }
@@ -81,11 +81,10 @@ public class LanguageUtils {
         return output;
     }
 
-    public static int getLanguagePositionInList(Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+    public static int getLanguagePositionInList(String currLang, Context context) {
         final List<String> list = Arrays.asList(context.getResources().getStringArray(R.array.language_codes));
 
-        return list.indexOf(prefs.getString(SharedHelper.Fields.LANGUAGE, ""));
+        return list.indexOf(currLang);
     }
 
     public static String getLanguageByCode(Context context, String language) {

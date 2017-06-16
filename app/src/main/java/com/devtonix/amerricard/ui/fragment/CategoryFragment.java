@@ -19,7 +19,6 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
-import com.devtonix.amerricard.utils.FavoriteUtils;
 
 import java.util.List;
 
@@ -118,7 +117,7 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
     @Override
     public void onItemClicked(int pos) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.POSITION_FOR_CARD_ITEM, pos);
+        intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, pos);
         intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_SCND_LVL, positionForCategory); //todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_FRST_LVL, positionForCategoryFirstLvl);
         startActivity(intent);

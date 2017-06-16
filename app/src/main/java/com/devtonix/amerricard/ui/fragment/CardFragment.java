@@ -15,6 +15,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.adapter.CardAdapter;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
@@ -28,6 +29,8 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
 
     @Inject
     CardRepository cardRepository;
+    @Inject
+    SharedHelper sharedHelper;
 
     private CardAdapter adapter;
     private RecyclerView recyclerView;
@@ -50,7 +53,7 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItemFirstLevel>(), this);
+        adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItemFirstLevel>(),sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

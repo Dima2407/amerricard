@@ -19,8 +19,6 @@ public class ACApplication extends Application {
         super.onCreate();
 
         Fabric.with(this, new Crashlytics());
-        LanguageUtils.setupLanguage(this);
-
 
         mainComponent = DaggerMainComponent.builder().appModule(new AppModule(this)).build();
 

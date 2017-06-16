@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,12 @@ public class DetailActivity extends BaseActivity {
     CardRepository cardRepository;
 
     private static final String TAG = DetailActivity.class.getSimpleName();
-    public static final String POSITION_FOR_CARD_ITEM = "position_for_card_item";
+    public static final String POSITION_FOR_CURRENT_CARD = "position_for_card_item";
+    public static final String POSITION_FOR_FAVORITE_CARD = "position_for_favorite_card";
     public static final String POSITION_FOR_CATEGORY_SCND_LVL = "position_for_category_scnd_lvl";
     public static final String POSITION_FOR_CATEGORY_FRST_LVL = "position_for_category_frst_lvl";
+    public static final String PARCELABLE_CARDS = "parcelable_cads";
+    public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
@@ -65,13 +69,24 @@ public class DetailActivity extends BaseActivity {
         initToolbar();
 
         final List<CategoryItemFirstLevel> categoryFirstLevel = cardRepository.getCardsFromStorage();
-        final int positionForCardItem = getIntent().getIntExtra(POSITION_FOR_CARD_ITEM, 0);
-        final int positionForCategorySecondLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_SCND_LVL, 0);
-        final int positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_FRST_LVL, 0);
 
+        final List<CardItem> cards;
+        final CardItem currentCardItem;
+        int positionForCurrentCard;
 
-        final List<CardItem> cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
-        final CardItem currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCardItem);
+        if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
+            positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
+            Log.d(TAG, "onCreate: action = " + getIntent().getAction() + "  position =" + positionForCurrentCard);
+            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            currentCardItem = cards.get(positionForCurrentCard);
+        } else {
+            positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
+            final int positionForCategorySecondLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_SCND_LVL, 0);
+            final int positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_FRST_LVL, 0);
+            cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
+            currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCurrentCard);
+        }
+
 
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
         viewPager.setAdapter(adapter);
@@ -84,7 +99,7 @@ public class DetailActivity extends BaseActivity {
                 cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
             }
         });
-        viewPager.setCurrentItem(positionForCardItem);
+        viewPager.setCurrentItem(positionForCurrentCard);
 
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));

@@ -11,6 +11,7 @@ import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.CategoryItemSecondLevel;
 import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
@@ -27,6 +28,8 @@ public class CategoryActivity extends BaseActivity {
 
     @Inject
     CardRepository cardRepository;
+    @Inject
+    SharedHelper sharedHelper;
 
     private List<CategoryItemSecondLevel> categoriesSecondLvl = new ArrayList<>();
     private CategoryAdapter adapter;
@@ -49,7 +52,7 @@ public class CategoryActivity extends BaseActivity {
 
         final List<CategoryItemFirstLevel> items = cardRepository.getCardsFromStorage();
         final CategoryItemFirstLevel item = items.get(positionForCategoryFirstLvl);
-        final String title = LanguageUtils.convertLang(item.getName(), CategoryActivity.this);
+        final String title = LanguageUtils.convertLang(item.getName(), sharedHelper.getLanguage());
 
         setTitle(title);
 
@@ -62,7 +65,7 @@ public class CategoryActivity extends BaseActivity {
 
         ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
 
-        adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategoryFirstLvl);
+        adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategoryFirstLvl, sharedHelper.getLanguage());
         pager.setAdapter(adapter);
 
         RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);

@@ -19,14 +19,16 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     private Context context;
     private int positionForCategoryFirstLvl;
     private List<CategoryItemSecondLevel> categories = new ArrayList<>();
+    private String lang;
 
     private SparseArray<Fragment> categoryFragments = new SparseArray<Fragment>();
 
-    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItemSecondLevel> categories, int positionForCategoryFirstLvl) {
+    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItemSecondLevel> categories, int positionForCategoryFirstLvl, String language) {
         super(fragmentManager);
         this.context = context;
         this.categories = categories;
         this.positionForCategoryFirstLvl = positionForCategoryFirstLvl;
+        this.lang = language;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        return LanguageUtils.convertLang(categories.get(position).getNameJsonEl(), context);
+        return LanguageUtils.convertLang(categories.get(position).getNameJsonEl(), lang);
     }
 
     @Override

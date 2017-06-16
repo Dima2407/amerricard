@@ -1,9 +1,11 @@
 
 package com.devtonix.amerricard.model;
 
+import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 public class EventItem {
@@ -22,7 +24,7 @@ public class EventItem {
     private Integer categoryId;
     @SerializedName("dates")
     @Expose
-    private List<Integer> dates = null;
+    private List<Long> dates = null;
 
     public Integer getId() {
         return id;
@@ -56,12 +58,22 @@ public class EventItem {
         this.categoryId = categoryId;
     }
 
-    public List<Integer> getDates() {
+    public List<Long> getDates() {
         return dates;
     }
 
-    public void setDates(List<Integer> dates) {
+    public void setDates(List<Long> dates) {
         this.dates = dates;
+    }
+
+    public String getFormattedDate() {
+        if (dates == null || dates.size() == 0) {
+            return "";
+        }
+
+        long d = dates.get(0);
+
+        return RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(d));
     }
 
 }

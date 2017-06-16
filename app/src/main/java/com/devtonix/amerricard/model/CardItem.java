@@ -1,10 +1,25 @@
 
 package com.devtonix.amerricard.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CardItem {
+public class CardItem implements Parcelable {
+
+    public static final Creator<CardItem> CREATOR = new Creator<CardItem>() {
+        @Override
+        public CardItem createFromParcel(Parcel in) {
+            return new CardItem(in);
+        }
+
+        @Override
+        public CardItem[] newArray(int size) {
+            return new CardItem[size];
+        }
+    };
 
     @SerializedName("type")
     @Expose
@@ -36,6 +51,19 @@ public class CardItem {
     @SerializedName("image")
     @Expose
     private String image;
+
+    public CardItem(Parcel in) {
+        type = in.readString();
+        name = in.readString();
+        author = in.readString();
+        owner = in.readString();
+        price = in.readInt();
+        favorite = in.readInt();
+        shared = in.readInt();
+        cardType = in.readString();
+        id = in.readInt();
+        image = in.readString();
+    }
 
     public String getType() {
         return type;
@@ -117,4 +145,36 @@ public class CardItem {
         this.image = image;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+//        type = in.readString();
+//        name = in.readString();
+//        author = in.readString();
+//        owner = in.readString();
+//        price = in.readInt();
+//        favorite = in.readInt();
+//        shared = in.readInt();
+//        cardType = in.readString();
+//        id = in.readInt();
+//        image = in.readString();
+
+        //todo ORDER MUST BE THE SAME
+
+        dest.writeString(type);
+        dest.writeString(name);
+        dest.writeString(author);
+        dest.writeString(owner);
+        dest.writeInt(price);
+        dest.writeInt(favorite);
+        dest.writeInt(shared);
+        dest.writeString(cardType);
+        dest.writeInt(id);
+        dest.writeString(image);
+    }
 }
