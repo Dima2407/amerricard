@@ -13,29 +13,49 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
+import com.devtonix.amerricard.utils.FavoriteUtils;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CategoryFragment extends Fragment implements CategoryGridAdapter.OnFavoriteClickListener {
 
+    @Inject
+    CardRepository cardRepository;
 
+    private static final String TAG = CategoryFragment.class.getSimpleName();
     private CategoryGridAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private int position;
+    private int positionForCategory;
+    private int positionForCategoryFirstLvl;
 
-    public static CategoryFragment getInstance(int position) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ACApplication.getMainComponent().inject(this);
+    }
+
+    public static CategoryFragment getInstance(int positionForCategorySecondLvl, int positionForCategoryFirstLvl) {
         CategoryFragment categoryFragment = new CategoryFragment();
-        categoryFragment.setPosition(position);
+        categoryFragment.setPositionForCategorySecondLvl(positionForCategorySecondLvl);
+        categoryFragment.setPositionForCategoryFirstLvl(positionForCategoryFirstLvl);
         return categoryFragment;
     }
 
-    private void setPosition(int position) {
-        this.position = position;
+    private void setPositionForCategorySecondLvl(int positionForCategorySecondLvl) {
+        this.positionForCategory = positionForCategorySecondLvl;
+    }
+    private void setPositionForCategoryFirstLvl(int positionForCategoryFirstLvl){
+        this.positionForCategoryFirstLvl = positionForCategoryFirstLvl;
     }
 
     @Override
@@ -52,12 +72,14 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
             @Override
             public void run() {
 
-                final List<CardItem> cards = ((CategoryActivity) getActivity()).getCategories(position);
+                final List<CardItem> cards = ((CategoryActivity) getActivity()).getCategories(positionForCategory);
 
                 try {
                     if (cards.size() != 0) {
                         Log.d("CategoryFragment", "visible");
                         manageVisible(true);
+
+                        Log.d(TAG, "CATEGORY_POSITION = " + positionForCategory);
 
                         int width;
                         int height;
@@ -69,12 +91,15 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
                         }
                         height = (int) (width * 1.6);
 
+                        final List<CardItem> favoriteCards = cardRepository.getFavoriteCardsFromStorage();
+
                         adapter = new CategoryGridAdapter(
                                 getActivity(),
                                 cards,
                                 CategoryFragment.this,
                                 width,
-                                height);
+                                height,
+                                favoriteCards);
 
                         recyclerView.setAdapter(adapter);
                     } else {
@@ -93,13 +118,23 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
     @Override
     public void onItemClicked(int pos) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra("position", pos);
+        intent.putExtra(DetailActivity.POSITION_FOR_CARD_ITEM, pos);
+        intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_SCND_LVL, positionForCategory); //todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_FRST_LVL, positionForCategoryFirstLvl);
         startActivity(intent);
     }
 
     @Override
-    public void onFavoriteClicked(int position) {
-
+    public void onFavoriteClicked(int position, CardItem item) {
+        if (adapter.isFavorite(item)) {
+            cardRepository.removeCardFromFavorites(item);
+            cardRepository.sendDeleteFavoriteCardRequest(item.getId());
+        } else {
+            cardRepository.addCardToFavorites(item);
+            cardRepository.sendAddFavoriteCardRequest(item.getId());
+        }
+        final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
+        adapter.setFavorites(freshFavoritesCards);
     }
 
     private void manageVisible(boolean isListVisible) {

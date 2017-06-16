@@ -1,5 +1,6 @@
 package com.devtonix.amerricard.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,6 @@ public class DetailFragment extends Fragment {
 
     private ViewGroup detailContainer;
     private ImageView image;
-
 
     public static DetailFragment getInstance(int id, boolean isFullScreen) {
         DetailFragment detailFragment = new DetailFragment();
@@ -63,7 +63,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void updateFragment(boolean isFullScreen) {
-//        image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
-//        detailContainer.setBackgroundColor(isFullScreen ? Color.BLACK : Color.WHITE);
+        image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
+        detailContainer.setBackgroundColor(isFullScreen ? Color.BLACK : Color.WHITE);
     }
 }

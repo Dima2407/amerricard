@@ -1,12 +1,14 @@
 package com.devtonix.amerricard.utils;
 
+import com.devtonix.amerricard.model.CardItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteUtils {
 
-//    public static List<Item> getFavorites() {
-//        List<Item> items = SharedHelper.getInstance().getFavorites();
+//    public  List<CardItem> getFavorites() {
+//        List<CardItem> items = SharedHelper.().getFavorites();
 //        return items==null ? new ArrayList<Item>() : items;
 //    }
 //

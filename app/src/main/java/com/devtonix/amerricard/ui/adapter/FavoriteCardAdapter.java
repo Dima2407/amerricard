@@ -16,12 +16,11 @@ import com.devtonix.amerricard.network.NetworkModule;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapter.MainHolder> {
+public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapter.MainHolder> {
 
     private List<CardItem> items = new ArrayList<>();
-    private List<CardItem> favorites = new ArrayList<>();
-    private Context context;
     private OnFavoriteClickListener listener;
+    private Context context;
 
     private int width;
     private int height;
@@ -32,16 +31,20 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         void onFavoriteClicked(int position, CardItem cardItem);
     }
 
-    public CategoryGridAdapter(Context context, List<CardItem> items, OnFavoriteClickListener listener, int width, int height, List<CardItem> favoriteCards) {
+    public FavoriteCardAdapter(
+            Context context,
+            List<CardItem> items,
+            OnFavoriteClickListener listener,
+            int width, int height) {
+
         this.context = context;
         this.items = items;
         this.listener = listener;
         this.width = width;
         this.height = height;
-        this.favorites = favoriteCards;
     }
 
-    public void updateData(List<CardItem> items) {
+    public void setItems(List<CardItem> items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -58,27 +61,13 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     public void onBindViewHolder(final MainHolder holder, int position) {
         final CardItem item = items.get(position);
 
-        if (isFavorite(item)) {
-            holder.favoriteButton.setVisibility(View.GONE);
-            holder.favoriteButtonFull.setVisibility(View.VISIBLE);
-            holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
-        } else {
-            holder.favoriteButton.setVisibility(View.VISIBLE);
-            holder.favoriteButtonFull.setVisibility(View.GONE);
-            holder.favoriteContainer.setBackgroundResource(R.drawable.shape_red_circle);
-        }
+        holder.favoriteButton.setVisibility(View.GONE);
+        holder.favoriteButtonFull.setVisibility(View.VISIBLE);
+        holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
+
         final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
         Glide.with(context).load(url).into(holder.icon);
-    }
-
-    public boolean isFavorite(CardItem item) {
-        for (CardItem cardItem : favorites) {
-            if ((int) cardItem.getId() == (int) item.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -124,10 +113,5 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         if (listener != null) {
             listener.onFavoriteClicked(adapterPosition, items.get(adapterPosition));
         }
-    }
-
-    public void setFavorites(List<CardItem> favorites) {
-        this.favorites = favorites;
-        notifyDataSetChanged();
     }
 }

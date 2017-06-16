@@ -1,7 +1,6 @@
 package com.devtonix.amerricard.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,13 +22,15 @@ import javax.inject.Inject;
 
 public class CategoryActivity extends BaseActivity {
 
+    private static final String POSITION_FOR_SAVE_INSTANCE_STATE = "position_for_save_instance_state";
+    public static final String POSITION_FOR_CATEGORY = "position_for_category";
+
     @Inject
     CardRepository cardRepository;
 
-    private TabLayout tab;
-    public List<CategoryItemSecondLevel> categories = new ArrayList<>();
+    private List<CategoryItemSecondLevel> categoriesSecondLvl = new ArrayList<>();
     private CategoryAdapter adapter;
-    private int position;
+    private int positionForCategoryFirstLvl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,56 +39,47 @@ public class CategoryActivity extends BaseActivity {
 
         ACApplication.getMainComponent().inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        initToolbar();
 
         if (savedInstanceState != null) {
-            position = savedInstanceState.getInt("pos");
+            positionForCategoryFirstLvl = savedInstanceState.getInt(POSITION_FOR_SAVE_INSTANCE_STATE);
         } else {
-            position = getIntent().getIntExtra("position", 0);
+            positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY, 0);
         }
 
         final List<CategoryItemFirstLevel> items = cardRepository.getCardsFromStorage();
-        final CategoryItemFirstLevel item = items.get(position);
+        final CategoryItemFirstLevel item = items.get(positionForCategoryFirstLvl);
         final String title = LanguageUtils.convertLang(item.getName(), CategoryActivity.this);
 
         setTitle(title);
 
         if (item.getData() != null && item.getData().size() != 0) {
-            categories = item.getData();
+            categoriesSecondLvl = item.getData();
         }
 
-//        if (categories.size() > 0) {
         findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
         findViewById(R.id.single_fragment).setVisibility(View.GONE);
 
         ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
 
-        adapter = new CategoryAdapter(this, getSupportFragmentManager(), categories);
+        adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategoryFirstLvl);
         pager.setAdapter(adapter);
 
         RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
         recyclerTabLayout.setUpWithViewPager(pager);
-//        } else {
-//            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
-//            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
-//
-//            FragmentManager fragMan = getSupportFragmentManager();
-//            FragmentTransaction fragTransaction = fragMan.beginTransaction();
-//
-//            Fragment categoryFragment = CategoryFragment.getInstance(-1);
-//
-//            fragTransaction.add(R.id.single_fragment, categoryFragment, "single");
-//            fragTransaction.commit();
-//        }
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
 //    @Override
-//    public void onItemClicked(int position) {
-//        Item item = categories.get(position);
+//    public void onItemClicked(int positionForCategoryFirstLvl) {
+//        Item item = categories.get(positionForCategoryFirstLvl);
 //
 //        Intent intent = new Intent(this, DetailActivity.class);
 //        intent.putExtra("item", item);
@@ -101,15 +93,12 @@ public class CategoryActivity extends BaseActivity {
     }
 
     public List<CardItem> getCategories(int position) {
-//        if (position == -1) {
-//            return categories;
-//        }
-        return categories.get(position).getData();
+        return categoriesSecondLvl.get(position).getData();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        outState.putInt("pos", position);
+        outState.putInt(POSITION_FOR_SAVE_INSTANCE_STATE, positionForCategoryFirstLvl);
     }
 }

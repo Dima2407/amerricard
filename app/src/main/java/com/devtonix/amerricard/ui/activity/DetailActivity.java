@@ -20,8 +20,11 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
+import com.devtonix.amerricard.ui.callback.CardShareCallback;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -38,11 +41,15 @@ public class DetailActivity extends BaseActivity {
     CardRepository cardRepository;
 
     private static final String TAG = DetailActivity.class.getSimpleName();
+    public static final String POSITION_FOR_CARD_ITEM = "position_for_card_item";
+    public static final String POSITION_FOR_CATEGORY_SCND_LVL = "position_for_category_scnd_lvl";
+    public static final String POSITION_FOR_CATEGORY_FRST_LVL = "position_for_category_frst_lvl";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
     private AppBarLayout bar;
     private ProgressBar progress;
+    private ViewPager viewPager;
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
 
@@ -54,18 +61,30 @@ public class DetailActivity extends BaseActivity {
         ACApplication.getMainComponent().inject(this);
 
         setTitle(getString(R.string.send_card));
+        initViews();
+        initToolbar();
 
-        bar = (AppBarLayout) findViewById(R.id.detail_appbar);
-        container = (ViewGroup) findViewById(R.id.detail_pager_container);
-        progress = (ProgressBar) findViewById(R.id.detail_activity_progress);
+        final List<CategoryItemFirstLevel> categoryFirstLevel = cardRepository.getCardsFromStorage();
+        final int positionForCardItem = getIntent().getIntExtra(POSITION_FOR_CARD_ITEM, 0);
+        final int positionForCategorySecondLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_SCND_LVL, 0);
+        final int positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_FRST_LVL, 0);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        final List<CardItem> cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
+        final CardItem currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCardItem);
 
-//        cardRepository.getCards(this);
+        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
+        viewPager.setAdapter(adapter);
+
+        findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
+                onShareItem(adapter.getImage(viewPager.getCurrentItem()));
+                cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
+            }
+        });
+        viewPager.setCurrentItem(positionForCardItem);
 
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
@@ -73,33 +92,26 @@ public class DetailActivity extends BaseActivity {
         interstitialAd.loadAd(adRequest);
     }
 
-//    @Override
-//    protected void handleCardSuccessEvent(final List<Item> items) {
-//        super.handleCardSuccessEvent(items);
-//
-//        final int position = getIntent().getIntExtra("position", 0);
-//        final ViewPager pager = (ViewPager) findViewById(R.id.detail_view_pager);
-//        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), items);
-//        pager.setAdapter(adapter);
-//
-//        findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                progress.setVisibility(View.VISIBLE);
-//                onShareItem(adapter.getImage(pager.getCurrentItem()));
-//                NetworkService.shareCard(getApplicationContext(), items.get(position).id);
-//            }
-//        });
-//
-//        pager.setCurrentItem(position);
-//    }
+    private void initViews() {
+        bar = (AppBarLayout) findViewById(R.id.detail_appbar);
+        container = (ViewGroup) findViewById(R.id.detail_pager_container);
+        progress = (ProgressBar) findViewById(R.id.detail_activity_progress);
+        viewPager = (ViewPager) findViewById(R.id.detail_view_pager);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
-
 
 
     public void changeMode() {
@@ -175,6 +187,23 @@ public class DetailActivity extends BaseActivity {
                 startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);
             }
             progress.setVisibility(View.GONE);
+        }
+    }
+
+    private class MyCardShareCallback implements CardShareCallback {
+        @Override
+        public void onSuccess() {
+            Log.d(TAG, "onSuccess: card shared");
+        }
+
+        @Override
+        public void onError() {
+            Log.d(TAG, "onError: card not shared");
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            Log.d(TAG, "onRetrofitError: error");
         }
     }
 }

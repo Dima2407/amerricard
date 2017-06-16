@@ -62,7 +62,7 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra("position", position);
+        intent.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, position);
         startActivity(intent);
     }
 

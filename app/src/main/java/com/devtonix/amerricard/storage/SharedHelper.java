@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.model.Contact;
+import com.devtonix.amerricard.model.ListCardItem;
 import com.devtonix.amerricard.model.ListCategoryItem;
+import com.devtonix.amerricard.model.ListContact;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -46,17 +50,15 @@ public class SharedHelper {
         ListCategoryItem listCategoryItem = new Gson().fromJson(sharedPreferences.getString(Fields.CARDS, ""), ListCategoryItem.class);
         return listCategoryItem == null ? new ArrayList<CategoryItemFirstLevel>() : listCategoryItem.data;
     }
-//
-//    public void saveContacts(List<Contact> contacts){
-//        set(Fields.CONTACTS, new Gson().toJson(new ListContact(contacts)));
-//    }
-//
-//    public List<Contact> getContacts(){
-//        ListContact listContact = new Gson().fromJson(getString(Fields.CONTACTS), ListContact.class);
-//        return listContact == null ? new ArrayList<Contact>() : listContact.contacts;
-//    }
-//
 
+    public void saveContacts(List<Contact> contacts){
+        sharedPreferences.edit().putString(Fields.CONTACTS, new Gson().toJson(new ListContact(contacts))).apply();
+    }
+
+    public List<Contact> getContacts(){
+        ListContact listContact = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACTS, ""), ListContact.class);
+        return listContact == null ? new ArrayList<Contact>() : listContact.contacts;
+    }
 //
 //    public void saveEvents(List<Item> items) {
 //        set(Fields.EVENTS, new Gson().toJson(new ListCategoryItem(items)));
@@ -76,14 +78,14 @@ public class SharedHelper {
 //        return listCategoryItem == null ? new ArrayList<Item>() : listCategoryItem.data;
 //    }
 //
-//    public void saveFavorites(List<Item> items) {
-//        set(Fields.FAVORITES, new Gson().toJson(new ListCategoryItem(items)));
-//    }
-//
-//    public List<Item> getFavorites() {
-//        ListCategoryItem li = new Gson().fromJson(getString(Fields.FAVORITES), ListCategoryItem.class);
-//        return li == null ? new ArrayList<Item>() : li.data;
-//    }
+    public void saveFavorites(List<CardItem> items) {
+        sharedPreferences.edit().putString(Fields.FAVORITES, new Gson().toJson(new ListCardItem(items))).apply();
+    }
+
+    public List<CardItem> getFavorites() {
+        ListCardItem li = new Gson().fromJson(sharedPreferences.getString(Fields.FAVORITES, ""), ListCardItem.class);
+        return li == null ? new ArrayList<CardItem>() : li.getCards();
+    }
 
     public void saveNotificationsTime(String time) {
         sharedPreferences.edit().putString(Fields.NOTIFICATION_TIME, time).apply();

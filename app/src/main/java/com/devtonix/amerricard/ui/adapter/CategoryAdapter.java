@@ -17,14 +17,16 @@ import java.util.List;
 public class CategoryAdapter extends FragmentPagerAdapter {
 
     private Context context;
+    private int positionForCategoryFirstLvl;
     private List<CategoryItemSecondLevel> categories = new ArrayList<>();
 
     private SparseArray<Fragment> categoryFragments = new SparseArray<Fragment>();
 
-    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItemSecondLevel> categories) {
+    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItemSecondLevel> categories, int positionForCategoryFirstLvl) {
         super(fragmentManager);
         this.context = context;
         this.categories = categories;
+        this.positionForCategoryFirstLvl = positionForCategoryFirstLvl;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return CategoryFragment.getInstance(position);
+        return CategoryFragment.getInstance(position, positionForCategoryFirstLvl);
     }
 
     @Override
@@ -42,7 +44,6 @@ public class CategoryAdapter extends FragmentPagerAdapter {
 
         return LanguageUtils.convertLang(categories.get(position).getNameJsonEl(), context);
     }
-
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {

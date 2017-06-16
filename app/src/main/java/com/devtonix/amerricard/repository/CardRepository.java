@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.CategoryItemSecondLevel;
 import com.devtonix.amerricard.network.API;
@@ -38,15 +39,15 @@ public class CardRepository {
         this.context = context;
     }
 
-    public void addFavoriteCard(long id) {
+    public void sendAddFavoriteCardRequest(long id) {
 
     }
 
-    public void deleteFavoriteCard(long id) {
+    public void sendDeleteFavoriteCardRequest(long id) {
 
     }
 
-    public void shareCard(long cardId, final CardShareCallback callback) {
+    public void sendShareCardRequest(long cardId, final CardShareCallback callback) {
         Call<SimpleResponse> call = api.shareCard(cardId);
         call.enqueue(new Callback<SimpleResponse>() {
             @Override
@@ -110,7 +111,6 @@ public class CardRepository {
     }
 
     public List<CategoryItemFirstLevel> getCardsFromStorage(){
-
         return sharedHelper.getCards();
     }
 
@@ -118,4 +118,34 @@ public class CardRepository {
 
         sharedHelper.saveCards(itemFirstLevels);
     }
+
+
+    public List<CardItem> getFavoriteCardsFromStorage(){
+        return sharedHelper.getFavorites();
+    }
+
+    public void saveFavoriteCardToStorage(List<CardItem> items){
+        sharedHelper.saveFavorites(items);
+    }
+
+    public void addCardToFavorites(CardItem item){
+        List<CardItem> oldItems = sharedHelper.getFavorites();
+        oldItems.add(item);
+        sharedHelper.saveFavorites(oldItems);
+    }
+
+    public void removeCardFromFavorites(CardItem item){
+        List<CardItem> oldItems = sharedHelper.getFavorites();
+        int position = -1;
+        for (int i=0;i<oldItems.size();i++) {
+            if ((int)oldItems.get(i).getId()== (int)item.getId()) {
+                position = i;
+            }
+        }
+        if (position != -1) {
+            oldItems.remove(position);
+            sharedHelper.saveFavorites(oldItems);
+        }
+    }
 }
+
