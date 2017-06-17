@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 
 import com.devtonix.amerricard.R;
 
-/**
- * Created by Oleksii on 11.05.17.
- */
-public class VipFragment extends Fragment {
+public class VipFragment extends BaseFragment {
 
     public static CategoryFragment getInstance(String url) {
         CategoryFragment categoryFragment = new CategoryFragment();

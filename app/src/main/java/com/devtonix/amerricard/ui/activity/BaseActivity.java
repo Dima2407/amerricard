@@ -1,78 +1,84 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.devtonix.amerricard.api.event.CardSuccessEvent;
-import com.devtonix.amerricard.api.event.EventSuccessEvent;
-import com.devtonix.amerricard.api.event.FailureEvent;
-import com.devtonix.amerricard.api.event.RxBus;
-import com.devtonix.amerricard.api.event.SuccessEvent;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.storage.SharedHelper;
 
-import java.util.List;
+import java.util.Locale;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import javax.inject.Inject;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private CompositeSubscription subscriptions;
+    protected ProgressDialog progressDialog;
+    private Locale currentLocale;
+
+    @Inject
+    SharedHelper sharedHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ACApplication.getMainComponent().inject(this);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getString(R.string.loading));
+        progressDialog.setCancelable(false);
+
+        setLocale();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        subscriptions = new CompositeSubscription();
-        subscriptions.add(RxBus.getInstance().toObserverable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Object>() {
-                    @Override
-                    public void call(Object event) {
-
-                        if (event instanceof CardSuccessEvent) {
-                            handleCardSuccessEvent(((CardSuccessEvent) event).getItem());
-                        } else if (event instanceof EventSuccessEvent) {
-                            handleEventSuccessEvent(((EventSuccessEvent) event).getItem());
-                        } else if (event instanceof SuccessEvent) {
-                            handleSuccessEvent(((SuccessEvent) event).getMessage());
-                        } else if (event instanceof FailureEvent) {
-                            handleFailureFound(((FailureEvent) event).getMessage());
-                        }
-                    }
-                }));
+        currentLocale = getResources().getConfiguration().locale;
     }
-
-    protected void handleEventSuccessEvent(List<Item> item) {
-
-    }
-
-    protected void handleCardSuccessEvent(List<Item> item) {
-        Log.d("handleCardSuccessEvent", "item " + item.size());
-    }
-
-    protected void handleFailureFound(String message) {
-
-    }
-
-    protected void handleSuccessEvent(String message) {
-
-    }
-
-
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        subscriptions.clear();
+    protected void onRestart() {
+        super.onRestart();
+
+        final Locale locale = getLocale();
+
+        if (!locale.equals(currentLocale)){
+            currentLocale = locale;
+            recreate();
+        }
+
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        setLocale();
+    }
+
+    private void setLocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            final Resources resources = getResources();
+            final Configuration configuration = resources.getConfiguration();
+            final Locale locale = getLocale();
+            if (!configuration.locale.equals(locale)) {
+                configuration.setLocale(locale);
+            }
+            resources.updateConfiguration(configuration, null);
+        }
+    }
+
+    public Locale getLocale() {
+        final String currLang = sharedHelper.getLanguage();
+        return new Locale(currLang);
+    }
 }

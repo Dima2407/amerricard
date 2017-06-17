@@ -9,24 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.ui.fragment.DetailFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Oleksii on 11.05.17.
- */
 public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private List<Item> items = new ArrayList<>();
+    private List<CardItem> items = new ArrayList<>();
+    private SparseArray<Fragment> tourFragments = new SparseArray<>();
     private boolean isFullScreen = false;
 
-    private SparseArray<Fragment> tourFragments = new SparseArray<Fragment>();
-
-    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<Item> items) {
+    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<CardItem> items) {
         super(fragmentManager);
         this.context = context;
         this.items = items;
@@ -39,7 +35,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance((int) items.get(position).id, isFullScreen);
+        return DetailFragment.getInstance((int) items.get(position).getId(), isFullScreen);
     }
 
     @Override
@@ -57,7 +53,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
     public void setFullScreen(boolean isFullScreen) {
         this.isFullScreen = isFullScreen;
 
-        for (int i=0; i<tourFragments.size(); i++) {
+        for (int i = 0; i < tourFragments.size(); i++) {
             if (tourFragments.get(i) != null) {
                 ((DetailFragment) tourFragments.get(i)).updateFragment(isFullScreen);
             }
@@ -65,6 +61,6 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
     }
 
     public ImageView getImage(int position) {
-        return ((DetailFragment)tourFragments.get(position)).getImageWithPic();
+        return ((DetailFragment) tourFragments.get(position)).getImageWithPic();
     }
 }

@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.Contact;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.model.EventItem;
+import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.devtonix.amerricard.utils.TimeUtils;
 
@@ -19,33 +21,45 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 
+    @Inject
+    EventRepository eventRepository;
+
+    @Inject
+    SharedHelper sharedHelper;
+
     private static final String TAG = HolidaysBroadcastReceiver.class.getSimpleName();
+
+    public HolidaysBroadcastReceiver() {
+        ACApplication.getMainComponent().inject(this);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        final boolean isNotificationEnabled = Preferences.getInstance().getNotification();
+        final boolean isNotificationEnabled = sharedHelper.getNotification();
         final Intent notificationIntent = new Intent(context, HolidaysNotificationService.class);
         final PendingIntent pendingIntent = PendingIntent.getService(context, 1234, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final Calendar currentCalendar = Calendar.getInstance();
 
         boolean isShowNeeded = false;
 
-        final List<Item> events = Preferences.getInstance().getEvents();
+        final List<EventItem> events = eventRepository.getEventFromStorage();
         final String currentDate = TimeUtils.calDateToString(currentCalendar);
 
-        for (Item item : events) {
-            if (TextUtils.equals(item.getDate(), currentDate)) {
+        for (EventItem item : events) {
+            if (TextUtils.equals(item.getFormattedDate(), currentDate)) {
                 isShowNeeded = true;
                 break;
             }
         }
 
-        final List<Contact> contacts = Preferences.getInstance().getContacts();
+        final List<Contact> contacts = sharedHelper.getContacts();
 
         for (Contact c : contacts) {
             try {
@@ -72,7 +86,7 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 
         if (isNotificationEnabled & isShowNeeded) {
 
-            final String timeForNotification = Preferences.getInstance().getNotificationsTime();
+            final String timeForNotification = sharedHelper.getNotificationsTime();
             final Calendar triggeredCalendar = getNotificationTriggeredCalendar(timeForNotification);
             long intendedTime = triggeredCalendar.getTimeInMillis();
             final long currentTime = currentCalendar.getTimeInMillis();

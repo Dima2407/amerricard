@@ -10,38 +10,38 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkServiceProvider;
-import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.FavoriteUtils;
+import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.network.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapter.MainHolder> {
 
-    private List<Item> items = new ArrayList<>();
+    private List<CardItem> items = new ArrayList<>();
+    private List<CardItem> favorites = new ArrayList<>();
     private Context context;
     private OnFavoriteClickListener listener;
-    private List<Item> favorites;
 
     private int width;
     private int height;
 
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
-        void onFavoriteClicked(int position);
+
+        void onFavoriteClicked(int position, CardItem cardItem);
     }
 
-    public CategoryGridAdapter(Context context, List<Item> items, OnFavoriteClickListener listener, int width, int height) {
+    public CategoryGridAdapter(Context context, List<CardItem> items, OnFavoriteClickListener listener, int width, int height, List<CardItem> favoriteCards) {
         this.context = context;
         this.items = items;
         this.listener = listener;
         this.width = width;
         this.height = height;
-        favorites = FavoriteUtils.getFavorites();
+        this.favorites = favoriteCards;
     }
 
-    public void updateData(List<Item> items) {
+    public void updateData(List<CardItem> items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -56,7 +56,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
-        Item item = items.get(position);
+        final CardItem item = items.get(position);
 
         if (isFavorite(item)) {
             holder.favoriteButton.setVisibility(View.GONE);
@@ -67,32 +67,18 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
             holder.favoriteButtonFull.setVisibility(View.GONE);
             holder.favoriteContainer.setBackgroundResource(R.drawable.shape_red_circle);
         }
-        String url = NetworkServiceProvider.BASE_URL
-                + (item.getUrlByType())
-                + item.id + "/image?width="+width+"&height="+height+"&type=fit";
+        final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
-        Glide.with(context).load(url)
-                .into(holder.icon);
+        Glide.with(context).load(url).into(holder.icon);
     }
 
-    private boolean isFavorite(Item item) {
-        for (Item i: favorites) {
-            if (i.id==item.id) {
+    public boolean isFavorite(CardItem item) {
+        for (CardItem cardItem : favorites) {
+            if ((int) cardItem.getId() == (int) item.getId()) {
                 return true;
             }
-
         }
         return false;
-    }
-
-    private void manageFavorites(Item item) {
-        if (isFavorite(item)) {
-            FavoriteUtils.removeFromFavorites(item);
-        } else {
-            FavoriteUtils.addToFavorites(item);
-        }
-        favorites = FavoriteUtils.getFavorites();
-        notifyDataSetChanged();
     }
 
     @Override
@@ -100,7 +86,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         return items.size();
     }
 
-    public class MainHolder extends RecyclerView.ViewHolder  {
+    public class MainHolder extends RecyclerView.ViewHolder {
 
         ImageView icon;
         ViewGroup favoriteContainer;
@@ -135,9 +121,13 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     }
 
     private void onFavoriteSelected(int adapterPosition) {
-        manageFavorites(items.get(adapterPosition));
         if (listener != null) {
-            listener.onFavoriteClicked(adapterPosition);
+            listener.onFavoriteClicked(adapterPosition, items.get(adapterPosition));
         }
+    }
+
+    public void setFavorites(List<CardItem> favorites) {
+        this.favorites = favorites;
+        notifyDataSetChanged();
     }
 }

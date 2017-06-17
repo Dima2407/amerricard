@@ -12,18 +12,38 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.adapter.CardAdapter;
+import com.devtonix.amerricard.ui.callback.CardGetCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClickListener {
+import javax.inject.Inject;
+
+public class CardFragment extends BaseFragment implements CardAdapter.OnFavoriteClickListener {
+
+    @Inject
+    CardRepository cardRepository;
+    @Inject
+    SharedHelper sharedHelper;
 
     private CardAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ACApplication.getMainComponent().inject(this);
+
+        cardRepository.getCards(new MyCardGetCallback());
+    }
 
     @Nullable
     @Override
@@ -33,7 +53,7 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<Item>(), this);
+        adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItemFirstLevel>(),sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -45,11 +65,11 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra("position", position);
+        intent.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, position);
         startActivity(intent);
     }
 
-    public void updateData(List<Item> items) {
+    public void updateData(List<CategoryItemFirstLevel> items) {
         if (items == null || items.size()==0) {
             manageVisible(false);
         } else {
@@ -65,6 +85,23 @@ public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClic
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class MyCardGetCallback implements CardGetCallback {
+        @Override
+        public void onSuccess(List<CategoryItemFirstLevel> data) {
+            updateData(data);
+        }
+
+        @Override
+        public void onError() {
+
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+
         }
     }
 }

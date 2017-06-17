@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,46 +27,39 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:visibility="gone"
-            android:layout_marginTop="?actionBarSize"
             android:id="@+id/single_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="?actionBarSize"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/multiple_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="?actionBarSize"
             android:orientation="vertical"
-            android:layout_marginTop="?actionBarSize">
+            android:visibility="gone">
 
             <com.nshmura.recyclertablayout.RecyclerTabLayout
                 android:id="@+id/category_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/colorAccent"
-                app:rtl_tabMaxWidth="200dp"
+                android:theme="@style/rtl_RecyclerTabLayout.Tab"
                 app:rtl_tabIndicatorColor="@android:color/white"
                 app:rtl_tabIndicatorHeight="2dp"
+                app:rtl_tabMaxWidth="200dp"
                 app:rtl_tabMinWidth="100dp"
-                android:theme="@style/rtl_RecyclerTabLayout.Tab"
-                app:rtl_tabSelectedTextColor="@android:color/white"
-                app:rtl_tabOnScreenLimit="3"/>
-
-            <!--<android.support.design.widget.TabLayout-->
-                <!--android:id="@+id/category_tab_layout"-->
-                <!--app:tabMode="scrollable"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:layout_gravity="top"/>-->
+                app:rtl_tabOnScreenLimit="3"
+                app:rtl_tabSelectedTextColor="@android:color/white" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/category_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

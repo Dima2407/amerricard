@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name" translatable="false">AmerriCard</string>
     <string name="facebook_app_id" translatable="false">1734091590251956</string>
-    <string name="banner_ad_unit_id">ca-app-pub-7353210906266235/7309964107</string>
-    <string name="inline_ad_unit_id">ca-app-pub-7353210906266235/1263430503</string>
-    <string name="fullscreen_ad_unit_id">ca-app-pub-7353210906266235/2740163704</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7353210906266235/7309964107</string>
+    <string name="inline_ad_unit_id" translatable="false">ca-app-pub-7353210906266235/1263430503</string>
+    <string name="fullscreen_ad_unit_id" translatable="false">ca-app-pub-7353210906266235/2740163704</string>
 
-    <string name="title_activity_main2" translatable="false">Main2Activity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="cards">Cards</string>
@@ -24,7 +22,7 @@
     <string name="favorites">Favorites</string>
     <string name="no_favorite_cards">No favorite cards</string>
     <string name="premium">Premium</string>
-    <string name="vip">Vip</string>
+    <string name="vip">VIP</string>
 
     <!--Notifications-->
     <string name="notifications_title">New event!</string>
@@ -43,16 +41,25 @@
     <string name="name">Name and Surname</string>
     <string name="add_birthday">Add birthday</string>
     <string name="birthday">Birthday</string>
+    <string name="french">French</string>
+    <string name="ukrainian">Ukrainian</string>
+    <string name="loading">Loading...</string>
+    <string name="create_birthday">Create</string>
+    <string name="amerricard">AmerriCard</string>
 
     <string-array name="languages">
         <item>@string/english</item>
         <item>@string/russian</item>
         <item>@string/spanish</item>
+        <item>@string/french</item>
+        <item>@string/ukrainian</item>
     </string-array>
 
     <string-array name="language_codes" translatable="false">
         <item>en</item>
         <item>ru</item>
         <item>es</item>
+        <item>fr</item>
+        <item>ua</item>
     </string-array>
 </resources>

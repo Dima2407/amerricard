@@ -8,18 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkService;
-import com.devtonix.amerricard.model.Item;
+import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
-import com.devtonix.amerricard.ui.fragment.CalendarFragment;
-import com.devtonix.amerricard.ui.fragment.CardFragment;
-import com.devtonix.amerricard.utils.Preferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-
-import java.util.List;
 
 public class MainActivity extends DrawerActivity {
 
@@ -52,35 +45,6 @@ public class MainActivity extends DrawerActivity {
 
         //todo perhaps, needs check isAppFirstLaunch
         startNotificationReceiver();
-    }
-
-    @Override
-    protected void handleCardSuccessEvent(List<Item> items) {
-        Log.d("handleCardSuccessEvent", "data " + items.size());
-        Preferences.getInstance().saveCards(items);
-        ((CardFragment) adapter.getCardFragment()).updateData(items);
-    }
-
-    @Override
-    protected void handleFailureFound(String message) {
-        super.handleFailureFound(message);
-
-        ((CardFragment) adapter.getCardFragment()).updateData(Preferences.getInstance().getCards());
-        ((CardFragment) adapter.getCalendarFragment()).updateData(Preferences.getInstance().getEvents());
-
-    }
-
-    @Override
-    protected void handleEventSuccessEvent(List<Item> items) {
-        Preferences.getInstance().saveEvents(items);
-        ((CalendarFragment) adapter.getCalendarFragment()).updateData(items);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        NetworkService.getCards(this);
-        NetworkService.getEvents(this);
     }
 
     private void startNotificationReceiver() {

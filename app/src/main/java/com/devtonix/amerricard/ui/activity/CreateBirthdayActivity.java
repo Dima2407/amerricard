@@ -6,20 +6,28 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.api.NetworkService;
-import com.devtonix.amerricard.api.request.CreateEventRequest;
-import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.network.request.CreateEventRequest;
+import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.repository.EventRepository;
+import com.devtonix.amerricard.ui.callback.EventCreateCallback;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CreateBirthdayActivity extends BaseActivity {
+
+    @Inject
+    EventRepository eventRepository;
+    @Inject
+    CardRepository cardRepository;
 
     private TextView tvBirthdayDate;
     private ViewGroup timerContainer;
@@ -33,6 +41,8 @@ public class CreateBirthdayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_birthday);
         setTitle(getString(R.string.add_birthday));
+
+        ACApplication.getMainComponent().inject(this);
 
         rlSaveBirthday = (RelativeLayout) findViewById(R.id.rl_save);
         tvBirthdayDate = (TextView) findViewById(R.id.tv_date);
@@ -51,22 +61,26 @@ public class CreateBirthdayActivity extends BaseActivity {
 
                 if (!isValid()) return;
 
-
-                final List<Item> cards = Preferences.getInstance().getCards();
-                final List<Long> cardIds = new ArrayList<Long>();
-                for (Item item : cards) {
-                    cardIds.add(item.id);
-                }
+//                final List<CategoryItemFirstLevel> cards = cardRepository.getCardsFromStorage();
+//                final List<Long> cardIds = new ArrayList<Long>();
+//                for (CategoryItemFirstLevel first : cards) {
+//
+//                    for (CategoryItemSecondLevel second : first.getData()){
+//                        for (CardItem card : second.getData()){
+//                            cardIds.add(Long.valueOf(card.getId()));
+//                        }
+//                    }
+//                }
 
                 CreateEventRequest request = new CreateEventRequest();
                 request.setName(etUsername.getText().toString().trim());
                 request.setDates(birthdays);
-                request.setCards(cardIds);
+                request.setCards(Arrays.asList(36L, 10L, 26L));
 
-                NetworkService.createEvent(request, CreateBirthdayActivity.this);
+                progressDialog.show();
 
-                Toast.makeText(CreateBirthdayActivity.this, "save birthday", Toast.LENGTH_SHORT).show();
-                finish();
+                eventRepository.createEvent(request, new MyEventCreateCallback());
+
             }
         });
     }
@@ -102,5 +116,25 @@ public class CreateBirthdayActivity extends BaseActivity {
         }, 1995, 1, 1);
         datePickerDialog.setAccentColor(getResources().getColor(R.color.colorPrimaryDark));
         datePickerDialog.show(getFragmentManager(), "datepicker");
+    }
+
+    private class MyEventCreateCallback implements EventCreateCallback {
+        @Override
+        public void onSuccess() {
+            progressDialog.dismiss();
+            finish();
+        }
+
+        @Override
+        public void onError() {
+            progressDialog.dismiss();
+            finish();
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            progressDialog.dismiss();
+            finish();
+        }
     }
 }

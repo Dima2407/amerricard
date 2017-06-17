@@ -4,28 +4,39 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.model.Item;
-import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
-import com.devtonix.amerricard.utils.Preferences;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.ui.adapter.FavoriteCardAdapter;
+import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteActivity extends DrawerActivity implements CategoryGridAdapter.OnFavoriteClickListener {
+import javax.inject.Inject;
 
-    private CategoryGridAdapter adapter;
+public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdapter.OnFavoriteClickListener {
+
+    private static final String TAG = FavoriteActivity.class.getSimpleName();
+    @Inject
+    CardRepository cardRepository;
+
+    private FavoriteCardAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private List<Item> items;
+    private List<CardItem> cards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(R.layout.activity_favorite);
+
+        ACApplication.getMainComponent().inject(this);
 
         setTitle(getString(R.string.favorites));
 
@@ -43,14 +54,18 @@ public class FavoriteActivity extends DrawerActivity implements CategoryGridAdap
     }
 
     private void manageRecycler() {
-        items = Preferences.getInstance().getFavorites();
-        if (items != null && items.size() != 0) {
+        cards = cardRepository.getFavoriteCardsFromStorage();
+        if (cards != null && cards.size() != 0) {
             manageVisible(true);
 
-            int width = (recyclerView.getWidth())/2;
-            int height = (int) (width*1.6);
-            adapter = new CategoryGridAdapter(FavoriteActivity.this, items,
-                    FavoriteActivity.this, width, height);
+            int width = (recyclerView.getWidth()) / 2;
+            int height = (int) (width * 1.6);
+            adapter = new FavoriteCardAdapter(
+                    FavoriteActivity.this,
+                    cards,
+                    FavoriteActivity.this,
+                    width,
+                    height);
             recyclerView.setAdapter(adapter);
         } else {
             manageVisible(false);
@@ -60,14 +75,29 @@ public class FavoriteActivity extends DrawerActivity implements CategoryGridAdap
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("list",new ArrayList<Item>(items));
-        intent.putExtra("position", position);
+        intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<CardItem>(cards));
+        intent.putExtra(DetailActivity.POSITION_FOR_FAVORITE_CARD, position);
+        Log.d(TAG, "onItemClicked: currPosition = " + position);
+        intent.setAction(DetailActivity.ACTION_SHOW_FAVORITE_CARDS);
         startActivity(intent);
     }
 
     @Override
-    public void onFavoriteClicked(int position) {
-        manageRecycler();
+    public void onFavoriteClicked(int position, CardItem item) {
+
+        progressDialog.show();
+
+        cardRepository.removeCardFromFavorites(item);
+        cardRepository.sendDeleteFavoriteCardRequest(item.getId(), new MyCardDeleteFromFavoriteCallback());
+
+        final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
+        adapter.setItems(freshFavoritesCards);
+
+        if (cards != null && cards.size() != 0) {
+            manageVisible(true);
+        } else {
+            manageVisible(false);
+        }
     }
 
 
@@ -78,6 +108,23 @@ public class FavoriteActivity extends DrawerActivity implements CategoryGridAdap
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class MyCardDeleteFromFavoriteCallback implements CardDeleteFromFavoriteCallback {
+        @Override
+        public void onSuccess() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onError() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            progressDialog.dismiss();
         }
     }
 }
