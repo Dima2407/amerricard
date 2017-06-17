@@ -15,7 +15,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends BaseFragment {
 
     private ViewGroup detailContainer;
     private ImageView image;

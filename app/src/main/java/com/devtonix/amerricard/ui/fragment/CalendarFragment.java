@@ -38,7 +38,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CalendarFragment extends Fragment implements CalendarAdapter.OnCalendarItemClickListener {
+public class CalendarFragment extends BaseFragment implements CalendarAdapter.OnCalendarItemClickListener {
 
     @Inject
     SharedHelper sharedHelper;

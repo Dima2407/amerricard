@@ -3,7 +3,6 @@ package com.devtonix.amerricard.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +18,14 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
+import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
+import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class CategoryFragment extends Fragment implements CategoryGridAdapter.OnFavoriteClickListener {
+public class CategoryFragment extends BaseFragment implements CategoryGridAdapter.OnFavoriteClickListener {
 
     @Inject
     CardRepository cardRepository;
@@ -53,7 +54,8 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
     private void setPositionForCategorySecondLvl(int positionForCategorySecondLvl) {
         this.positionForCategory = positionForCategorySecondLvl;
     }
-    private void setPositionForCategoryFirstLvl(int positionForCategoryFirstLvl){
+
+    private void setPositionForCategoryFirstLvl(int positionForCategoryFirstLvl) {
         this.positionForCategoryFirstLvl = positionForCategoryFirstLvl;
     }
 
@@ -125,12 +127,15 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
 
     @Override
     public void onFavoriteClicked(int position, CardItem item) {
+
+        progressDialog.show();
+
         if (adapter.isFavorite(item)) {
             cardRepository.removeCardFromFavorites(item);
-            cardRepository.sendDeleteFavoriteCardRequest(item.getId());
+            cardRepository.sendDeleteFavoriteCardRequest(item.getId(), new MyCardDeleteFromFavoriteCallback());
         } else {
             cardRepository.addCardToFavorites(item);
-            cardRepository.sendAddFavoriteCardRequest(item.getId());
+            cardRepository.sendAddFavoriteCardRequest(item.getId(), new MyCardAddToFavoriteCallback());
         }
         final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
         adapter.setFavorites(freshFavoritesCards);
@@ -143,6 +148,40 @@ public class CategoryFragment extends Fragment implements CategoryGridAdapter.On
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class MyCardDeleteFromFavoriteCallback implements CardDeleteFromFavoriteCallback {
+        @Override
+        public void onSuccess() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onError() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private class MyCardAddToFavoriteCallback implements CardAddToFavoriteCallback {
+        @Override
+        public void onSuccess() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onError() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            progressDialog.dismiss();
         }
     }
 }

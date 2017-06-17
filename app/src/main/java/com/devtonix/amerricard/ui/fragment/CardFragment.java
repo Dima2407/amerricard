@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CardFragment extends Fragment implements CardAdapter.OnFavoriteClickListener {
+public class CardFragment extends BaseFragment implements CardAdapter.OnFavoriteClickListener {
 
     @Inject
     CardRepository cardRepository;

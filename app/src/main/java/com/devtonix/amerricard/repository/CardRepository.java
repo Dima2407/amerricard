@@ -11,9 +11,11 @@ import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.response.CardResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
+import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
+import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
-import com.devtonix.amerricard.storage.SharedHelper;
 
 import java.util.List;
 
@@ -39,12 +41,50 @@ public class CardRepository {
         this.context = context;
     }
 
-    public void sendAddFavoriteCardRequest(long id) {
+    public void sendAddFavoriteCardRequest(long id, final CardAddToFavoriteCallback callback) {
+        Call<SimpleResponse> call = api.addFavoriteCard(id);
+        call.enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                if (t != null && t.getMessage() != null) {
+                    callback.onRetrofitError(t.getMessage());
+                } else {
+                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
+                }
+            }
+        });
     }
 
-    public void sendDeleteFavoriteCardRequest(long id) {
+    public void sendDeleteFavoriteCardRequest(long id, final CardDeleteFromFavoriteCallback callback) {
+        Call<SimpleResponse> call = api.deleteFavoriteCard(id);
+        call.enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                if (t != null && t.getMessage() != null) {
+                    callback.onRetrofitError(t.getMessage());
+                } else {
+                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
+                }
+            }
+        });
     }
 
     public void sendShareCardRequest(long cardId, final CardShareCallback callback) {
@@ -110,7 +150,7 @@ public class CardRepository {
         });
     }
 
-    public List<CategoryItemFirstLevel> getCardsFromStorage(){
+    public List<CategoryItemFirstLevel> getCardsFromStorage() {
         return sharedHelper.getCards();
     }
 
@@ -120,21 +160,21 @@ public class CardRepository {
     }
 
 
-    public List<CardItem> getFavoriteCardsFromStorage(){
+    public List<CardItem> getFavoriteCardsFromStorage() {
         return sharedHelper.getFavorites();
     }
 
-    public void addCardToFavorites(CardItem item){
+    public void addCardToFavorites(CardItem item) {
         List<CardItem> oldItems = sharedHelper.getFavorites();
         oldItems.add(item);
         sharedHelper.saveFavorites(oldItems);
     }
 
-    public void removeCardFromFavorites(CardItem item){
+    public void removeCardFromFavorites(CardItem item) {
         List<CardItem> oldItems = sharedHelper.getFavorites();
         int position = -1;
-        for (int i=0;i<oldItems.size();i++) {
-            if ((int)oldItems.get(i).getId()== (int)item.getId()) {
+        for (int i = 0; i < oldItems.size(); i++) {
+            if ((int) oldItems.get(i).getId() == (int) item.getId()) {
                 position = i;
             }
         }

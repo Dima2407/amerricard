@@ -13,6 +13,7 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.FavoriteCardAdapter;
+import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +85,10 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
     @Override
     public void onFavoriteClicked(int position, CardItem item) {
 
+        progressDialog.show();
+
         cardRepository.removeCardFromFavorites(item);
-        cardRepository.sendDeleteFavoriteCardRequest(item.getId());
+        cardRepository.sendDeleteFavoriteCardRequest(item.getId(), new MyCardDeleteFromFavoriteCallback());
 
         final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
         adapter.setItems(freshFavoritesCards);
@@ -105,6 +108,23 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class MyCardDeleteFromFavoriteCallback implements CardDeleteFromFavoriteCallback {
+        @Override
+        public void onSuccess() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onError() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            progressDialog.dismiss();
         }
     }
 }
