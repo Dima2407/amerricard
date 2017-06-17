@@ -26,8 +26,6 @@ public class MainActivity extends DrawerActivity {
         super.onCreate(savedInstanceState);
         init(R.layout.activity_main);
 
-        ACApplication.getMainComponent().inject(this);
-
         ViewPager pager = (ViewPager) findViewById(R.id.main_view_pager);
         adapter = new MainPagerAdapter(this, getSupportFragmentManager());
         pager.setAdapter(adapter);

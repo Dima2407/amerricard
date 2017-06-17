@@ -10,7 +10,9 @@ import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.response.EventResponse;
+import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.callback.EventCreateCallback;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import retrofit2.Response;
 public class EventRepository {
 
     private static final String TAG = EventRepository.class.getSimpleName();
+
     @Inject
     API api;
     @Inject
@@ -36,8 +39,29 @@ public class EventRepository {
         this.context = context;
     }
 
-    public void createEvent(CreateEventRequest createEventRequest) {
+    public void createEvent(CreateEventRequest createEventRequest, final EventCreateCallback callback) {
+        Call<SimpleResponse> call = api.createEvent(createEventRequest);
+        call.enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.isSuccessful()){
+                    callback.onSuccess();
+                } else{
+                    callback.onError();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                if (t != null && t.getMessage() != null) {
+                    Log.d(TAG, "onFailure: " + t.getMessage());
+                    callback.onRetrofitError(t.getMessage());
+                } else {
+                    Log.d(TAG, "onFailure: " + NetworkModule.UNKNOWN_ERROR);
+                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
+                }
+            }
+        });
     }
 
     public void editEvent(EditEventRequest editEventRequest) {

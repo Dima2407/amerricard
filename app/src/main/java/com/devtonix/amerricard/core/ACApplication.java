@@ -1,8 +1,8 @@
 package com.devtonix.amerricard.core;
 
 import android.app.Application;
+
 import com.crashlytics.android.Crashlytics;
-import com.devtonix.amerricard.utils.LanguageUtils;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -22,7 +22,7 @@ public class ACApplication extends Application {
 
         mainComponent = DaggerMainComponent.builder().appModule(new AppModule(this)).build();
 
-        // Facebook init
+//        Facebook init
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
     }

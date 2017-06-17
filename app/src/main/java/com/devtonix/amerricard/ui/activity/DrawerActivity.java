@@ -52,7 +52,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
             }
         });
 
-        getSupportActionBar().setTitle("amerricard");
+        getSupportActionBar().setTitle(R.string.amerricard);
     }
 
     private void initSidePanel() {

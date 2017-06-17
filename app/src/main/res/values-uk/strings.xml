@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Налаштування</string>
+    <string name="add_birthday">Додати день народження</string>
+    <string name="amerricard">AmerriCard</string>
+    <string name="become_vip">Стати VIP</string>
+    <string name="birthday">День народження</string>
+    <string name="calendar">Календар</string>
+    <string name="cards">Листівки</string>
+    <string name="celebrities">Знаменитості</string>
+    <string name="create_birthday">Створити</string>
+    <string name="daily_notification">Щоденне повідомлення на день народження</string>
+    <string name="english">English</string>
+    <string name="error_no_internet">Перевірте з\'єднання з Інтернетом</string>
+    <string name="favorite_cards">Улюблені карти</string>
+    <string name="favorites">Улюбленi</string>
+    <string name="french">French</string>
+    <string name="language">Мова</string>
+    <string name="loading">Завантаження...</string>
+    <string name="manage_birthdays">Управлiння днями народженнями</string>
+    <string name="name">Ім\'я та прізвище</string>
+    <string name="no_cards_available">Немає доступних карт</string>
+    <string name="no_cards_in_this_category">Немає карти в цій категорії</string>
+    <string name="no_favorite_cards">Немає улюблених карт</string>
+    <string name="notifications_title">Нова подія!</string>
+    <string name="ok">Ok</string>
+    <string name="premium">Премiум</string>
+    <string name="russian">Russian</string>
+    <string name="scheduled_time">Запланований час</string>
+    <string name="send_card">Відправити листівку</string>
+    <string name="sent_cards">Передані карти</string>
+    <string name="settings">Налаштування</string>
+    <string name="spanish">Spanish</string>
+    <string name="ukrainian">Ukrainian</string>
+    <string name="vip">VIP</string>
+</resources>
