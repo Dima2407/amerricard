@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -144,7 +145,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
     private List<Contact> getContactsWithBirthday() {
         final long startQuery = System.currentTimeMillis();
-        final List<Contact> contactsAndBirthdays = new ArrayList<>(50);
+        final List<Contact> contactsAndBirthdays = new ArrayList<>();
         final Uri uri = ContactsContract.Data.CONTENT_URI;
 
         final String[] projection = new String[]{
@@ -169,12 +170,17 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         final int photoUriColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
 
         while (cursor.moveToNext()) {
-            final Contact contact = new Contact();
-            contact.setName(cursor.getString(contactNameColumn));
-            contact.setPhotoUri(cursor.getString(photoUriColumn));
+
 
             final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
             final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
+            if (TextUtils.equals(formatterBirthday, "01.01.1970")){
+                continue;
+            }
+
+            final Contact contact = new Contact();
+            contact.setName(cursor.getString(contactNameColumn));
+            contact.setPhotoUri(cursor.getString(photoUriColumn));
 
             contact.setBirthday(formatterBirthday);
 
