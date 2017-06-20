@@ -62,4 +62,5 @@
         <item>fr</item>
         <item>ua</item>
     </string-array>
+    <string name="created_with">Created with</string>
 </resources>

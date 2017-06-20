@@ -33,4 +33,5 @@
     <string name="amerricard">AmerriCard</string>
     <string name="loading">Загрузка...</string>
     <string name="notifications_title">Новое событие!</string>
+    <string name="created_with">Создано в</string>
 </resources>
