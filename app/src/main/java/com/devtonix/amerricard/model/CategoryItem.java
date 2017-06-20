@@ -20,6 +20,7 @@ public class CategoryItem {
 
 
     //-------------------------------
+//    @Expose(deserialize = false, serialize = false)
     private List<CategoryItem> categoryItems = null;
     //-------------------------------
     private List<CardItem> cardItems = null;
@@ -60,5 +61,23 @@ public class CategoryItem {
 
     public String getImage() {
         return image;
+    }
+
+
+
+    public List<CategoryItem> getCategoryItems() {
+        return categoryItems;
+    }
+
+    public void setCategoryItems(List<CategoryItem> categoryItems) {
+        this.categoryItems = categoryItems;
+    }
+
+    public List<CardItem> getCardItems() {
+        return cardItems;
+    }
+
+    public void setCardItems(List<CardItem> cardItems) {
+        this.cardItems = cardItems;
     }
 }

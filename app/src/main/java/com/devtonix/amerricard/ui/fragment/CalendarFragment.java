@@ -181,7 +181,6 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
             final Contact contact = new Contact();
             contact.setName(cursor.getString(contactNameColumn));
             contact.setPhotoUri(cursor.getString(photoUriColumn));
-
             contact.setBirthday(formatterBirthday);
 
             contactsAndBirthdays.add(contact);
