@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,7 +26,6 @@ import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
 import com.devtonix.amerricard.utils.RegexDateUtils;
@@ -47,6 +45,9 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     EventRepository eventRepository;
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
+
+
     private CalendarAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
@@ -70,7 +71,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(),this);
+        adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -96,9 +97,27 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+//                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+                startActivityForResult(intent, REQUEST_CODE_FOR_CREATING_CONTACT);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_FOR_CREATING_CONTACT) {
+
+            if (SystemUtils.isPermissionGranted(getActivity())) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
+            } else {
+                contacts = getContactsWithBirthday();
+                eventRepository.getEvents(new MyEventGetCallback());
+            }
+        }
     }
 
     private void manageVisible(boolean isListVisible) {
@@ -174,7 +193,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
             final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
             final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
-            if (TextUtils.equals(formatterBirthday, "01.01.1970")){
+            if (TextUtils.equals(formatterBirthday, "01.01.1970")) {
                 continue;
             }
 
@@ -205,8 +224,8 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         @Override
         public void onSuccess(List<EventItem> events) {
 
-            for (EventItem event : events){
-                Log.d(TAG, "onSuccess: event="+event.getName().getEn());
+            for (EventItem event : events) {
+                Log.d(TAG, "onSuccess: event=" + event.getName().getEn());
             }
             updateEvents(events);
         }

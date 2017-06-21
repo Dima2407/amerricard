@@ -48,6 +48,7 @@ public class DetailActivity extends BaseActivity {
     public static final String POSITION_FOR_CATEGORY_FRST_LVL = "position_for_category_frst_lvl";
     public static final String PARCELABLE_CARDS = "parcelable_cads";
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
+    private static final String WEB_CITE = " amerricards.com";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
@@ -196,7 +197,7 @@ public class DetailActivity extends BaseActivity {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "From Amerricards");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.created_with) + WEB_CITE);
                 shareIntent.setType("image/*");
 
                 startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);
