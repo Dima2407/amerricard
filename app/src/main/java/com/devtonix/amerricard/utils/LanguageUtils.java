@@ -19,36 +19,6 @@ import java.util.Locale;
 
 public class LanguageUtils {
 
-//    public static void setupLanguage(Context context) {
-//        Log.d("LanguageUtils", "setupLanguage");
-//        setLanguage(context, getLanguage(context));
-//    }
-
-//    public static void setLanguage(Context context, String lang) {
-//        if (TextUtils.isEmpty(lang)) lang = "en";
-//        final Resources res = context.getResources();
-//        final DisplayMetrics dm = res.getDisplayMetrics();
-//        final Configuration conf = res.getConfiguration();
-//        conf.locale = new Locale(lang.toLowerCase());
-//        res.updateConfiguration(conf, dm);
-//        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-//        prefs.edit().putString(SharedHelper.Fields.LANGUAGE, lang.toLowerCase()).apply();
-//    }
-
-//    public static String getLanguage(Context context) {
-////        final SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-////        String currentLang = prefs.getString(SharedHelper.Fields.LANGUAGE, "");
-//        //todo FIX THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        String currentLang = "en";
-//
-//        if (currentLang.isEmpty()) {
-//            currentLang = Locale.getDefault().getLanguage();
-//        }
-//        Log.d("LanguageUtils", "language:" + currentLang);
-//
-//        return currentLang;
-//    }
-
     public static String convertLang(Name name, String currLang) {
         switch (currLang) {
             case "en":

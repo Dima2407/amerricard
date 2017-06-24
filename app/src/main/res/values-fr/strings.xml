@@ -10,11 +10,9 @@
     <string name="celebrities">Célébrités</string>
     <string name="create_birthday">Créer</string>
     <string name="daily_notification">Notification d\'anniversaire quotidienne</string>
-    <string name="english">English</string>
     <string name="error_no_internet">Vérifiez votre connection internet</string>
     <string name="favorite_cards">Cartes préférées</string>
     <string name="favorites">Favoris</string>
-    <string name="french">French</string>
     <string name="language">La langue</string>
     <string name="loading">Chargement...</string>
     <string name="manage_birthdays">Gérer les anniversaires</string>
@@ -25,13 +23,10 @@
     <string name="notifications_title">Nouvel évènement!</string>
     <string name="ok">Ok</string>
     <string name="premium">Prime</string>
-    <string name="russian">Russian</string>
     <string name="scheduled_time">Heure prévue</string>
     <string name="send_card">Envoyer une carte</string>
     <string name="sent_cards">Cartes envoyées</string>
     <string name="settings">Paramètres</string>
-    <string name="spanish">Spanish</string>
-    <string name="ukrainian">Ukrainian</string>
     <string name="vip">VIP</string>
     <string name="created_with">Créé en</string>
 </resources>

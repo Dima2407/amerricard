@@ -10,11 +10,9 @@
     <string name="celebrities">Знаменитості</string>
     <string name="create_birthday">Створити</string>
     <string name="daily_notification">Щоденне повідомлення на день народження</string>
-    <string name="english">English</string>
     <string name="error_no_internet">Перевірте з\'єднання з Інтернетом</string>
     <string name="favorite_cards">Улюблені карти</string>
     <string name="favorites">Улюбленi</string>
-    <string name="french">French</string>
     <string name="language">Мова</string>
     <string name="loading">Завантаження...</string>
     <string name="manage_birthdays">Управлiння днями народженнями</string>
@@ -25,13 +23,10 @@
     <string name="notifications_title">Нова подія!</string>
     <string name="ok">Ok</string>
     <string name="premium">Премiум</string>
-    <string name="russian">Russian</string>
     <string name="scheduled_time">Запланований час</string>
     <string name="send_card">Відправити листівку</string>
     <string name="sent_cards">Передані карти</string>
     <string name="settings">Налаштування</string>
-    <string name="spanish">Spanish</string>
-    <string name="ukrainian">Ukrainian</string>
     <string name="vip">VIP</string>
     <string name="created_with">Створено у</string>
 </resources>

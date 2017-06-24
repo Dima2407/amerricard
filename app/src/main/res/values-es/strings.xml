@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="french">French</string>
-    <string name="ukrainian">Ukrainian</string>
     <string name="action_settings">Ajustes</string>
     <string name="add_birthday">Añadir cumpleaños</string>
     <string name="amerricard">AmerriCard</string>
@@ -12,7 +10,6 @@
     <string name="celebrities">Famosos</string>
     <string name="create_birthday">Crear</string>
     <string name="daily_notification">Notificación diaria de cumpleaños</string>
-    <string name="english">English</string>
     <string name="error_no_internet">Comprueba tu conexión a Internet</string>
     <string name="favorite_cards">Tarjetas favoritas</string>
     <string name="favorites">Favoritos</string>
@@ -26,12 +23,10 @@
     <string name="notifications_title">¡Nuevo evento!</string>
     <string name="ok">Ok</string>
     <string name="premium">Prima</string>
-    <string name="russian">Russian</string>
     <string name="scheduled_time">Hora programada</string>
     <string name="send_card">Enviar una tarjeta</string>
     <string name="sent_cards">Tarjetas enviadas</string>
     <string name="settings">Ajustes</string>
-    <string name="spanish">Spanish</string>
     <string name="vip">VIP</string>
     <string name="created_with">Creada en</string>
 </resources>
