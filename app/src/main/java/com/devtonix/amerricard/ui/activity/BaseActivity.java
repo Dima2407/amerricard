@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
@@ -79,6 +80,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public Locale getLocale() {
         final String currLang = sharedHelper.getLanguage();
+
+        if (TextUtils.equals(currLang, "ua")){
+            return new Locale("uk", "UA");
+        }
+
         return new Locale(currLang);
     }
 }
