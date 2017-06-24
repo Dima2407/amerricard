@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemSecondLevel;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.devtonix.amerricard.utils.LanguageUtils;
@@ -18,12 +19,12 @@ public class CategoryAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private int positionForCategoryFirstLvl;
-    private List<CategoryItemSecondLevel> categories = new ArrayList<>();
+    private List<CategoryItem> categories = new ArrayList<>();
     private String lang;
 
     private SparseArray<Fragment> categoryFragments = new SparseArray<Fragment>();
 
-    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItemSecondLevel> categories, int positionForCategoryFirstLvl, String language) {
+    public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItem> categories, int positionForCategoryFirstLvl, String language) {
         super(fragmentManager);
         this.context = context;
         this.categories = categories;
@@ -44,7 +45,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        return LanguageUtils.convertLang(categories.get(position).getNameJsonEl(), lang);
+        return LanguageUtils.convertLang(categories.get(position).getName(), lang);
     }
 
     @Override

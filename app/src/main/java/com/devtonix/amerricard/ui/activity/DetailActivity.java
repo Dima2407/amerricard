@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
@@ -69,7 +70,7 @@ public class DetailActivity extends BaseActivity {
         initViews();
         initToolbar();
 
-        final List<CategoryItemFirstLevel> categoryFirstLevel = cardRepository.getCardsFromStorage();
+        final List<CategoryItem> categoryFirstLevel = cardRepository.getCardsFromStorage();
 
         final List<CardItem> cards;
         final CardItem currentCardItem;
@@ -84,8 +85,10 @@ public class DetailActivity extends BaseActivity {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
             final int positionForCategorySecondLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_SCND_LVL, 0);
             final int positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_FRST_LVL, 0);
-            cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
-            currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCurrentCard);
+//            cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
+            cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getCategoryItems().get(positionForCategorySecondLvl).getCardItems();
+//            currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCurrentCard);
+            currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getCategoryItems().get(positionForCategorySecondLvl).getCardItems().get(positionForCurrentCard);
         }
 
 

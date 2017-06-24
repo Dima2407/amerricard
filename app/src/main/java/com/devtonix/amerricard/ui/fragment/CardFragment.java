@@ -3,7 +3,6 @@ package com.devtonix.amerricard.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
-import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
@@ -53,7 +52,7 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItemFirstLevel>(),sharedHelper.getLanguage(), this);
+        adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItem>(), sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -69,8 +68,8 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         startActivity(intent);
     }
 
-    public void updateData(List<CategoryItemFirstLevel> items) {
-        if (items == null || items.size()==0) {
+    public void updateData(List<CategoryItem> items) {
+        if (items == null || items.size() == 0) {
             manageVisible(false);
         } else {
             manageVisible(true);
@@ -90,7 +89,7 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
 
     private class MyCardGetCallback implements CardGetCallback {
         @Override
-        public void onSuccess(List<CategoryItemFirstLevel> data) {
+        public void onSuccess(List<CategoryItem> data) {
             updateData(data);
         }
 

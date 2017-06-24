@@ -3,6 +3,7 @@ package com.devtonix.amerricard.network;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.response.CardResponse;
+import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.EventResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 
@@ -30,7 +31,7 @@ public interface API {
     Call<SimpleResponse> deleteFavoriteCard(@Path("cardId") long cardId);
 
     @GET("card")
-    Call<CardResponse> getCard();
+    Call<CardResponseNew> getCard();
 
     /**
      * CRUD event

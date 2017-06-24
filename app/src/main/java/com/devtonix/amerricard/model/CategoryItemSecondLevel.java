@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class CategoryItemSecondLevel {
 
     @SerializedName("type")

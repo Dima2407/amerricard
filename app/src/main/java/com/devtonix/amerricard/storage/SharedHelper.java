@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
@@ -45,13 +46,13 @@ public class SharedHelper {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public void saveCards(List<CategoryItemFirstLevel> items) {
+    public void saveCards(List<CategoryItem> items) {
         sharedPreferences.edit().putString(Fields.CARDS, new Gson().toJson(new ListCategoryItem(items))).apply();
     }
 
-    public List<CategoryItemFirstLevel> getCards() {
+    public List<CategoryItem> getCards() {
         ListCategoryItem listCategoryItem = new Gson().fromJson(sharedPreferences.getString(Fields.CARDS, ""), ListCategoryItem.class);
-        return listCategoryItem == null ? new ArrayList<CategoryItemFirstLevel>() : listCategoryItem.data;
+        return listCategoryItem == null ? new ArrayList<CategoryItem>() : listCategoryItem.data;
     }
 
     public void saveContacts(List<Contact> contacts) {

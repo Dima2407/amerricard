@@ -38,6 +38,7 @@ public class LanguageUtils {
 
 
     //todo TRY-CATCH for logic is very bad solution, but server return bad json-structure
+    @Deprecated
     public static String convertLang(JsonElement jsonElementName, String currLang) {
 
         String output = "";

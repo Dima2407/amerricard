@@ -5,11 +5,13 @@ import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.CategoryItemSecondLevel;
 import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.response.CardResponse;
+import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
@@ -111,50 +113,49 @@ public class CardRepository {
     }
 
     public void getCards(final CardGetCallback callback) {
-        Call<CardResponse> call = api.getCard();
-        call.enqueue(new Callback<CardResponse>() {
+        Call<CardResponseNew> call = api.getCard();
+        call.enqueue(new Callback<CardResponseNew>() {
             @Override
-            public void onResponse(Call<CardResponse> call, Response<CardResponse> response) {
+            public void onResponse(Call<CardResponseNew> call, Response<CardResponseNew> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    final List<CategoryItemFirstLevel> firstLevels = response.body().getData();
+                    final List<CategoryItem> categories = response.body().getCategories();
 
-                    //for testing
-                    for (CategoryItemFirstLevel itemFirstLevel : firstLevels) {
-                        final List<CategoryItemSecondLevel> categoryItemSecondLevels = itemFirstLevel.getData();
-                        for (CategoryItemSecondLevel secondLevel : categoryItemSecondLevels) {
-                            Log.d(TAG, "onResponse: name = " + secondLevel.getNameJsonEl().toString());
+                    for (CategoryItem mainCategory: categories){
+                        for (CategoryItem category: mainCategory.getCategoryItems()){
+                            Log.d(TAG, "["+mainCategory.getName().getEn()+"]"+"category=" + category.getName().getEn());
+                        }
+                        for (CardItem card : mainCategory.getCardItems()){
+                            Log.d(TAG, "["+mainCategory.getName().getEn()+"]"+"card="+card.getName());
                         }
                     }
-                    Log.d(TAG, "onResponse: success   card = " + response.body().getData().get(0).getData().get(0).getData().get(0).getName());
+                    saveCardsToStorage(categories);
 
-
-                    saveCardsToStorage(firstLevels);
-
-                    callback.onSuccess(response.body().getData());
+                    callback.onSuccess(categories);
                 } else {
-                    Log.d(TAG, "onResponse: error");
+                    Log.d(TAG, "getCards() onResponse: error");
                     callback.onError();
                 }
             }
 
             @Override
-            public void onFailure(Call<CardResponse> call, Throwable t) {
+            public void onFailure(Call<CardResponseNew> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
-                    Log.d(TAG, "onFailure: " + t.getMessage());
+                    Log.d(TAG, "getCards() onFailure: " + t.getMessage());
                     callback.onRetrofitError(t.getMessage());
                 } else {
-                    Log.d(TAG, "onFailure: " + NetworkModule.UNKNOWN_ERROR);
+                    Log.d(TAG, "getCards() onFailure: " + NetworkModule.UNKNOWN_ERROR);
                     callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
                 }
             }
         });
     }
 
-    public List<CategoryItemFirstLevel> getCardsFromStorage() {
+    public List<CategoryItem> getCardsFromStorage() {
+
         return sharedHelper.getCards();
     }
 
-    public void saveCardsToStorage(List<CategoryItemFirstLevel> itemFirstLevels) {
+    public void saveCardsToStorage(List<CategoryItem> itemFirstLevels) {
 
         sharedHelper.saveCards(itemFirstLevels);
     }
