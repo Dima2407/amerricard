@@ -22,10 +22,13 @@ import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.activity.CategoryActivity;
+import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
 import com.devtonix.amerricard.utils.RegexDateUtils;
@@ -53,6 +56,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     private TextView emptyText;
     private ContentResolver contentResolver;
     private List<Contact> contacts = new ArrayList<>();
+    private List<Object> objects = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +87,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
             contacts = getContactsWithBirthday();
-            updateEvents(null);
+//            updateEvents(null);
         }
 
         return view;
@@ -131,11 +135,12 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     }
 
     public void updateEvents(List<EventItem> events) {
-        final List<Object> objects = new ArrayList<>();
+        objects.clear();
 
         if (events != null) {
             objects.addAll(events);
         }
+
         objects.addAll(contacts);
 
         if (objects.size() == 0) {
@@ -150,8 +155,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 contacts = getContactsWithBirthday();
@@ -217,7 +221,25 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
     @Override
     public void onItemClicked(int position) {
+        Log.d(TAG, "onItemClicked: position=" + position);
 
+        Object o = objects.get(position);
+        if (o instanceof EventItem) {
+            final EventItem event = (EventItem) o;
+            final int categoryId = event.getCategoryId();
+
+            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+            intent.setAction(CategoryActivity.ACTION_FROM_EVENTS);
+            intent.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, categoryId);
+            startActivity(intent);
+        } else if (o instanceof Contact) {
+            final Contact contact = (Contact) o;
+            final int birthdayPosition = 2;
+
+            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+            intent.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, birthdayPosition);
+            startActivity(intent);
+        }
     }
 
     private class MyEventGetCallback implements EventGetCallback {

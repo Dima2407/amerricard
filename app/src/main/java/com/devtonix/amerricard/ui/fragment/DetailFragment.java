@@ -64,6 +64,6 @@ public class DetailFragment extends BaseFragment {
 
     public void updateFragment(boolean isFullScreen) {
         image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
-        detailContainer.setBackgroundColor(isFullScreen ? Color.BLACK : Color.WHITE);
+//        detailContainer.setBackgroundColor(isFullScreen ? Color.BLACK : Color.WHITE);
     }
 }

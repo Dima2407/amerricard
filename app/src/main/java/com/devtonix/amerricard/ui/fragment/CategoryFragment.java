@@ -21,6 +21,7 @@ import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,11 +32,15 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     CardRepository cardRepository;
 
     private static final String TAG = CategoryFragment.class.getSimpleName();
+    public static final int POSITION_NOT_SET = -1;
+
     private CategoryGridAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private int positionForCategory;
-    private int positionForCategoryFirstLvl;
+    private int positionForCardItem = -1;
+    private int positionForCategoryItem = -1;
+    private int categoryId = -1;
+    private List<CardItem> cards;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,19 +49,35 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         ACApplication.getMainComponent().inject(this);
     }
 
-    public static CategoryFragment getInstance(int positionForCategorySecondLvl, int positionForCategoryFirstLvl) {
+    public static CategoryFragment getInstance(int positionForCard, int positionForCategory) {
         CategoryFragment categoryFragment = new CategoryFragment();
-        categoryFragment.setPositionForCategorySecondLvl(positionForCategorySecondLvl);
-        categoryFragment.setPositionForCategoryFirstLvl(positionForCategoryFirstLvl);
+        categoryFragment.setPositionForCardItem(positionForCard);
+        categoryFragment.setPositionForCategoryItem(positionForCategory);
         return categoryFragment;
     }
 
-    private void setPositionForCategorySecondLvl(int positionForCategorySecondLvl) {
-        this.positionForCategory = positionForCategorySecondLvl;
+    public static CategoryFragment getInstance(int positionMainCategory) {
+        CategoryFragment categoryFragment = new CategoryFragment();
+        categoryFragment.setPositionForCardItem(positionMainCategory);
+        return categoryFragment;
     }
 
-    private void setPositionForCategoryFirstLvl(int positionForCategoryFirstLvl) {
-        this.positionForCategoryFirstLvl = positionForCategoryFirstLvl;
+    public static CategoryFragment getInstanceForCategoryId(int categoryId) {
+        CategoryFragment categoryFragment = new CategoryFragment();
+        categoryFragment.setCategoryId(categoryId);
+        return categoryFragment;
+    }
+
+    private void setPositionForCardItem(int positionForCardItem) {
+        this.positionForCardItem = positionForCardItem;
+    }
+
+    private void setPositionForCategoryItem(int positionForCategoryItem) {
+        this.positionForCategoryItem = positionForCategoryItem;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override
@@ -66,21 +87,18 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        int countRow = 2;
+        final int countRow = 2;
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), countRow));
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
 
-                final List<CardItem> cards = ((CategoryActivity) getActivity()).getCategories(positionForCategory);
+                cards = ((CategoryActivity) getActivity()).getCategories(positionForCardItem);
 
                 try {
                     if (cards.size() != 0) {
-                        Log.d("CategoryFragment", "visible");
                         manageVisible(true);
-
-                        Log.d(TAG, "CATEGORY_POSITION = " + positionForCategory);
 
                         int width;
                         int height;
@@ -90,6 +108,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
                         } else {
                             width = (recyclerView.getWidth()) / 2;
                         }
+
                         height = (int) (width * 1.6);
 
                         final List<CardItem> favoriteCards = cardRepository.getFavoriteCardsFromStorage();
@@ -118,11 +137,21 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onItemClicked(int pos) {
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, pos);
-        intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_SCND_LVL, positionForCategory); //todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY_FRST_LVL, positionForCategoryFirstLvl);
-        startActivity(intent);
+        if (categoryId != -1) {
+            //show selected card from CALENDAR tab (click on some event)
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<>(cards));
+            intent.putExtra(DetailActivity.POSITION_FOR_CARD_FROM_EVENT_SCREEN, pos);
+            intent.setAction(DetailActivity.ACTION_SHOW_CARD_FROM_EVENT_SCREEN);
+            startActivity(intent);
+        } else {
+            //show selected card from CARDS tab
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, pos);
+            intent.putExtra(DetailActivity.POSITION_FOR_CARD, positionForCardItem);
+            intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, positionForCategoryItem);
+            startActivity(intent);
+        }
     }
 
     @Override

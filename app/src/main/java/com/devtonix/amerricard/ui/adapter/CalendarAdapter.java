@@ -70,7 +70,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     @Override
     public CalendarAdapter.MainHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.view_calendar_item, parent, false);
-        return new CalendarAdapter.MainHolder(v);
+        return new CalendarAdapter.MainHolder(v, listener);
     }
 
     @Override
@@ -108,29 +108,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
         return objects.size();
     }
 
-    public class MainHolder extends RecyclerView.ViewHolder {
+    static final class MainHolder extends RecyclerView.ViewHolder {
 
         TextView text;
         TextView subtext;
         ImageView icon;
 
-        public MainHolder(View itemView) {
+        public MainHolder(View itemView, final OnCalendarItemClickListener listener) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onSelected(getAdapterPosition());
+                  listener.onItemClicked(getAdapterPosition());
                 }
             });
             text = (TextView) itemView.findViewById(R.id.card_text);
             subtext = (TextView) itemView.findViewById(R.id.card_sub_text);
             icon = (ImageView) itemView.findViewById(R.id.card_icon);
-        }
-    }
-
-    private void onSelected(int adapterPosition) {
-        if (listener != null) {
-            listener.onItemClicked(adapterPosition);
         }
     }
 }
