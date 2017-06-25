@@ -3,7 +3,7 @@
     <string name="action_settings">Налаштування</string>
     <string name="add_birthday">Додати день народження</string>
     <string name="amerricard">AmerriCard</string>
-    <string name="become_vip">Стати VIP</string>
+    <string name="become_vip">Стати VIP або Premium</string>
     <string name="birthday">День народження</string>
     <string name="calendar">Календар</string>
     <string name="cards">Листівки</string>
@@ -29,4 +29,5 @@
     <string name="settings">Налаштування</string>
     <string name="vip">VIP</string>
     <string name="created_with">Створено у</string>
+    <string name="become_vip_title">Стати VIP</string>
 </resources>

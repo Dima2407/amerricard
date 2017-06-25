@@ -25,6 +25,7 @@ public class SharedHelper {
 
     public interface Fields {
         String FIRST_TIME = "first_time";
+        String FIRST_LAUNCH_APPLICATION = "first_launch_application";
         String LOGGED_IN = "loggedIn";
         String USER_ID = "userId";
         String TOKEN = "token";
@@ -122,6 +123,14 @@ public class SharedHelper {
 
     public String getLanguage() {
         return sharedPreferences.getString(Fields.LANGUAGE, Locale.getDefault().getLanguage());
+    }
+
+    public void setFirstLaunchApplication(boolean isFirstLaunch){
+        sharedPreferences.edit().putBoolean(Fields.FIRST_LAUNCH_APPLICATION, isFirstLaunch).apply();
+    }
+
+    public boolean isFirstLaunchApplication(){
+        return sharedPreferences.getBoolean(Fields.FIRST_LAUNCH_APPLICATION, true);
     }
 
 

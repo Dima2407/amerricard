@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="become_vip">Получить VIP статус</string>
+    <string name="become_vip">Получить VIP или Premium</string>
     <string name="calendar">Календарь</string>
     <string name="cards">Открытки</string>
     <string name="favorite_cards">Избранные открытки</string>
@@ -29,4 +29,5 @@
     <string name="loading">Загрузка...</string>
     <string name="notifications_title">Новое событие!</string>
     <string name="created_with">Создано в</string>
+    <string name="become_vip_title">Получить VIP</string>
 </resources>

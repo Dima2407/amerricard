@@ -3,12 +3,14 @@ package com.devtonix.amerricard.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
@@ -34,14 +36,13 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
     private CardAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
+    private SwipeRefreshLayout srlContainer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ACApplication.getMainComponent().inject(this);
-
-        cardRepository.getCards(new MyCardGetCallback());
     }
 
     @Nullable
@@ -51,6 +52,7 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
+        srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
 
         adapter = new CardAdapter(getActivity(), new ArrayList<CategoryItem>(), sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -59,6 +61,31 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         manageVisible(false);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //if this is a first time when app launch, I want to get cards from network
+        //after that I load cards from storage (shared prefs)
+        if (sharedHelper.isFirstLaunchApplication()){
+
+            cardRepository.getCards(new MyCardGetCallback());
+
+            sharedHelper.setFirstLaunchApplication(false);
+        } else {
+            final List<CategoryItem> mainCategories = cardRepository.getCardsFromStorage();
+            updateData(mainCategories);
+        }
+
+        srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srlContainer.setRefreshing(true);
+                cardRepository.getCards(new MyCardGetCallback());
+            }
+        });
     }
 
     @Override
@@ -91,16 +118,18 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         @Override
         public void onSuccess(List<CategoryItem> data) {
             updateData(data);
+
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onError() {
-
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onRetrofitError(String message) {
-
+            srlContainer.setRefreshing(false);
         }
     }
 }

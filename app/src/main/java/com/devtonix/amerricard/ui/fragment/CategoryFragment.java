@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
+import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
@@ -113,13 +115,29 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
                         final List<CardItem> favoriteCards = cardRepository.getFavoriteCardsFromStorage();
 
+                        final List<CardItem> vipCards = new ArrayList<CardItem>();
+                        for (CardItem card : cards) {
+                            if (TextUtils.equals(card.getCardType(), "VIP")) {
+                                vipCards.add(card);
+                            }
+                        }
+
+                        final List<CardItem> premiumCards = new ArrayList<CardItem>();
+                        for (CardItem card : cards) {
+                            if (TextUtils.equals(card.getCardType(), "PREMIUM")) {
+                                premiumCards.add(card);
+                            }
+                        }
+
                         adapter = new CategoryGridAdapter(
                                 getActivity(),
                                 cards,
                                 CategoryFragment.this,
                                 width,
                                 height,
-                                favoriteCards);
+                                favoriteCards,
+                                vipCards,
+                                premiumCards);
 
                         recyclerView.setAdapter(adapter);
                     } else {
@@ -155,9 +173,10 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     }
 
     @Override
-    public void onFavoriteClicked(int position, CardItem item) {
+    public void onFavoriteClicked(int position) {
 
         progressDialog.show();
+        final CardItem item = cards.get(position);
 
         if (adapter.isFavorite(item)) {
             cardRepository.removeCardFromFavorites(item);
@@ -168,6 +187,22 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         }
         final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
         adapter.setFavorites(freshFavoritesCards);
+    }
+
+    @Override
+    public void onVipClicked(int position) {
+        Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
+        intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onPremiumClicked(int position) {
+        Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
+        intent.setAction(VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     private void manageVisible(boolean isListVisible) {

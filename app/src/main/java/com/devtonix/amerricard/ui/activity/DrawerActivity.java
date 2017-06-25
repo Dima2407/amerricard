@@ -65,7 +65,8 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
         addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
         addItem(R.id.drawer_manage_holidays, getString(R.string.manage_birthdays), R.drawable.ic_edit);
-        addItem(R.id.drawer_vip, getString(R.string.become_vip), R.drawable.ic_crown);
+        addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip);
+        addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium);
         addItem(R.id.drawer_settings, getString(R.string.settings), R.drawable.ic_settings);
     }
 
@@ -107,7 +108,14 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                 startActivity(new Intent(this, ManageActivity.class));
                 break;
             case R.id.drawer_vip:
-                startActivity(new Intent(this, VipActivity.class));
+                Intent vipIntent = new Intent(this, VipAndPremiumActivity.class);
+                vipIntent.putExtra(VipAndPremiumActivity.TAB_POSITION, 0);
+                startActivity(vipIntent);
+                break;
+            case R.id.drawer_premium:
+                Intent premIntent = new Intent(this, VipAndPremiumActivity.class);
+                premIntent.putExtra(VipAndPremiumActivity.TAB_POSITION, 1);
+                startActivity(premIntent);
                 break;
             case R.id.drawer_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

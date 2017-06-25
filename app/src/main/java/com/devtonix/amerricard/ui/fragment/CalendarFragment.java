@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -54,6 +55,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     private CalendarAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
+    private SwipeRefreshLayout srlContainer;
     private ContentResolver contentResolver;
     private List<Contact> contacts = new ArrayList<>();
     private List<Object> objects = new ArrayList<>();
@@ -74,6 +76,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
+        srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
 
         adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -105,6 +108,15 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
                 startActivityForResult(intent, REQUEST_CODE_FOR_CREATING_CONTACT);
+            }
+        });
+
+        srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srlContainer.setRefreshing(true);
+
+                eventRepository.getEvents(new MyEventGetCallback());
             }
         });
     }
@@ -245,21 +257,19 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     private class MyEventGetCallback implements EventGetCallback {
         @Override
         public void onSuccess(List<EventItem> events) {
-
-            for (EventItem event : events) {
-                Log.d(TAG, "onSuccess: event=" + event.getName().getEn());
-            }
             updateEvents(events);
+
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onError() {
-
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onRetrofitError(String message) {
-
+            srlContainer.setRefreshing(false);
         }
     }
 }

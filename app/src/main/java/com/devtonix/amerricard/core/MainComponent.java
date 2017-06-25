@@ -19,6 +19,8 @@ import com.devtonix.amerricard.ui.fragment.BaseFragment;
 import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.ui.fragment.PremiumFragment;
+import com.devtonix.amerricard.ui.fragment.VipFragment;
 
 import javax.inject.Singleton;
 
@@ -45,6 +47,8 @@ public interface MainComponent {
     void inject(CategoryFragment categoryFragment);
     void inject(CalendarFragment calendarFragment);
     void inject(CardFragment cardFragment);
+    void inject(PremiumFragment premiumFragment);
+    void inject(VipFragment vipFragment);
 
     /**
      * Other

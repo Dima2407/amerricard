@@ -3,7 +3,7 @@
     <string name="action_settings">Ajustes</string>
     <string name="add_birthday">Añadir cumpleaños</string>
     <string name="amerricard">AmerriCard</string>
-    <string name="become_vip">Hazte VIP</string>
+    <string name="become_vip">Convertirse en VIP o Premium</string>
     <string name="birthday">Cumpleaños</string>
     <string name="calendar">Calendario</string>
     <string name="cards">Postales</string>
@@ -29,4 +29,5 @@
     <string name="settings">Ajustes</string>
     <string name="vip">VIP</string>
     <string name="created_with">Creada en</string>
+    <string name="become_vip_title">Hazte VIP</string>
 </resources>

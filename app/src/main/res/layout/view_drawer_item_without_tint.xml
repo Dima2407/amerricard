@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/view_drawer_item_icon"
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/small_padding"
+            android:padding="@dimen/small_padding"/>
+
+        <TextView
+            android:id="@+id/view_drawer_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="@dimen/text_size_big"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"/>
+    </LinearLayout>
+</LinearLayout>

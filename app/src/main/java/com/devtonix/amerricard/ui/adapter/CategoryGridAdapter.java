@@ -18,8 +18,10 @@ import java.util.List;
 
 public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapter.MainHolder> {
 
-    private List<CardItem> items = new ArrayList<>();
+    private List<CardItem> cards = new ArrayList<>();
     private List<CardItem> favorites = new ArrayList<>();
+    private List<CardItem> vipCards = new ArrayList<>();
+    private List<CardItem> premiumCards = new ArrayList<>();
     private Context context;
     private OnFavoriteClickListener listener;
 
@@ -29,20 +31,28 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
 
-        void onFavoriteClicked(int position, CardItem cardItem);
+        void onFavoriteClicked(int position);
+
+        void onVipClicked(int position);
+
+        void onPremiumClicked(int position);
     }
 
-    public CategoryGridAdapter(Context context, List<CardItem> items, OnFavoriteClickListener listener, int width, int height, List<CardItem> favoriteCards) {
+    public CategoryGridAdapter(Context context, List<CardItem> cards, OnFavoriteClickListener listener,
+                               int width, int height, List<CardItem> favoriteCards,
+                               List<CardItem> vipCards, List<CardItem> premiumCards) {
         this.context = context;
-        this.items = items;
+        this.cards = cards;
         this.listener = listener;
         this.width = width;
         this.height = height;
         this.favorites = favoriteCards;
+        this.vipCards = vipCards;
+        this.premiumCards = premiumCards;
     }
 
     public void updateData(List<CardItem> items) {
-        this.items = items;
+        this.cards = items;
         notifyDataSetChanged();
     }
 
@@ -51,12 +61,12 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         View v = LayoutInflater.from(context).inflate(R.layout.view_category_item, parent, false);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
         v.setLayoutParams(params);
-        return new MainHolder(v);
+        return new MainHolder(v, listener);
     }
 
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
-        final CardItem item = items.get(position);
+        final CardItem item = cards.get(position);
 
         if (isFavorite(item)) {
             holder.favoriteButton.setVisibility(View.GONE);
@@ -67,6 +77,10 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
             holder.favoriteButtonFull.setVisibility(View.GONE);
             holder.favoriteContainer.setBackgroundResource(R.drawable.shape_red_circle);
         }
+
+        holder.ivVip.setVisibility(isVip(item) ? View.VISIBLE : View.GONE);
+        holder.ivPremium.setVisibility(isPremium(item) ? View.VISIBLE : View.GONE);
+
         final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
         Glide.with(context).load(url).into(holder.icon);
@@ -81,24 +95,44 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         return false;
     }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
+    public boolean isVip(CardItem item) {
+        for (CardItem cardItem : vipCards) {
+            if ((int) cardItem.getId() == (int) item.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public class MainHolder extends RecyclerView.ViewHolder {
+    public boolean isPremium(CardItem item) {
+        for (CardItem cardItem : premiumCards) {
+            if ((int) cardItem.getId() == (int) item.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getItemCount() {
+        return cards.size();
+    }
+
+    static final class MainHolder extends RecyclerView.ViewHolder {
 
         ImageView icon;
         ViewGroup favoriteContainer;
         ImageView favoriteButton;
         ImageView favoriteButtonFull;
+        ImageView ivVip;
+        ImageView ivPremium;
 
-        public MainHolder(View itemView) {
+        public MainHolder(View itemView, final OnFavoriteClickListener listener) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onSelected(getAdapterPosition());
+                    listener.onItemClicked(getAdapterPosition());
                 }
             });
             icon = (ImageView) itemView.findViewById(R.id.category_icon);
@@ -106,23 +140,28 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
             favoriteContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onFavoriteSelected(getAdapterPosition());
+                    listener.onFavoriteClicked(getAdapterPosition());
                 }
             });
             favoriteButton = (ImageView) itemView.findViewById(R.id.category_favorite_button);
             favoriteButtonFull = (ImageView) itemView.findViewById(R.id.category_favorite_button_full);
-        }
-    }
 
-    private void onSelected(int adapterPosition) {
-        if (listener != null) {
-            listener.onItemClicked(adapterPosition);
-        }
-    }
+            ivVip = (ImageView) itemView.findViewById(R.id.ivVip);
+            ivPremium = (ImageView) itemView.findViewById(R.id.ivPremium);
 
-    private void onFavoriteSelected(int adapterPosition) {
-        if (listener != null) {
-            listener.onFavoriteClicked(adapterPosition, items.get(adapterPosition));
+            ivVip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onVipClicked(getAdapterPosition());
+                }
+            });
+
+            ivPremium.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onPremiumClicked(getAdapterPosition());
+                }
+            });
         }
     }
 

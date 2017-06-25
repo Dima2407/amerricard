@@ -13,4 +13,6 @@
     <color name="colorTextDefault">#AA000000</color>
     <color name="colorIconsActive">#FF8A8A8A</color>
     <color name="colorIconsInactive">#FFBFBFBF</color>
+
+    <color name="opacity_50">#a7ffffff</color>
 </resources>
