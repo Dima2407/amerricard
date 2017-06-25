@@ -1,18 +1,20 @@
 package com.devtonix.amerricard.ui.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
-import com.devtonix.amerricard.model.CategoryItemFirstLevel;
-import com.devtonix.amerricard.model.CategoryItemSecondLevel;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
+import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
@@ -25,15 +27,19 @@ public class CategoryActivity extends BaseActivity {
 
     private static final String POSITION_FOR_SAVE_INSTANCE_STATE = "position_for_save_instance_state";
     public static final String POSITION_FOR_CATEGORY = "position_for_category";
+    public static final String ACTION_FROM_EVENTS = "action_from_events";
+    public static final String EXTRA_CATEGORY_ID = "extra_category_id";
 
     @Inject
     CardRepository cardRepository;
     @Inject
     SharedHelper sharedHelper;
 
-    private List<CategoryItemSecondLevel> categoriesSecondLvl = new ArrayList<>();
+    private List<CategoryItem> categoriesSecondLvl = new ArrayList<>();
     private CategoryAdapter adapter;
-    private int positionForCategoryFirstLvl;
+    private int positionForCategory;
+    private List<CategoryItem> mainCategories;
+    private int categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,31 +51,68 @@ public class CategoryActivity extends BaseActivity {
         initToolbar();
 
         if (savedInstanceState != null) {
-            positionForCategoryFirstLvl = savedInstanceState.getInt(POSITION_FOR_SAVE_INSTANCE_STATE);
+            positionForCategory = savedInstanceState.getInt(POSITION_FOR_SAVE_INSTANCE_STATE);
         } else {
-            positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY, 0);
+            positionForCategory = getIntent().getIntExtra(POSITION_FOR_CATEGORY, 0);
         }
 
-        final List<CategoryItemFirstLevel> items = cardRepository.getCardsFromStorage();
-        final CategoryItemFirstLevel item = items.get(positionForCategoryFirstLvl);
-        final String title = LanguageUtils.convertLang(item.getName(), sharedHelper.getLanguage());
+        mainCategories = cardRepository.getCardsFromStorage();
+        final CategoryItem currentCategory = mainCategories.get(positionForCategory);
+        final String title = LanguageUtils.convertLang(currentCategory.getName(), sharedHelper.getLanguage());
 
         setTitle(title);
 
-        if (item.getData() != null && item.getData().size() != 0) {
-            categoriesSecondLvl = item.getData();
+        if (currentCategory.getData() != null && currentCategory.getData().size() != 0) {
+            categoriesSecondLvl = currentCategory.getCategoryItems();
         }
 
-        findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
-        findViewById(R.id.single_fragment).setVisibility(View.GONE);
+        if (TextUtils.equals(getIntent().getAction(), ACTION_FROM_EVENTS)) {
+            //for display content of only one category (list of card)
+            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
+            final String currLang = sharedHelper.getLanguage();
 
-        adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategoryFirstLvl, sharedHelper.getLanguage());
-        pager.setAdapter(adapter);
+            categoryId = getIntent().getIntExtra(EXTRA_CATEGORY_ID, 0);
 
-        RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
-        recyclerTabLayout.setUpWithViewPager(pager);
+            for (CategoryItem category : mainCategories) {
+                if (category.getId() == categoryId) {
+                    final String categoryName = LanguageUtils.convertLang(category.getName(), currLang);
+                    setTitle(categoryName);
+                } else {
+                    final List<CategoryItem> innerCategories = category.getCategoryItems();
+                    for (CategoryItem innerCategory : innerCategories) {
+                        if (innerCategory.getId() == categoryId) {
+                            final String categoryName = LanguageUtils.convertLang(innerCategory.getName(), currLang);
+                            setTitle(categoryName);
+                        } else {
+                            // there is no required cards
+                        }
+                    }
+                }
+            }
+
+            Fragment fragment = CategoryFragment.getInstanceForCategoryId(categoryId);
+            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
+        } else if (categoriesSecondLvl.size() > 0) {
+            //for display categories with cards
+            findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
+            findViewById(R.id.single_fragment).setVisibility(View.GONE);
+
+            ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
+            adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
+            pager.setAdapter(adapter);
+            RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
+            recyclerTabLayout.setUpWithViewPager(pager);
+
+        } else {
+            //for display cards only
+            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
+
+            Fragment fragment = CategoryFragment.getInstance(positionForCategory);
+            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
+        }
     }
 
     private void initToolbar() {
@@ -80,15 +123,6 @@ public class CategoryActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-//    @Override
-//    public void onItemClicked(int positionForCategoryFirstLvl) {
-//        Item item = categories.get(positionForCategoryFirstLvl);
-//
-//        Intent intent = new Intent(this, DetailActivity.class);
-//        intent.putExtra("item", item);
-//        startActivity(intent);
-//    }
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -96,12 +130,36 @@ public class CategoryActivity extends BaseActivity {
     }
 
     public List<CardItem> getCategories(int position) {
-        return categoriesSecondLvl.get(position).getData();
+
+        //if user click to some event then need to show list of card selected category
+        if (TextUtils.equals(getIntent().getAction(), ACTION_FROM_EVENTS)) {
+            for (CategoryItem category : mainCategories) {
+                if (category.getId() == categoryId) {
+                    return category.getCardItems();
+                } else {
+                    final List<CategoryItem> innerCategories = category.getCategoryItems();
+                    for (CategoryItem innerCategory : innerCategories) {
+                        if (innerCategory.getId() == categoryId) {
+                            return innerCategory.getCardItems();
+                        } else {
+                            // there is no required cards
+                        }
+                    }
+                }
+            }
+        }
+
+        //if it is not category so this is cards
+        if (categoriesSecondLvl.size() == 0) {
+            return mainCategories.get(positionForCategory).getCardItems();
+        }
+
+        return categoriesSecondLvl.get(position).getCardItems();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(POSITION_FOR_SAVE_INSTANCE_STATE, positionForCategoryFirstLvl);
+        outState.putInt(POSITION_FOR_SAVE_INSTANCE_STATE, positionForCategory);
     }
 }

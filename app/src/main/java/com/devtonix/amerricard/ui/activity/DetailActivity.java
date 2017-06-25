@@ -22,10 +22,11 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
-import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
+import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -44,10 +45,13 @@ public class DetailActivity extends BaseActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     public static final String POSITION_FOR_CURRENT_CARD = "position_for_card_item";
     public static final String POSITION_FOR_FAVORITE_CARD = "position_for_favorite_card";
-    public static final String POSITION_FOR_CATEGORY_SCND_LVL = "position_for_category_scnd_lvl";
-    public static final String POSITION_FOR_CATEGORY_FRST_LVL = "position_for_category_frst_lvl";
+    public static final String POSITION_FOR_CARD = "position_for_card";
+    public static final String POSITION_FOR_CATEGORY = "position_for_category";
     public static final String PARCELABLE_CARDS = "parcelable_cads";
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
+    public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
+    public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
+    private static final String WEB_CITE = " amerricards.com";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
     private ViewGroup container;
@@ -56,6 +60,7 @@ public class DetailActivity extends BaseActivity {
     private ViewPager viewPager;
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
+    private List<CategoryItem> mainCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class DetailActivity extends BaseActivity {
         initViews();
         initToolbar();
 
-        final List<CategoryItemFirstLevel> categoryFirstLevel = cardRepository.getCardsFromStorage();
+        mainCategories = cardRepository.getCardsFromStorage();
 
         final List<CardItem> cards;
         final CardItem currentCardItem;
@@ -76,17 +81,30 @@ public class DetailActivity extends BaseActivity {
 
         if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
-            Log.d(TAG, "onCreate: action = " + getIntent().getAction() + "  position =" + positionForCurrentCard);
+            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            currentCardItem = cards.get(positionForCurrentCard);
+        } else if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_CARD_FROM_EVENT_SCREEN)) {
+            positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CARD_FROM_EVENT_SCREEN, 0);
             cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
             currentCardItem = cards.get(positionForCurrentCard);
         } else {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
-            final int positionForCategorySecondLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_SCND_LVL, 0);
-            final int positionForCategoryFirstLvl = getIntent().getIntExtra(POSITION_FOR_CATEGORY_FRST_LVL, 0);
-            cards = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData();
-            currentCardItem = categoryFirstLevel.get(positionForCategoryFirstLvl).getData().get(positionForCategorySecondLvl).getData().get(positionForCurrentCard);
-        }
+            final int positionForCategory = getIntent().getIntExtra(POSITION_FOR_CATEGORY, 0);
+            final int positionForCard = getIntent().getIntExtra(POSITION_FOR_CARD, 0);
 
+            Log.d(TAG, "positionForCategory  = " + positionForCategory);
+            Log.d(TAG, "positionForCard = " + positionForCard);
+
+            if (positionForCategory == CategoryFragment.POSITION_NOT_SET) {
+                //this are not categories with cards, there are cards only
+                cards = mainCategories.get(positionForCard).getCardItems();
+                currentCardItem = mainCategories.get(positionForCard).getCardItems().get(positionForCurrentCard);
+            } else {
+                //this are categories with cards
+                cards = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems();
+                currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
+            }
+        }
 
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
         viewPager.setAdapter(adapter);
@@ -196,7 +214,7 @@ public class DetailActivity extends BaseActivity {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "From Amerricards");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.created_with) + WEB_CITE);
                 shareIntent.setType("image/*");
 
                 startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);

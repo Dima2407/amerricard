@@ -18,6 +18,8 @@ import com.devtonix.amerricard.utils.CircleTransform;
 import com.devtonix.amerricard.utils.LanguageUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHolder> {
@@ -26,6 +28,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     private List<Object> objects = new ArrayList<>();
     private List<EventItem> holidays = new ArrayList<>();
     private List<Contact> contacts = new ArrayList<>();
+    private Comparator<Object> objectComparator;
 
     private String currLang;
     private Context context;
@@ -40,10 +43,44 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
         this.context = mContext;
         this.currLang = language;
         this.listener = listener;
+
+        objectComparator = new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+
+                if (o1 instanceof EventItem) {
+                    if (o2 instanceof Contact) {
+                        EventItem e = (EventItem) o1;
+                        Contact c = (Contact) o2;
+                        return e.getFormattedDate().compareTo(c.getBirthday());
+                    } else {
+                        EventItem event1 = (EventItem) o1;
+                        EventItem event2 = (EventItem) o2;
+                        return event1.getFormattedDate().compareTo(event2.getFormattedDate());
+                    }
+                }
+
+                if (o1 instanceof Contact) {
+                    if (o2 instanceof EventItem) {
+                        Contact c = (Contact) o1;
+                        EventItem e = (EventItem) o2;
+                        return c.getBirthday().compareTo(e.getFormattedDate());
+                    } else {
+                        Contact c1 = (Contact) o1;
+                        Contact c2 = (Contact) o2;
+                        return c1.getBirthday().compareTo(c2.getBirthday());
+                    }
+                }
+
+                return 0;
+            }
+        };
     }
 
     public void updateData(List<Object> objects, List<EventItem> eventForHide) {
         this.objects = objects;
+
+        Collections.sort(this.objects, objectComparator);
 
         for (Object o : objects) {
             if (o instanceof EventItem) {
@@ -70,7 +107,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
     @Override
     public CalendarAdapter.MainHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.view_calendar_item, parent, false);
-        return new CalendarAdapter.MainHolder(v);
+        return new CalendarAdapter.MainHolder(v, listener);
     }
 
     @Override
@@ -108,29 +145,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.MainHo
         return objects.size();
     }
 
-    public class MainHolder extends RecyclerView.ViewHolder {
+    static final class MainHolder extends RecyclerView.ViewHolder {
 
         TextView text;
         TextView subtext;
         ImageView icon;
 
-        public MainHolder(View itemView) {
+        public MainHolder(View itemView, final OnCalendarItemClickListener listener) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onSelected(getAdapterPosition());
+                    listener.onItemClicked(getAdapterPosition());
                 }
             });
             text = (TextView) itemView.findViewById(R.id.card_text);
             subtext = (TextView) itemView.findViewById(R.id.card_sub_text);
             icon = (ImageView) itemView.findViewById(R.id.card_icon);
-        }
-    }
-
-    private void onSelected(int adapterPosition) {
-        if (listener != null) {
-            listener.onItemClicked(adapterPosition);
         }
     }
 }

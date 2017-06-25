@@ -27,6 +27,8 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/small_padding"
             android:text="Unknown"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="@dimen/text_size_bigger"
             android:textColor="@android:color/white" />
 

@@ -10,9 +10,10 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,13 @@ import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
+import com.devtonix.amerricard.ui.activity.CategoryActivity;
+import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
 import com.devtonix.amerricard.utils.RegexDateUtils;
@@ -46,11 +49,16 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     EventRepository eventRepository;
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
+
+
     private CalendarAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
+    private SwipeRefreshLayout srlContainer;
     private ContentResolver contentResolver;
     private List<Contact> contacts = new ArrayList<>();
+    private List<Object> objects = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,8 +76,9 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
+        srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
 
-        adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(),this);
+        adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -81,7 +90,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
             contacts = getContactsWithBirthday();
-            updateEvents(null);
+//            updateEvents(null);
         }
 
         return view;
@@ -95,9 +104,36 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+//                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+                startActivityForResult(intent, REQUEST_CODE_FOR_CREATING_CONTACT);
             }
         });
+
+        srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srlContainer.setRefreshing(true);
+
+                eventRepository.getEvents(new MyEventGetCallback());
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_FOR_CREATING_CONTACT) {
+
+            if (SystemUtils.isPermissionGranted(getActivity())) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
+            } else {
+                contacts = getContactsWithBirthday();
+                eventRepository.getEvents(new MyEventGetCallback());
+            }
+        }
     }
 
     private void manageVisible(boolean isListVisible) {
@@ -111,11 +147,12 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     }
 
     public void updateEvents(List<EventItem> events) {
-        final List<Object> objects = new ArrayList<>();
+        objects.clear();
 
         if (events != null) {
             objects.addAll(events);
         }
+
         objects.addAll(contacts);
 
         if (objects.size() == 0) {
@@ -130,8 +167,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 contacts = getContactsWithBirthday();
@@ -144,7 +180,7 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
     private List<Contact> getContactsWithBirthday() {
         final long startQuery = System.currentTimeMillis();
-        final List<Contact> contactsAndBirthdays = new ArrayList<>(50);
+        final List<Contact> contactsAndBirthdays = new ArrayList<>();
         final Uri uri = ContactsContract.Data.CONTENT_URI;
 
         final String[] projection = new String[]{
@@ -169,13 +205,17 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         final int photoUriColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
 
         while (cursor.moveToNext()) {
-            final Contact contact = new Contact();
-            contact.setName(cursor.getString(contactNameColumn));
-            contact.setPhotoUri(cursor.getString(photoUriColumn));
+
 
             final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
             final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
+            if (TextUtils.equals(formatterBirthday, "01.01.1970")) {
+                continue;
+            }
 
+            final Contact contact = new Contact();
+            contact.setName(cursor.getString(contactNameColumn));
+            contact.setPhotoUri(cursor.getString(photoUriColumn));
             contact.setBirthday(formatterBirthday);
 
             contactsAndBirthdays.add(contact);
@@ -193,27 +233,43 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
     @Override
     public void onItemClicked(int position) {
+        Log.d(TAG, "onItemClicked: position=" + position);
 
+        Object o = objects.get(position);
+        if (o instanceof EventItem) {
+            final EventItem event = (EventItem) o;
+            final int categoryId = event.getCategoryId();
+
+            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+            intent.setAction(CategoryActivity.ACTION_FROM_EVENTS);
+            intent.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, categoryId);
+            startActivity(intent);
+        } else if (o instanceof Contact) {
+            final Contact contact = (Contact) o;
+            final int birthdayPosition = 2;
+
+            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+            intent.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, birthdayPosition);
+            startActivity(intent);
+        }
     }
 
     private class MyEventGetCallback implements EventGetCallback {
         @Override
         public void onSuccess(List<EventItem> events) {
-
-            for (EventItem event : events){
-                Log.d(TAG, "onSuccess: event="+event.getName().getEn());
-            }
             updateEvents(events);
+
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onError() {
-
+            srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onRetrofitError(String message) {
-
+            srlContainer.setRefreshing(false);
         }
     }
 }

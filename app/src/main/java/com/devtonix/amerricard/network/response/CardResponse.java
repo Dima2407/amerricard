@@ -7,6 +7,7 @@ import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class CardResponse {
 
     @SerializedName("status")

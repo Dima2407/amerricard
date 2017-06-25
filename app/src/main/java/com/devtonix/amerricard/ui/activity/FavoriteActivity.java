@@ -77,7 +77,6 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<CardItem>(cards));
         intent.putExtra(DetailActivity.POSITION_FOR_FAVORITE_CARD, position);
-        Log.d(TAG, "onItemClicked: currPosition = " + position);
         intent.setAction(DetailActivity.ACTION_SHOW_FAVORITE_CARDS);
         startActivity(intent);
     }

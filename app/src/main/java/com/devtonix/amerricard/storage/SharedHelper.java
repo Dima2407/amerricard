@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
@@ -24,6 +25,7 @@ public class SharedHelper {
 
     public interface Fields {
         String FIRST_TIME = "first_time";
+        String FIRST_LAUNCH_APPLICATION = "first_launch_application";
         String LOGGED_IN = "loggedIn";
         String USER_ID = "userId";
         String TOKEN = "token";
@@ -45,13 +47,13 @@ public class SharedHelper {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public void saveCards(List<CategoryItemFirstLevel> items) {
+    public void saveCards(List<CategoryItem> items) {
         sharedPreferences.edit().putString(Fields.CARDS, new Gson().toJson(new ListCategoryItem(items))).apply();
     }
 
-    public List<CategoryItemFirstLevel> getCards() {
+    public List<CategoryItem> getCards() {
         ListCategoryItem listCategoryItem = new Gson().fromJson(sharedPreferences.getString(Fields.CARDS, ""), ListCategoryItem.class);
-        return listCategoryItem == null ? new ArrayList<CategoryItemFirstLevel>() : listCategoryItem.data;
+        return listCategoryItem == null ? new ArrayList<CategoryItem>() : listCategoryItem.data;
     }
 
     public void saveContacts(List<Contact> contacts) {
@@ -121,6 +123,14 @@ public class SharedHelper {
 
     public String getLanguage() {
         return sharedPreferences.getString(Fields.LANGUAGE, Locale.getDefault().getLanguage());
+    }
+
+    public void setFirstLaunchApplication(boolean isFirstLaunch){
+        sharedPreferences.edit().putBoolean(Fields.FIRST_LAUNCH_APPLICATION, isFirstLaunch).apply();
+    }
+
+    public boolean isFirstLaunchApplication(){
+        return sharedPreferences.getBoolean(Fields.FIRST_LAUNCH_APPLICATION, true);
     }
 
 

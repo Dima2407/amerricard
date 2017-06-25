@@ -7,6 +7,7 @@ import com.devtonix.amerricard.utils.LanguageUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class CategoryItemFirstLevel {
 
     @SerializedName("type")

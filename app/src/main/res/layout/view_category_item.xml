@@ -22,6 +22,28 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"/>
 
+        <ImageView
+            android:id="@+id/ivVip"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/category_favorite_container"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_vip"/>
+
+        <ImageView
+            android:id="@+id/ivPremium"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/category_favorite_container"
+            android:layout_marginRight="4dp"
+            android:visibility="gone"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/ic_premium"/>
+
         <RelativeLayout
             android:id="@+id/category_favorite_container"
             android:layout_width="32dp"
@@ -45,7 +67,7 @@
                 android:id="@+id/category_favorite_button"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_favorite"
+                android:src="@drawable/ic_favorite_full"
                 />
     </RelativeLayout>
 

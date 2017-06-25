@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.CategoryItemFirstLevel;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.utils.LanguageUtils;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
     private static final String TAG = CardAdapter.class.getSimpleName();
-    private List<CategoryItemFirstLevel> items = new ArrayList<>();
+    private List<CategoryItem> items = new ArrayList<>();
     private Context context;
     private OnFavoriteClickListener listener;
     private String currLang;
@@ -28,14 +29,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         void onItemClicked(int position);
     }
 
-    public CardAdapter(Context mContext, List<CategoryItemFirstLevel> items, String language, OnFavoriteClickListener listener) {
+    public CardAdapter(Context mContext, List<CategoryItem> items, String language, OnFavoriteClickListener listener) {
         this.context = mContext;
         this.items = items;
         this.listener = listener;
         this.currLang = language;
     }
 
-    public void updateData(List<CategoryItemFirstLevel> cardsList) {
+    public void updateData(List<CategoryItem> cardsList) {
         items = cardsList;
 
         notifyDataSetChanged();
@@ -49,7 +50,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
 
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
-        CategoryItemFirstLevel item = items.get(position);
+        CategoryItem item = items.get(position);
         holder.text.setText(LanguageUtils.convertLang(item.getName(), currLang));
 
         final String url = NetworkModule.BASE_URL + NetworkModule.CATEGORY_SUFFIX + item.getId() + "/image?width=100&height=200&type=fit";

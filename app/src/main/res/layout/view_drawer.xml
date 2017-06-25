@@ -21,7 +21,8 @@
             android:layout_height="1dp"
             android:background="@color/lightGray" />
 
-        <include android:id="@+id/drawer_vip" layout="@layout/view_drawer_item"/>
+        <include android:id="@+id/drawer_vip" layout="@layout/view_drawer_item_without_tint"/>
+        <include android:id="@+id/drawer_premium" layout="@layout/view_drawer_item_without_tint"/>
         <include android:id="@+id/drawer_settings" layout="@layout/view_drawer_item"/>
     </LinearLayout>
 </ScrollView>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="become_vip">Получить VIP статус</string>
+    <string name="become_vip">Получить VIP или Premium</string>
     <string name="calendar">Календарь</string>
     <string name="cards">Открытки</string>
-    <string name="english">English</string>
     <string name="favorite_cards">Избранные открытки</string>
     <string name="favorites">Избранное</string>
     <string name="manage_birthdays">Управление днями рождениями</string>
@@ -11,10 +10,8 @@
     <string name="no_cards_in_this_category">Нет открыток в этой категории</string>
     <string name="no_favorite_cards">Нет избранных открыток</string>
     <string name="premium">Премиум</string>
-    <string name="russian">Russian</string>
     <string name="sent_cards">Отосланные открытки</string>
     <string name="settings">Настройки</string>
-    <string name="spanish">Spanish</string>
     <string name="vip">VIP</string>
     <string name="error_no_internet">Проверьте ваше соединение с интернетом</string>
     <string name="action_settings">Настройки</string>
@@ -27,10 +24,10 @@
     <string name="name">Имя и фамилия</string>
     <string name="add_birthday">Добавить день рождения</string>
     <string name="birthday">День рождения</string>
-    <string name="french">French</string>
-    <string name="ukrainian">Ukrainian</string>
     <string name="create_birthday">Создать</string>
     <string name="amerricard">AmerriCard</string>
     <string name="loading">Загрузка...</string>
     <string name="notifications_title">Новое событие!</string>
+    <string name="created_with">Создано в</string>
+    <string name="become_vip_title">Получить VIP</string>
 </resources>
