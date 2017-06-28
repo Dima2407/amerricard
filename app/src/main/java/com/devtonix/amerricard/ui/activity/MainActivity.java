@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.google.android.gms.ads.AdRequest;

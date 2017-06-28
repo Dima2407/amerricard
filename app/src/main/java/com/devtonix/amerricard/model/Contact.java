@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import java.text.SimpleDateFormat;
 
-public class Contact {
+public class Contact implements BaseEvent{
 
     private String name;
     private String birthday;
@@ -58,5 +58,15 @@ public class Contact {
         result = 31 * result + (getBirthday() != null ? getBirthday().hashCode() : 0);
         result = 31 * result + (getPhotoUri() != null ? getPhotoUri().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String getEventDate() {
+        return getBirthday();
+    }
+
+    @Override
+    public String getEventName() {
+        return getName();
     }
 }
