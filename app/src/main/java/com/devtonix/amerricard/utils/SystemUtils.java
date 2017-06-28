@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 
 public class SystemUtils {
 
-    public static boolean isPermissionGranted(Context context){
+    public static boolean isPermissionNotGranted(Context context){
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && context.checkSelfPermission(Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED;

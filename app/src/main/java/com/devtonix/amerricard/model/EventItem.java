@@ -1,6 +1,7 @@
 
 package com.devtonix.amerricard.model;
 
+import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -82,7 +83,17 @@ public class EventItem implements BaseEvent {
     }
 
     @Override
-    public String getEventName() {
-        return getName().getEn(); //todo fix Name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public Name getEventName() {
+        return getName();
+    }
+
+    @Override
+    public int getEventType() {
+        return TYPE_EVENT;
+    }
+
+    @Override
+    public String getEventImage() {
+        return NetworkModule.BASE_URL + "event/" + getId() + "/image?width=100&height=200&type=fit";
     }
 }

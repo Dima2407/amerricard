@@ -1,8 +1,11 @@
 package com.devtonix.amerricard.core;
 
+import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.repository.CelebrityRepository;
+import com.devtonix.amerricard.repository.ContactRepository;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.repository.RepositoryModule;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
@@ -55,7 +58,9 @@ public interface MainComponent {
      */
     void inject(CardRepository cardRepository);
     void inject(EventRepository eventRepository);
+    void inject(CelebrityRepository celebrityRepository);
     void inject(SharedHelper sharedHelper);
     void inject(HolidaysNotificationService holidaysNotificationService);
     void inject(HolidaysBroadcastReceiver holidaysBroadcastReceiver);
+    void inject(ContactRepository contactRepository);
 }

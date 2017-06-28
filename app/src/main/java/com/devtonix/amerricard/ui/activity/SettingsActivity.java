@@ -71,7 +71,7 @@ public class SettingsActivity extends DrawerActivity {
         celebritiesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                sharedHelper.setCelebrities(b);
+                sharedHelper.setCelebritiesInSettings(b);
                 manageCelebrities();
             }
         });
@@ -95,7 +95,7 @@ public class SettingsActivity extends DrawerActivity {
     }
 
     private void manageCelebrities() {
-        celebritiesSwitch.setChecked(sharedHelper.getCelebrities());
+        celebritiesSwitch.setChecked(sharedHelper.getCelebritiesInSettings());
     }
 
     private void onTimeClick() {

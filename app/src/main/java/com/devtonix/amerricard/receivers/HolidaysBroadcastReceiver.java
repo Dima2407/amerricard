@@ -9,8 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.Celebrity;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
+import com.devtonix.amerricard.repository.CelebrityRepository;
+import com.devtonix.amerricard.repository.ContactRepository;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
 import com.devtonix.amerricard.storage.SharedHelper;
@@ -27,7 +30,10 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
 
     @Inject
     EventRepository eventRepository;
-
+    @Inject
+    CelebrityRepository celebrityRepository;
+    @Inject
+    ContactRepository contactRepository;
     @Inject
     SharedHelper sharedHelper;
 
@@ -59,8 +65,30 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
             }
         }
 
-        final List<Contact> contacts = sharedHelper.getContacts();
+        final List<Celebrity> celebrities = celebrityRepository.getCelebritiesFromStorage();
+        for (Celebrity c : celebrities) {
+            try {
+                Log.d(TAG, "onCreate: celebrity = " + c.getName());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getFormattedDate()));
 
+                final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                final int month = calendar.get(Calendar.MONTH);
+
+                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
+                final int currentMonth = currentCalendar.get(Calendar.MONTH);
+
+                if (day == currentDay & month == currentMonth) {
+                    isShowNeeded = true;
+                    break;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        final List<Contact> contacts = contactRepository.getContactsFromStorage();
         for (Contact c : contacts) {
             try {
                 Log.d(TAG, "onCreate: contact = " + c.getName());

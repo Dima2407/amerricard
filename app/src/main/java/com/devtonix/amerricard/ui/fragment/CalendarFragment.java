@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -13,8 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,50 +19,53 @@ import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
-import com.devtonix.amerricard.model.CategoryItem;
+import com.devtonix.amerricard.model.BaseEvent;
+import com.devtonix.amerricard.model.Celebrity;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
+import com.devtonix.amerricard.repository.CelebrityRepository;
+import com.devtonix.amerricard.repository.ContactRepository;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
-import com.devtonix.amerricard.ui.activity.DetailActivity;
-import com.devtonix.amerricard.ui.adapter.CalendarAdapter;
+import com.devtonix.amerricard.ui.adapter.CalendarAdapterNew;
+import com.devtonix.amerricard.ui.callback.CelebritiesGetCallback;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
-import com.devtonix.amerricard.utils.RegexDateUtils;
+import com.devtonix.amerricard.ui.callback.GetContactBirthdayCallback;
 import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class CalendarFragment extends BaseFragment implements CalendarAdapter.OnCalendarItemClickListener {
+public class CalendarFragment extends BaseFragment {
 
     @Inject
     SharedHelper sharedHelper;
     @Inject
     EventRepository eventRepository;
+    @Inject
+    CelebrityRepository celebrityRepository;
+    @Inject
+    ContactRepository contactRepository;
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
 
-
-    private CalendarAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
     private SwipeRefreshLayout srlContainer;
     private ContentResolver contentResolver;
-    private List<Contact> contacts = new ArrayList<>();
-    private List<Object> objects = new ArrayList<>();
+    private List<BaseEvent> baseEvents = new ArrayList<>();
+    private CalendarAdapterNew calendarAdapterNew;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ACApplication.getMainComponent().inject(this);
-
-        eventRepository.getEvents(new MyEventGetCallback());
+        contentResolver = getActivity().getContentResolver();
     }
 
     @Nullable
@@ -78,20 +77,13 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
 
-        adapter = new CalendarAdapter(getActivity(), sharedHelper.getLanguage(), this);
+        calendarAdapterNew = new CalendarAdapterNew(sharedHelper.getLanguage(), getContext(), new MyOnCalendarItemClickListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(calendarAdapterNew);
 
-        contentResolver = getActivity().getContentResolver();
+        fill();
 
         manageVisible(false);
-
-        if (SystemUtils.isPermissionGranted(getActivity())) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
-        } else {
-            contacts = getContactsWithBirthday();
-//            updateEvents(null);
-        }
 
         return view;
     }
@@ -104,7 +96,6 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), CreateBirthdayActivity.class));
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
                 startActivityForResult(intent, REQUEST_CODE_FOR_CREATING_CONTACT);
@@ -116,9 +107,22 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
             public void onRefresh() {
                 srlContainer.setRefreshing(true);
 
-                eventRepository.getEvents(new MyEventGetCallback());
+                fill();
             }
         });
+    }
+
+    private void fill() {
+
+        baseEvents.clear();
+
+        eventRepository.getEvents(new MyEventGetCallback());
+        celebrityRepository.getCelebrities(new MyCelebritiesGetCallback());
+        if (SystemUtils.isPermissionNotGranted(getActivity())) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
+        } else {
+            contactRepository.getContactsWithBirthday(contentResolver, new MyGetContactBirthdayCallback());
+        }
     }
 
     @Override
@@ -127,11 +131,12 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
 
         if (requestCode == REQUEST_CODE_FOR_CREATING_CONTACT) {
 
-            if (SystemUtils.isPermissionGranted(getActivity())) {
+            if (SystemUtils.isPermissionNotGranted(getActivity())) {
                 requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
             } else {
-                contacts = getContactsWithBirthday();
-                eventRepository.getEvents(new MyEventGetCallback());
+
+                fill();
+
             }
         }
     }
@@ -146,119 +151,37 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         }
     }
 
-    public void updateEvents(List<EventItem> events) {
-        objects.clear();
-
-        if (events != null) {
-            objects.addAll(events);
-        }
-
-        objects.addAll(contacts);
-
-        if (objects.size() == 0) {
+    private void controlVisibility() {
+        if (baseEvents.size() == 0) {
             manageVisible(false);
         } else {
             manageVisible(true);
         }
+    }
 
-        final List<EventItem> eventForHide = sharedHelper.getEventsForHide();
-
-        adapter.updateData(objects, eventForHide);
+    public void updateEventsNew() {
+        controlVisibility();
+        calendarAdapterNew.updateAdapter(baseEvents);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                contacts = getContactsWithBirthday();
-                updateEvents(null);
+
+                fill();
+
             } else {
                 Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private List<Contact> getContactsWithBirthday() {
-        final long startQuery = System.currentTimeMillis();
-        final List<Contact> contactsAndBirthdays = new ArrayList<>();
-        final Uri uri = ContactsContract.Data.CONTENT_URI;
-
-        final String[] projection = new String[]{
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Event.PHOTO_URI,
-                ContactsContract.CommonDataKinds.Event.START_DATE
-        };
-
-        final String where = ContactsContract.Data.MIMETYPE + "= ? AND " +
-                ContactsContract.CommonDataKinds.Event.TYPE + "=" +
-                ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
-
-        final String[] selection = new String[]{ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE};
-
-        final String order = null;
-
-        Cursor cursor = contentResolver.query(uri, projection, where, selection, order);
-
-        final int birthdayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-        final int contactNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-        final int photoUriColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
-
-        while (cursor.moveToNext()) {
-
-
-            final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
-            final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
-            if (TextUtils.equals(formatterBirthday, "01.01.1970")) {
-                continue;
-            }
-
-            final Contact contact = new Contact();
-            contact.setName(cursor.getString(contactNameColumn));
-            contact.setPhotoUri(cursor.getString(photoUriColumn));
-            contact.setBirthday(formatterBirthday);
-
-            contactsAndBirthdays.add(contact);
-
-            Log.d(TAG, "getContactsWithBirthday: dateInMillis = " + dateInMillis + " date = " + formatterBirthday);
-        }
-
-        cursor.close();
-
-        sharedHelper.saveContacts(contactsAndBirthdays);
-
-        Log.d(TAG, "getContactsWithBirthday: selection time = " + (System.currentTimeMillis() - startQuery) + " ms");
-        return contactsAndBirthdays;
-    }
-
-    @Override
-    public void onItemClicked(int position) {
-        Log.d(TAG, "onItemClicked: position=" + position);
-
-        Object o = objects.get(position);
-        if (o instanceof EventItem) {
-            final EventItem event = (EventItem) o;
-            final int categoryId = event.getCategoryId();
-
-            Intent intent = new Intent(getActivity(), CategoryActivity.class);
-            intent.setAction(CategoryActivity.ACTION_FROM_EVENTS);
-            intent.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, categoryId);
-            startActivity(intent);
-        } else if (o instanceof Contact) {
-            final Contact contact = (Contact) o;
-            final int birthdayPosition = 2;
-
-            Intent intent = new Intent(getActivity(), CategoryActivity.class);
-            intent.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, birthdayPosition);
-            startActivity(intent);
-        }
-    }
-
     private class MyEventGetCallback implements EventGetCallback {
         @Override
         public void onSuccess(List<EventItem> events) {
-            updateEvents(events);
-
+            baseEvents.addAll(events);
+            updateEventsNew();
             srlContainer.setRefreshing(false);
         }
 
@@ -270,6 +193,61 @@ public class CalendarFragment extends BaseFragment implements CalendarAdapter.On
         @Override
         public void onRetrofitError(String message) {
             srlContainer.setRefreshing(false);
+        }
+    }
+
+    private class MyCelebritiesGetCallback implements CelebritiesGetCallback {
+        @Override
+        public void onSuccess(List<Celebrity> celebrities) {
+            baseEvents.addAll(celebrities);
+            updateEventsNew();
+            srlContainer.setRefreshing(false);
+        }
+
+        @Override
+        public void onError() {
+            srlContainer.setRefreshing(false);
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            srlContainer.setRefreshing(false);
+        }
+    }
+
+    private class MyGetContactBirthdayCallback implements GetContactBirthdayCallback {
+        @Override
+        public void onSuccess(List<Contact> contacts) {
+            baseEvents.addAll(contacts);
+            updateEventsNew();
+        }
+    }
+
+    private class MyOnCalendarItemClickListener implements CalendarAdapterNew.OnCalendarItemClickListener {
+        @Override
+        public void onItemClicked(int position) {
+
+            final BaseEvent baseEvent = baseEvents.get(position);
+            switch (baseEvent.getEventType()) {
+                case BaseEvent.TYPE_EVENT:
+                    final int categoryId = ((EventItem) baseEvent).getCategoryId();
+                    Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                    intent.setAction(CategoryActivity.ACTION_FROM_EVENTS);
+                    intent.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, categoryId);
+                    startActivity(intent);
+                    break;
+                case BaseEvent.TYPE_CONTACT:
+                    final int birthdayPosition = 2;
+                    Intent intentForContact = new Intent(getActivity(), CategoryActivity.class);
+                    intentForContact.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, birthdayPosition);
+                    startActivity(intentForContact);
+                    break;
+                case BaseEvent.TYPE_CELEBRITY:
+
+                    //todo implement this action ASAP
+
+                    break;
+            }
         }
     }
 }
