@@ -35,6 +35,6 @@ public class TimeUtils {
     }
 
     public static String calDateToString(Calendar calendar) {
-        return DateFormat.format("MM.dd.yyyy", calendar).toString();
+        return DateFormat.format(RegexDateUtils.GODLIKE_DATE_FORMAT, calendar).toString();
     }
 }

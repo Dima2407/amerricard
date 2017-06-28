@@ -13,20 +13,21 @@ public class RegexDateUtils {
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT_TWO = new SimpleDateFormat("MMM dd, yyyy");
 
     public static final SimpleDateFormat GODLIKE_APPLICATION_DATE_FORMAT = new SimpleDateFormat("MM.dd.yyyy");
+    public static final String GODLIKE_DATE_FORMAT = "MM.dd.yyyy";
 
     public static long verifyDateFormat(String date) {
         final Matcher firstMatcher = Pattern.compile(REGEX_PATTERN_FIRST).matcher(date);
         final Matcher secondMatcher = Pattern.compile(REGEX_PATTERN_SECOND).matcher(date);
 
         try {
-            if (firstMatcher.matches()){
+            if (firstMatcher.matches()) {
                 return SIMPLE_DATE_FORMAT_ONE.parse(date).getTime();
-            } else if (secondMatcher.matches()){
+            } else if (secondMatcher.matches()) {
                 return SIMPLE_DATE_FORMAT_TWO.parse(date).getTime();
             } else {
                 return -1;
             }
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
             return -2;
         }

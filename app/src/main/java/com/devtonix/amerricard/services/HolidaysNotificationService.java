@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -52,18 +53,19 @@ public class HolidaysNotificationService extends Service {
         final Calendar currentCalendar = Calendar.getInstance();
         final String currentDate = TimeUtils.calDateToString(currentCalendar);
 
-        final List<EventItem> itemsForDisplay = new ArrayList<>();
+        final List<EventItem> eventsForDisplay = new ArrayList<>();
 
         for (EventItem item : events) {
             if (TextUtils.equals(item.getFormattedDate(), currentDate)) {
-                itemsForDisplay.add(item);
+                eventsForDisplay.add(item);
+                Log.d(TAG, "onCreate: eventForDisplay.add("+item.getName()+")");
             }
         }
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("Today celebrate:");
 
-        for (EventItem item : itemsForDisplay) {
+        for (EventItem item : eventsForDisplay) {
             inboxStyle.addLine(
                     LanguageUtils.convertLang(item.getName(),
                             sharedHelper.getLanguage()) + " (" + item.getFormattedDate() + ")");
@@ -87,7 +89,7 @@ public class HolidaysNotificationService extends Service {
 
                 if (day == currentDay & month == currentMonth) {
                     contactsForDisplay.add(c);
-                    Log.d(TAG, "onCreate: contactsForDisplay.add(c) ");
+                    Log.d(TAG, "onCreate: contactsForDisplay.add("+c.getName()+") ");
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -98,14 +100,14 @@ public class HolidaysNotificationService extends Service {
             inboxStyle.addLine(c.getName() + " (" + c.getBirthday() + ")");
         }
 
-        final String forDisplay = itemsForDisplay.size() == 0
+        final String forDisplay = eventsForDisplay.size() == 0
                 ? contacts.get(0).getName() + " happy birthday!"
-                : LanguageUtils.convertLang(itemsForDisplay.get(0).getName(), sharedHelper.getLanguage()) + "is celebrated today";
+                : LanguageUtils.convertLang(eventsForDisplay.get(0).getName(), sharedHelper.getLanguage()) + " is celebrated today";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setContentText(forDisplay)
                 .setContentTitle(getString(R.string.notifications_title))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_logo_cropped_2)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true);
 

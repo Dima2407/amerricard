@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class EventItem {
+public class EventItem implements BaseEvent {
 
     @SerializedName("id")
     @Expose
@@ -76,4 +76,13 @@ public class EventItem {
         return RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(d));
     }
 
+    @Override
+    public String getEventDate() {
+        return getFormattedDate();
+    }
+
+    @Override
+    public String getEventName() {
+        return getName().getEn(); //todo fix Name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
 }
