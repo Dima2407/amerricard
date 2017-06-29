@@ -21,4 +21,16 @@ public class RepositoryModule {
     public CardRepository getCardRepository(Context context) {
         return new CardRepository(context);
     }
+
+    @Provides
+    @Singleton
+    public CelebrityRepository getCelebrityRepository(Context context) {
+        return new CelebrityRepository(context);
+    }
+
+    @Provides
+    @Singleton
+    public ContactRepository getContactRepository(Context context) {
+        return new ContactRepository(context);
+    }
 }

@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItem;
-import com.devtonix.amerricard.model.CategoryItemFirstLevel;
+import com.devtonix.amerricard.model.Celebrity;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
 import com.devtonix.amerricard.model.ListCardItem;
 import com.devtonix.amerricard.model.ListCategoryItem;
+import com.devtonix.amerricard.model.ListCelebrities;
 import com.devtonix.amerricard.model.ListContact;
 import com.devtonix.amerricard.model.ListEventItem;
 import com.google.gson.Gson;
@@ -38,6 +39,7 @@ public class SharedHelper {
         String NOTIFICATION_TIME = "notification_time";
         String CONTACTS = "contacts";
         String CELEBRITIES = "celebrities";
+        String LIST_OF_CELEBRITIES = "list_of_celebrities";
     }
 
     public SharedHelper(Context context) {
@@ -74,6 +76,14 @@ public class SharedHelper {
         return li == null ? new ArrayList<EventItem>() : li.getEvents();
     }
 
+    public void saveCelebrities(List<Celebrity> celebrities) {
+        sharedPreferences.edit().putString(Fields.LIST_OF_CELEBRITIES, new Gson().toJson(new ListCelebrities(celebrities))).apply();
+    }
+
+    public List<Celebrity> getCelebrities() {
+        ListCelebrities celebrities = new Gson().fromJson(sharedPreferences.getString(Fields.LIST_OF_CELEBRITIES, ""), ListCelebrities.class);
+        return celebrities == null ? new ArrayList<Celebrity>() : celebrities.getCelebrities();
+    }
 
     public void saveEventsForHide(List<EventItem> items) {
         sharedPreferences.edit().putString(Fields.EVENTS_FOR_HIDE, new Gson().toJson(new ListEventItem(items))).apply();
@@ -109,11 +119,11 @@ public class SharedHelper {
         return sharedPreferences.getBoolean(Fields.NOTIFICATION, true);
     }
 
-    public void setCelebrities(boolean isEnabled) {
+    public void setCelebritiesInSettings(boolean isEnabled) {
         sharedPreferences.edit().putBoolean(Fields.CELEBRITIES, isEnabled).apply();
     }
 
-    public boolean getCelebrities() {
+    public boolean getCelebritiesInSettings() {
         return sharedPreferences.getBoolean(Fields.CELEBRITIES, true);
     }
 
@@ -125,11 +135,11 @@ public class SharedHelper {
         return sharedPreferences.getString(Fields.LANGUAGE, Locale.getDefault().getLanguage());
     }
 
-    public void setFirstLaunchApplication(boolean isFirstLaunch){
+    public void setFirstLaunchApplication(boolean isFirstLaunch) {
         sharedPreferences.edit().putBoolean(Fields.FIRST_LAUNCH_APPLICATION, isFirstLaunch).apply();
     }
 
-    public boolean isFirstLaunchApplication(){
+    public boolean isFirstLaunchApplication() {
         return sharedPreferences.getBoolean(Fields.FIRST_LAUNCH_APPLICATION, true);
     }
 

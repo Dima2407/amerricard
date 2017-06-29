@@ -24,6 +24,18 @@ public class Name implements Serializable{
     @Expose
     private String fr;
 
+    private String baseName;
+
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+
     public String getEn() {
         return en;
     }

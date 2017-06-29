@@ -1,10 +1,6 @@
 package com.devtonix.amerricard.model;
 
-import android.annotation.SuppressLint;
-
-import java.text.SimpleDateFormat;
-
-public class Contact implements BaseEvent{
+public class Contact implements BaseEvent {
 
     private String name;
     private String birthday;
@@ -66,7 +62,19 @@ public class Contact implements BaseEvent{
     }
 
     @Override
-    public String getEventName() {
-        return getName();
+    public Name getEventName() {
+        Name name = new Name();
+        name.setBaseName(getName());
+        return name;
+    }
+
+    @Override
+    public int getEventType() {
+        return TYPE_CONTACT;
+    }
+
+    @Override
+    public String getEventImage() {
+        return getPhotoUri();
     }
 }

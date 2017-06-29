@@ -4,6 +4,7 @@ import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.response.CardResponse;
 import com.devtonix.amerricard.network.response.CardResponseNew;
+import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 
@@ -45,7 +46,14 @@ public interface API {
 
     @DELETE("event/{eventId}")
     Call<SimpleResponse> deleteEvent(@Path("eventId") long eventId);
-//
+
     @GET("event")
     Call<EventResponse> getEvents();
+
+    /**
+     * Celebrities
+     * */
+
+    @GET("celebrities")
+    Call<CelebrityResponse> getCelebrities();
 }
