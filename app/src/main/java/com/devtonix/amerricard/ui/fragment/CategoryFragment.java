@@ -199,8 +199,12 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onPremiumClicked(int position) {
+//        Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
+//        intent.setAction(VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
+//        startActivity(intent);
+//        getActivity().finish();
         Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
-        intent.setAction(VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
+        intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
         startActivity(intent);
         getActivity().finish();
     }
