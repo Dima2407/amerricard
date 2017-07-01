@@ -2,7 +2,6 @@
 <resources>
     <string name="action_settings">Paramètres</string>
     <string name="add_birthday">Ajouter un anniversaire</string>
-    <string name="amerricard">AmerriCard</string>
     <string name="become_vip">Devenez VIP ou Premium</string>
     <string name="birthday">Anniversaire</string>
     <string name="calendar">Calendrier</string>
