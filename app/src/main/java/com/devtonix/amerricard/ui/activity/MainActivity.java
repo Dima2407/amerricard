@@ -47,7 +47,7 @@ public class MainActivity extends DrawerActivity {
     }
 
     private void startNotificationReceiver() {
-        Log.d(TAG, "startNotificationReceiver @(^_^)@");
+        Log.e(TAG, "startNotificationReceiver @(^_^)@");
         Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
         getApplicationContext().sendBroadcast(startReceiver);
     }
