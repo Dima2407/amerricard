@@ -55,12 +55,11 @@ public class HolidaysNotificationService extends Service {
         final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         final Intent mainIntent = new Intent(this.getApplicationContext(), MainActivity.class);
         final PendingIntent pIntent = PendingIntent.getActivity(this, 0, mainIntent, 0);
-        final List<EventItem> events = eventRepository.getEventFromStorage();
         final Calendar currentCalendar = Calendar.getInstance();
         final String currentDate = TimeUtils.calDateToString(currentCalendar);
 
+        final List<EventItem> events = eventRepository.getEventFromStorage();
         final List<EventItem> eventsForDisplay = new ArrayList<>();
-
         for (EventItem item : events) {
             if (TextUtils.equals(item.getFormattedDate(), currentDate)) {
                 eventsForDisplay.add(item);
@@ -116,44 +115,47 @@ public class HolidaysNotificationService extends Service {
             }
         }
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle("Today celebrate:");
+        if (eventsForDisplay.size() > 0 || contactsForDisplay.size() > 0 || celebritiesForDisplay.size() > 0) {
 
-        for (Contact c : contactsForDisplay) {
-            inboxStyle.addLine(c.getName() + " (" + c.getBirthday() + ")");
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle("Today celebrate:");
+
+            for (Contact c : contactsForDisplay) {
+                inboxStyle.addLine(c.getName() + " (" + c.getBirthday() + ")");
+            }
+
+            for (Celebrity c : celebritiesForDisplay) {
+                inboxStyle.addLine(c.getName() + " (" + c.getFormattedDate() + ")");
+            }
+
+            for (EventItem item : eventsForDisplay) {
+                inboxStyle.addLine(
+                        LanguageUtils.convertLang(item.getName(),
+                                sharedHelper.getLanguage()) + " (" + item.getFormattedDate() + ")");
+            }
+
+
+            StringBuilder forDisplay = new StringBuilder();
+
+            if (contactsForDisplay.size() != 0) {
+                forDisplay.append(contacts.get(0).getName()).append(" happy birthday!");
+            } else if (eventsForDisplay.size() != 0) {
+                forDisplay.append(LanguageUtils.convertLang(eventsForDisplay.get(0).getName(), sharedHelper.getLanguage())).append(" is celebrated today");
+            } else if (celebritiesForDisplay.size() != 0) {
+                forDisplay.append(celebrities.get(0).getName()).append(" happy birthday!");
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setContentText(forDisplay)
+                    .setContentTitle(getString(R.string.notifications_title))
+                    .setSmallIcon(R.drawable.ic_logo_cropped_2)
+                    .setContentIntent(pIntent)
+                    .setAutoCancel(true);
+
+            builder.setStyle(inboxStyle);
+
+            notificationManager.notify(1, builder.build());
         }
-
-        for (Celebrity c : celebritiesForDisplay) {
-            inboxStyle.addLine(c.getName() + " (" + c.getFormattedDate() + ")");
-        }
-
-        for (EventItem item : eventsForDisplay) {
-            inboxStyle.addLine(
-                    LanguageUtils.convertLang(item.getName(),
-                            sharedHelper.getLanguage()) + " (" + item.getFormattedDate() + ")");
-        }
-
-
-        StringBuilder forDisplay = new StringBuilder();
-
-        if (contactsForDisplay.size() != 0) {
-            forDisplay.append(contacts.get(0).getName()).append(" happy birthday!");
-        } else if (eventsForDisplay.size() != 0) {
-            forDisplay.append(LanguageUtils.convertLang(eventsForDisplay.get(0).getName(), sharedHelper.getLanguage())).append(" is celebrated today");
-        } else if (celebritiesForDisplay.size() != 0) {
-            forDisplay.append(celebrities.get(0).getName()).append(" happy birthday!");
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setContentText(forDisplay)
-                .setContentTitle(getString(R.string.notifications_title))
-                .setSmallIcon(R.drawable.ic_logo_cropped_2)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true);
-
-        builder.setStyle(inboxStyle);
-
-        notificationManager.notify(1, builder.build());
 
         stopSelf();
     }

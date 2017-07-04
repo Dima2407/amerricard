@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">AmerriCard</string>
+    <string name="app_name" translatable="false">Amerriсard</string>
     <string name="facebook_app_id" translatable="false">1734091590251956</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7353210906266235/7309964107</string>
     <string name="inline_ad_unit_id" translatable="false">ca-app-pub-7353210906266235/1263430503</string>
@@ -45,7 +45,6 @@
     <string name="ukrainian" translatable="false">Українська</string>
     <string name="loading">Loading...</string>
     <string name="create_birthday">Create</string>
-    <string name="amerricard">AmerriCard</string>
     <string name="spanish" translatable="false">Español</string>
 
     <string-array name="languages" translatable="false">

@@ -79,7 +79,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
 
         Glide.with(context)
                 .load(baseEvent.getEventImage())
-                .error(R.drawable.ic_logo)
+                .error(R.drawable.ic_no_avatar)
                 .transform(new CircleTransform(context))
                 .into(holder.icon);
 

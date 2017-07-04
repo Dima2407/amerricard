@@ -2,7 +2,6 @@
 <resources>
     <string name="action_settings">Налаштування</string>
     <string name="add_birthday">Додати день народження</string>
-    <string name="amerricard">AmerriCard</string>
     <string name="become_vip">Стати VIP або Premium</string>
     <string name="birthday">День народження</string>
     <string name="calendar">Календар</string>
