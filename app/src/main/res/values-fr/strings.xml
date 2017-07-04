@@ -29,4 +29,6 @@
     <string name="vip">VIP</string>
     <string name="created_with">Créé en</string>
     <string name="become_vip_title">Devenez VIP</string>
+    <string name="share_via">Partager</string>
+    <string name="category">Catégorie</string>
 </resources>

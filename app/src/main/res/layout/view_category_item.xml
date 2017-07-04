@@ -52,7 +52,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="@dimen/smaller_padding"
             android:layout_marginRight="@dimen/smaller_padding"
-            android:background="@drawable/shape_red_circle"
             android:gravity="center">
 
             <ImageView
@@ -68,7 +67,7 @@
                 android:id="@+id/category_favorite_button"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_favorite_full"
+                android:src="@drawable/ic_favorite"
                 />
         </RelativeLayout>
 

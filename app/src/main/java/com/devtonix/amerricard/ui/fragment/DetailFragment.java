@@ -1,10 +1,7 @@
 package com.devtonix.amerricard.ui.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +16,7 @@ public class DetailFragment extends BaseFragment {
 
     private ViewGroup detailContainer;
     private ImageView image;
+    private String url = "";
 
     public static DetailFragment getInstance(int id, boolean isFullScreen) {
         DetailFragment detailFragment = new DetailFragment();
@@ -39,11 +37,9 @@ public class DetailFragment extends BaseFragment {
         image.post(new Runnable() {
             @Override
             public void run() {
-                String url = NetworkModule.BASE_URL
+                url = NetworkModule.BASE_URL
                         + NetworkModule.CARD_SUFFIX
                         + getArguments().getString("id") + "/image?width="+image.getHeight()+"&height="+image.getWidth()+"&type=fit";
-
-                Log.d("detail", "url "+ url);
 
                 Glide.with(getActivity()).load(url)
                         .into(image);
@@ -58,12 +54,12 @@ public class DetailFragment extends BaseFragment {
         return view;
     }
 
-    public ImageView getImageWithPic() {
-        return image;
+    public String getImageUrl() {
+        return url;
     }
+
 
     public void updateFragment(boolean isFullScreen) {
         image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
-//        detailContainer.setBackgroundColor(isFullScreen ? Color.BLACK : Color.WHITE);
     }
 }

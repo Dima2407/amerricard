@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
@@ -35,7 +34,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance((int) items.get(position).getId(), isFullScreen);
+        return DetailFragment.getInstance(items.get(position).getId(), isFullScreen);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    public ImageView getImage(int position) {
-        return ((DetailFragment) tourFragments.get(position)).getImageWithPic();
+    public String getImage(int position) {
+        return ((DetailFragment) tourFragments.get(position)).getImageUrl();
     }
 }

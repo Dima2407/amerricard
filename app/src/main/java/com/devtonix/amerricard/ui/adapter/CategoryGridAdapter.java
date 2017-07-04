@@ -71,11 +71,9 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         if (isFavorite(item)) {
             holder.favoriteButton.setVisibility(View.GONE);
             holder.favoriteButtonFull.setVisibility(View.VISIBLE);
-            holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
         } else {
             holder.favoriteButton.setVisibility(View.VISIBLE);
             holder.favoriteButtonFull.setVisibility(View.GONE);
-            holder.favoriteContainer.setBackgroundResource(R.drawable.shape_red_circle);
         }
 
         holder.ivVip.setVisibility(isVip(item) ? View.VISIBLE : View.GONE);

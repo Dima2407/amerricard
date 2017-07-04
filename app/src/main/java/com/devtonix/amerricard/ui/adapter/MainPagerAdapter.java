@@ -44,7 +44,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return context.getString(R.string.cards);
+            return context.getString(R.string.category);
         } else {
             return context.getString(R.string.calendar);
         }

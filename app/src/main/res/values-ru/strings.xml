@@ -29,4 +29,6 @@
     <string name="notifications_title">Новое событие!</string>
     <string name="created_with">Создано в</string>
     <string name="become_vip_title">Получить VIP</string>
+    <string name="share_via">Поделиться</string>
+    <string name="category">Открытки</string>
 </resources>

@@ -2,11 +2,9 @@ package com.devtonix.amerricard.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -15,10 +13,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
@@ -108,6 +108,7 @@ public class DetailActivity extends BaseActivity {
 
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
         viewPager.setAdapter(adapter);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
 
         findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +147,6 @@ public class DetailActivity extends BaseActivity {
         return true;
     }
 
-
     public void changeMode() {
         isFullScreen = !isFullScreen;
 
@@ -158,70 +158,71 @@ public class DetailActivity extends BaseActivity {
             container.setVisibility(View.VISIBLE);
         }
         adapter.setFullScreen(isFullScreen);
-
-    }
-
-
-    public void onShareItem(ImageView view) {
-        new LoadImageTask().execute(view);
-
-    }
-
-    public Uri getLocalBitmapUri(ImageView imageView) {
-        Uri bmpUri = null;
-
-        try {
-            Drawable drawable = imageView.getDrawable();
-            Bitmap bmp = ((GlideBitmapDrawable) drawable).getBitmap();
-
-            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
-
-            FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.close();
-
-            bmpUri = FileProvider.getUriForFile(DetailActivity.this, "com.devtonix.amerricard.fileprovider", file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bmpUri;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE_SHARE) {
-            Log.d(TAG, "onActivityResult: 2002");
             if (interstitialAd.isLoaded()) {
                 interstitialAd.show();
             }
         }
     }
 
-    class LoadImageTask extends AsyncTask<ImageView, Void, Uri> {
+    public void onShareItem(String s) {
+
+        //web -> bmp
+        Glide.with(this).load(s).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                new LoadImageTask(resource).execute();
+            }
+        });
+    }
+
+    private class LoadImageTask extends AsyncTask<Void, Void, Uri> {
+        private Bitmap bmp;
+
+        public LoadImageTask(Bitmap bmp) { this.bmp = bmp; }
 
         @Override
-        protected Uri doInBackground(ImageView... views) {
-            return getLocalBitmapUri(views[0]);
+        protected Uri doInBackground(Void... voids) {
+            return FileProvider.getUriForFile(DetailActivity.this, "com.devtonix.amerricard.fileprovider", getFile(bmp));
         }
 
         @Override
         protected void onPostExecute(Uri bmpUri) {
             super.onPostExecute(bmpUri);
-
             if (bmpUri != null) {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
                 shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.created_with) + WEB_CITE);
                 shareIntent.setType("image/*");
 
-                startActivityForResult(Intent.createChooser(shareIntent, "Share Image"), REQUEST_CODE_SHARE);
+                startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_via)), REQUEST_CODE_SHARE);
             }
             progress.setVisibility(View.GONE);
         }
     }
+
+    // bmp -> file
+    private File getFile(Bitmap bmp) {
+
+        File file = new File(getCacheDir(), "share_image_" + System.currentTimeMillis() + ".jpeg");
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
 
     private class MyCardShareCallback implements CardShareCallback {
         @Override
