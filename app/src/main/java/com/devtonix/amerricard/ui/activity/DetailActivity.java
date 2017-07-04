@@ -51,6 +51,8 @@ public class DetailActivity extends BaseActivity {
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
     public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
+    private static final String TYPE_VIP = "VIP";
+    private static final String TYPE_PREMIUM = "PREMIUM";
     private static final String WEB_CITE = " amerricards.com";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
@@ -113,6 +115,12 @@ public class DetailActivity extends BaseActivity {
         findViewById(R.id.toolbar_share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final CardItem cardItem = cards.get(viewPager.getCurrentItem());
+                if (TextUtils.equals(cardItem.getCardType(), TYPE_VIP) ||
+                        TextUtils.equals(cardItem.getCardType(), TYPE_PREMIUM)) {
+                    loadVipScreen();
+                    return;
+                }
                 progress.setVisibility(View.VISIBLE);
                 onShareItem(adapter.getImage(viewPager.getCurrentItem()));
                 cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
@@ -139,6 +147,13 @@ public class DetailActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    private void loadVipScreen() {
+        Intent intent = new Intent(DetailActivity.this, VipAndPremiumActivity.class);
+        intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -173,7 +188,7 @@ public class DetailActivity extends BaseActivity {
     public void onShareItem(String s) {
 
         //web -> bmp
-        Glide.with(this).load(s).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+        Glide.with(this).load(s).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                 new LoadImageTask(resource).execute();
@@ -184,7 +199,9 @@ public class DetailActivity extends BaseActivity {
     private class LoadImageTask extends AsyncTask<Void, Void, Uri> {
         private Bitmap bmp;
 
-        public LoadImageTask(Bitmap bmp) { this.bmp = bmp; }
+        public LoadImageTask(Bitmap bmp) {
+            this.bmp = bmp;
+        }
 
         @Override
         protected Uri doInBackground(Void... voids) {

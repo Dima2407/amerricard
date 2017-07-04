@@ -155,6 +155,13 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onItemClicked(int pos) {
+
+        CardItem cardItem = cards.get(pos);
+        if (adapter.isVip(cardItem) || adapter.isPremium(cardItem)){
+            Log.d(TAG, "click on prem or vip card");
+            loadVipScreen();
+            return;
+        }
         if (categoryId != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);
@@ -191,18 +198,15 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onVipClicked(int position) {
-        Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
-        intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
-        startActivity(intent);
-        getActivity().finish();
+        loadVipScreen();
     }
 
     @Override
     public void onPremiumClicked(int position) {
-//        Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
-//        intent.setAction(VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
-//        startActivity(intent);
-//        getActivity().finish();
+        loadVipScreen();
+    }
+
+    private void loadVipScreen() {
         Intent intent = new Intent(getActivity(), VipAndPremiumActivity.class);
         intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
         startActivity(intent);
