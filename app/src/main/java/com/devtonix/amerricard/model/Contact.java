@@ -5,6 +5,7 @@ public class Contact implements BaseEvent {
     private String name;
     private String birthday;
     private String photoUri;
+    private boolean isCancelled = false;
 
     public Contact() {
     }
@@ -31,6 +32,15 @@ public class Contact implements BaseEvent {
 
     public void setPhotoUri(String photoUri) {
         this.photoUri = photoUri;
+    }
+
+
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
     }
 
     @Override

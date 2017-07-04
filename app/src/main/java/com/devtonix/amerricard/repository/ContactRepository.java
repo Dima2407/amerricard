@@ -100,6 +100,14 @@ public class ContactRepository {
                     }
                 });
 
+
+//                List<Contact> oldContacts = new ArrayList<Contact>();
+//                oldContacts = getContactsFromStorage();
+//                if (oldContacts.size() > 0){
+//                    for (Contact contact : oldContacts ){
+//                        if (contact.equals())
+//                    }
+//                }
                 saveContactsToStorage(contactsAndBirthdays);
             }
         });
