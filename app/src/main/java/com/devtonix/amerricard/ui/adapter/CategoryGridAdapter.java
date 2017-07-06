@@ -1,7 +1,9 @@
 package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.network.NetworkModule;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +84,9 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
         final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
-        Glide.with(context).load(url).into(holder.icon);
+        Glide.with(context).load(item.getGlideImageUrl()).into(holder.icon);
+
+
     }
 
     public boolean isFavorite(CardItem item) {

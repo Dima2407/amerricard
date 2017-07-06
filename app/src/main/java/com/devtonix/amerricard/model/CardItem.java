@@ -4,6 +4,8 @@ package com.devtonix.amerricard.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bumptech.glide.load.model.GlideUrl;
+import com.devtonix.amerricard.utils.AmazonUtils.GetS3Object;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -51,6 +53,10 @@ public class CardItem implements Parcelable {
     @SerializedName("image")
     @Expose
     private String image;
+    @Expose
+    @SerializedName("imageUrl")
+    private String imageUrl;
+
 
     public CardItem(Parcel in) {
         type = in.readString();
@@ -63,6 +69,7 @@ public class CardItem implements Parcelable {
         cardType = in.readString();
         id = in.readInt();
         image = in.readString();
+        imageUrl = in.readString();
     }
 
     public String getType() {
@@ -145,6 +152,13 @@ public class CardItem implements Parcelable {
         this.image = image;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     @Override
     public int describeContents() {
@@ -153,18 +167,6 @@ public class CardItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        type = in.readString();
-//        name = in.readString();
-//        author = in.readString();
-//        owner = in.readString();
-//        price = in.readInt();
-//        favorite = in.readInt();
-//        shared = in.readInt();
-//        cardType = in.readString();
-//        id = in.readInt();
-//        image = in.readString();
-
-        //todo ORDER MUST BE THE SAME
 
         dest.writeString(type);
         dest.writeString(name);
@@ -176,5 +178,10 @@ public class CardItem implements Parcelable {
         dest.writeString(cardType);
         dest.writeInt(id);
         dest.writeString(image);
+        dest.writeString(imageUrl);
+    }
+
+    public GlideUrl getGlideImageUrl() {
+        return GetS3Object.fromS3toUrl(imageUrl);
     }
 }
