@@ -16,12 +16,15 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
 import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     private int positionForCategoryItem = -1;
     private int categoryId = -1;
     private List<CardItem> cards;
+    private AdView mAdView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,6 +155,20 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mAdView = (AdView) view.findViewById(R.id.adView);
+
+        if (!sharedHelper.isVipOrPremium()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override

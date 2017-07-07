@@ -16,6 +16,8 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.utils.LanguageUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -33,6 +35,7 @@ public class SettingsActivity extends DrawerActivity {
     private TextView timerText;
     private ViewGroup languageContainer;
     private TextView languageText;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,14 @@ public class SettingsActivity extends DrawerActivity {
         setLanguageSelected(sharedHelper.getLanguage());
 
         timerText.setText(sharedHelper.getNotificationsTime());
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        if (!sharedHelper.isVipOrPremium()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     private void initViews() {

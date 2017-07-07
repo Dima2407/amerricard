@@ -14,6 +14,8 @@ import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.FavoriteCardAdapter;
 import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
     private RecyclerView recyclerView;
     private TextView emptyText;
     private List<CardItem> cards;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,15 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
                 manageRecycler();
             }
         });
+
+        mAdView = (AdView) findViewById(R.id.adView);
+
+        if (!sharedHelper.isVipOrPremium()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(View.GONE);
+        }
 
     }
 
