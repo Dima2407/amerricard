@@ -65,4 +65,5 @@
     </string-array>
     <string name="created_with">Created with</string>
     <string name="share_via">Share</string>
+    <string name="exit_message">Вы действительно хотите выйти?</string>
 </resources>
