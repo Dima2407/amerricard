@@ -22,6 +22,10 @@ import java.util.Locale;
 
 public class SharedHelper {
 
+    private static final String USER_STATUS_VIP = "vip";
+    private static final String USER_STATUS_PREMIUM = "premium";
+    private static final String USER_STATUS_NORMAL = "normal";
+
     private SharedPreferences sharedPreferences;
 
     public interface Fields {
@@ -30,6 +34,7 @@ public class SharedHelper {
         String LOGGED_IN = "loggedIn";
         String USER_ID = "userId";
         String TOKEN = "token";
+        String USER_STATUS = "normal";
         String CARDS = "cards";
         String EVENTS = "events";
         String EVENTS_FOR_HIDE = "events_for_hide";
@@ -143,7 +148,14 @@ public class SharedHelper {
         return sharedPreferences.getBoolean(Fields.FIRST_LAUNCH_APPLICATION, true);
     }
 
+    public void setUserStatus(String status) {
+        sharedPreferences.edit().putString(Fields.USER_STATUS, status).apply();
+    }
 
+    public boolean isVipOrPremium() {
+        return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_VIP) ||
+                sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
+    }
 }
 
 

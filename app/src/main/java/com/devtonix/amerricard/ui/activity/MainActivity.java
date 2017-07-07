@@ -13,6 +13,8 @@ import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends DrawerActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -38,8 +40,12 @@ public class MainActivity extends DrawerActivity {
         pager.setCurrentItem(position);
 
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        if (!sharedHelper.isVipOrPremium()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(GONE);
+        }
 
 
         //todo perhaps, needs check isAppFirstLaunch

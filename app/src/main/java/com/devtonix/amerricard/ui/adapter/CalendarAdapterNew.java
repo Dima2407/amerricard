@@ -77,6 +77,8 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
                 break;
         }
 
+        Log.i("loadPicture", TAG + " onBindViewHolder()  Glide");
+
         Glide.with(context)
                 .load(baseEvent.getEventImage())
                 .error(R.drawable.ic_no_avatar)
