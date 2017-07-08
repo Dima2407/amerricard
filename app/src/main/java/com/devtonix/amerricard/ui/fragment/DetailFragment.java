@@ -39,9 +39,9 @@ public class DetailFragment extends BaseFragment {
             public void run() {
                 url = NetworkModule.BASE_URL
                         + NetworkModule.CARD_SUFFIX
-                        + getArguments().getString("id") + "/image?width="+image.getHeight()+"&height="+image.getWidth()+"&type=fit";
+                        + getArguments().getString("id") + "/image";
 
-                Glide.with(getActivity()).load(url)
+                Glide.with(getActivity()).load(url + "?width="+image.getHeight()+"&height="+image.getWidth()+"&type=fit")
                         .into(image);
             }
         });

@@ -231,7 +231,7 @@ public class DetailActivity extends BaseActivity {
         File file = new File(getCacheDir(), "share_image_" + System.currentTimeMillis() + ".jpeg");
         try {
             FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
