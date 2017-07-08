@@ -84,7 +84,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
         final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
-        Glide.with(context).load(item.getGlideImageUrl()).into(holder.icon);
+        Glide.with(context).load(url).into(holder.icon);
 
 
     }

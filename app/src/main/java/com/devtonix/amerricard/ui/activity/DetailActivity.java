@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
@@ -63,6 +64,7 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
+   // private List<CardItem> cardItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +124,7 @@ public class DetailActivity extends BaseActivity {
                     return;
                 }
                 progress.setVisibility(View.VISIBLE);
-                onShareItem(adapter.getImage(viewPager.getCurrentItem()));
+                onShareItem(/*adapter.getImage(viewPager.getCurrentItem())*/cardItem.getGlideImageUrl());
                 cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
             }
         });
@@ -185,7 +187,7 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
-    public void onShareItem(String s) {
+    public void onShareItem(GlideUrl s) {
 
         //web -> bmp
         Glide.with(this).load(s).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
