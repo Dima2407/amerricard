@@ -27,6 +27,8 @@ import com.devtonix.amerricard.utils.LanguageUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -55,6 +57,19 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
                 return o1.getEventDate().compareTo(o2.getEventDate());
             }
         };
+    }
+
+    public int getNearestDatePosition() {
+        int position = 0;
+        for (int i = 0; i < baseEvents.size(); i++) {
+            String[] dateStrs = baseEvents.get(i).getEventDate().split("[.]");
+            Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
+            if (date.getTime() > GregorianCalendar.getInstance().getTime().getTime()) {
+                position = i;
+                break;
+            }
+        }
+        return position;
     }
 
     public void updateAdapter(List<BaseEvent> baseEvents) {

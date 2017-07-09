@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,11 @@ import com.devtonix.amerricard.ui.callback.GetContactBirthdayCallback;
 import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Handler;
 
 import javax.inject.Inject;
 
@@ -58,6 +63,7 @@ public class CalendarFragment extends BaseFragment {
     private SwipeRefreshLayout srlContainer;
     private ContentResolver contentResolver;
     private List<BaseEvent> baseEvents = new ArrayList<>();
+    private List<BaseEvent> baseEventsAll = new ArrayList<>();
     private CalendarAdapterNew calendarAdapterNew;
 
     @Override
@@ -73,6 +79,7 @@ public class CalendarFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, null);
 
+        Log.i("loadPicture", "CalendarFragment onCreateView");
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
@@ -110,11 +117,19 @@ public class CalendarFragment extends BaseFragment {
                 fill();
             }
         });
+
+    }
+
+    private void setPosition() {
+        recyclerView.scrollToPosition(calendarAdapterNew.getItemCount() - 1);
+        recyclerView.scrollToPosition(calendarAdapterNew.getNearestDatePosition());
     }
 
     private void fill() {
 
+        baseEventsAll.clear();
         baseEvents.clear();
+        baseEventsAll.addAll(sharedHelper.getEvents());
 
         eventRepository.getEvents(new MyEventGetCallback());
         celebrityRepository.getCelebrities(new MyCelebritiesGetCallback());
@@ -183,6 +198,7 @@ public class CalendarFragment extends BaseFragment {
             baseEvents.addAll(events);
             updateEventsNew();
             srlContainer.setRefreshing(false);
+            setPosition();
         }
 
         @Override
@@ -202,6 +218,7 @@ public class CalendarFragment extends BaseFragment {
             baseEvents.addAll(celebrities);
             updateEventsNew();
             srlContainer.setRefreshing(false);
+            setPosition();
         }
 
         @Override
@@ -220,6 +237,7 @@ public class CalendarFragment extends BaseFragment {
         public void onSuccess(List<Contact> contacts) {
             baseEvents.addAll(contacts);
             updateEventsNew();
+            setPosition();
         }
     }
 
@@ -243,7 +261,6 @@ public class CalendarFragment extends BaseFragment {
                     startActivity(intentForContact);
                     break;
                 case BaseEvent.TYPE_CELEBRITY:
-
                     //todo implement this action ASAP
 
                     break;
