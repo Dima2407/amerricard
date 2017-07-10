@@ -46,22 +46,12 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        name = (TextView) findViewById(R.id.drawer_nav_name);
-        name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         getSupportActionBar().setTitle(R.string.app_name);
     }
 
     private void initSidePanel() {
 
-        headerTitle = (TextView) findViewById(R.id.drawer_nav_name);
         headerEmail = (TextView) findViewById(R.id.drawer_nav_email);
-        headerImage = (ImageView) findViewById(R.id.drawer_nav_image);
 
         addItem(R.id.drawer_cards, getString(R.string.category), R.drawable.ic_birthday);
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
@@ -75,19 +65,13 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
 
     private void addItem(int view, String title, int image) {
         ViewGroup vg = (ViewGroup) findViewById(view);
-        ((TextView)vg.findViewById(R.id.view_drawer_item_text)).setText(title);
-        ((ImageView)vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
+        ((TextView) vg.findViewById(R.id.view_drawer_item_text)).setText(title);
+        ((ImageView) vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
         vg.setOnClickListener(this);
     }
 
     protected void setTitle(String title) {
         getSupportActionBar().setTitle(title == null ? "" : title);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -125,6 +109,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         }
         this.finish();
     }
+
 
     @Override
     public void onBackPressed() {
