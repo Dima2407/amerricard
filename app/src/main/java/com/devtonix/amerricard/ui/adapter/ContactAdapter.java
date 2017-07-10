@@ -70,7 +70,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
                 return false;
             }
         });
-        holder.swContact.setChecked(contact.isCancelled());
+        holder.swContact.setChecked(!contact.isCancelled());
 
         Glide.with(context).load(contact.getPhotoUri()).error(R.drawable.ic_no_avatar).transform(new CircleTransform(context)).into(holder.ivContactIcon);
     }
