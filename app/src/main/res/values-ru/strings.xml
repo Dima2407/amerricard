@@ -15,11 +15,11 @@
     <string name="vip">VIP</string>
     <string name="error_no_internet">Проверьте ваше соединение с интернетом</string>
     <string name="action_settings">Настройки</string>
-    <string name="celebrities">Знамненитости</string>
+    <string name="celebrities">Знамененитости</string>
     <string name="daily_notification">Дневные уведомления</string>
     <string name="language">Языки</string>
     <string name="ok">Ok</string>
-    <string name="scheduled_time">Устанленое врея</string>
+    <string name="scheduled_time">Установленое время</string>
     <string name="send_card">Отправить открытку</string>
     <string name="name">Имя и фамилия</string>
     <string name="add_birthday">Добавить день рождения</string>
