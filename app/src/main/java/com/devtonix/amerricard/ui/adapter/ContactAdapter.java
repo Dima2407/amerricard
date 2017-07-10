@@ -43,7 +43,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
 
     @Override
     public HolidaysVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.holidays_item, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.view_holiday_item, parent, false);
         return new HolidaysVH(v);
     }
 
@@ -52,6 +52,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
         final Contact contact = contacts.get(position);
 
         holder.tvContactTitle.setText(contact.getName());
+        holder.subText.setText(contact.getBirthday());
         holder.swContact.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -70,6 +71,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
             }
         });
         holder.swContact.setChecked(contact.isCancelled());
+
         Glide.with(context).load(contact.getPhotoUri()).error(R.drawable.ic_no_avatar).transform(new CircleTransform(context)).into(holder.ivContactIcon);
     }
 
@@ -81,6 +83,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
     final class HolidaysVH extends RecyclerView.ViewHolder {
 
         TextView tvContactTitle;
+        TextView subText;
         ImageView ivContactIcon;
         SwitchCompat swContact;
 
@@ -95,6 +98,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
             tvContactTitle = (TextView) itemView.findViewById(R.id.tv_contact_title);
             ivContactIcon = (ImageView) itemView.findViewById(R.id.iv_contact_icon);
             swContact = (SwitchCompat) itemView.findViewById(R.id.sw_contact);
+            subText = (TextView) itemView.findViewById(R.id.item_holiday_sub_text);
         }
     }
 }
