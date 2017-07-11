@@ -50,6 +50,7 @@ public class HolidaysNotificationService extends Service {
     @Override
     public void onCreate() {
 
+        Log.d(TAG, "onCreate");
         ACApplication.getMainComponent().inject(this);
 
         final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -106,7 +107,7 @@ public class HolidaysNotificationService extends Service {
 
                 Log.d(TAG, "onCreate: contact = " + c.getName() + " day=" + day + " month=" + month);
 
-                if (day == currentDay & month == currentMonth) {
+                if (day == currentDay & month == currentMonth && !sharedHelper.getContacsForHide().contains(c)) {
                     contactsForDisplay.add(c);
                     Log.d(TAG, "onCreate: contactsForDisplay.add(" + c.getName() + ") ");
                 }
