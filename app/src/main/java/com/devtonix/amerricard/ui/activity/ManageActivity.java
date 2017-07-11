@@ -3,6 +3,7 @@ package com.devtonix.amerricard.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
@@ -40,6 +41,12 @@ public class ManageActivity extends DrawerActivity {
         contacts = contactRepository.getContactsFromStorage();
 
         adapter.updateContacts(contacts);
+
+        for (Contact contact : contacts) {
+            if (sharedHelper.getContacsForHide().contains(contact)) {
+                contact.setCancelled(true);
+            }
+        }
     }
 
     @Override
@@ -60,6 +67,15 @@ public class ManageActivity extends DrawerActivity {
         @Override
         public void onItemClicked(int position) {
 
+        }
+
+        @Override
+        public void onSwitchPositionChanged(int position, boolean isPositivePosition) {
+            if (isPositivePosition){
+                sharedHelper.removeContactFromHidden(contacts.get(position));
+            } else {
+                sharedHelper.addContactForHide(contacts.get(position));
+            }
         }
     }
 }

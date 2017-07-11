@@ -2,6 +2,7 @@ package com.devtonix.amerricard.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class SharedHelper {
 
@@ -45,6 +47,7 @@ public class SharedHelper {
         String CONTACTS = "contacts";
         String CELEBRITIES = "celebrities";
         String LIST_OF_CELEBRITIES = "list_of_celebrities";
+        String CONTACS_FOR_HIDE = "contacs_for_hide";
     }
 
     public SharedHelper(Context context) {
@@ -69,7 +72,7 @@ public class SharedHelper {
 
     public List<Contact> getContacts() {
         ListContact listContact = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACTS, ""), ListContact.class);
-        return listContact == null ? new ArrayList<Contact>() : listContact.contacts;
+        return listContact == null ? new ArrayList<Contact>() : listContact.getListContacs();
     }
 
     public void saveEvents(List<EventItem> items) {
@@ -99,6 +102,32 @@ public class SharedHelper {
         return events == null ? new ArrayList<EventItem>() : events.getEvents();
     }
 
+    public void saveContacsForHide(List<Contact> contacts) {
+        sharedPreferences.edit().putString(Fields.CONTACS_FOR_HIDE, new Gson().toJson(new ListContact(contacts))).apply();
+    }
+
+    public void addContactForHide(Contact contact) {
+        List<Contact> contacts = getContacsForHide();
+        contacts.add(contact);
+        saveContacsForHide(contacts);
+    }
+
+    public void removeContactFromHidden(Contact contact) {
+        List<Contact> contacts = getContacsForHide();
+        for (Contact c : contacts) {
+            if (c.equals(contact)) {
+                contacts.remove(contact);
+                break;
+            }
+        }
+        saveContacsForHide(contacts);
+    }
+
+    public List<Contact> getContacsForHide() {
+        ListContact contacts = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACS_FOR_HIDE, ""), ListContact.class);
+        return contacts == null ? new ArrayList<Contact>() : contacts.getListContacs();
+    }
+
     public void saveFavorites(List<CardItem> items) {
         sharedPreferences.edit().putString(Fields.FAVORITES, new Gson().toJson(new ListCardItem(items))).apply();
     }
@@ -113,7 +142,7 @@ public class SharedHelper {
     }
 
     public String getNotificationsTime() {
-        return sharedPreferences.getString(Fields.NOTIFICATION_TIME, "08:00");
+        return sharedPreferences.getString(Fields.NOTIFICATION_TIME, "19:06");
     }
 
     public void setNotification(boolean isEnabled) {

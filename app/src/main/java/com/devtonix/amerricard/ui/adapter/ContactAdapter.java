@@ -3,7 +3,6 @@ package com.devtonix.amerricard.ui.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +27,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
 
     public interface OnSwitchClickListener {
         void onItemClicked(int position);
+        void onSwitchPositionChanged(int position, boolean isPositivePosition);
     }
 
     public ContactAdapter(Context mContext, OnSwitchClickListener listener) {
@@ -48,7 +48,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
     }
 
     @Override
-    public void onBindViewHolder(final HolidaysVH holder, int position) {
+    public void onBindViewHolder(final HolidaysVH holder, final int position) {
         final Contact contact = contacts.get(position);
 
         holder.tvContactTitle.setText(contact.getName());
@@ -58,13 +58,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (holder.swContact.isChecked()) {
-                        Log.d(TAG, "onTouch:  contact.setCancelled(false)");
                         holder.swContact.setChecked(false);
                         contact.setCancelled(false);
+                        listener.onSwitchPositionChanged(position, false);
+
                     } else {
-                        Log.d(TAG, "onTouch:  contact.setCancelled(true)");
                         holder.swContact.setChecked(true);
                         contact.setCancelled(true);
+                        listener.onSwitchPositionChanged(position, true);
                     }
                 }
                 return false;

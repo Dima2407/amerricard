@@ -1,9 +1,18 @@
 package com.devtonix.amerricard.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Contact implements BaseEvent {
 
+    @SerializedName("name")
+    @Expose
     private String name;
+    @SerializedName("birthday")
+    @Expose
     private String birthday;
+    @SerializedName("photoUri")
+    @Expose
     private String photoUri;
     private boolean isCancelled = false;
 
