@@ -16,7 +16,6 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
-import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
@@ -174,12 +173,6 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     @Override
     public void onItemClicked(int pos) {
 
-        CardItem cardItem = cards.get(pos);
-        if (adapter.isVip(cardItem) || adapter.isPremium(cardItem)){
-            Log.d(TAG, "click on prem or vip card");
-            loadVipScreen();
-            return;
-        }
         if (categoryId != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);

@@ -52,8 +52,8 @@ public class DetailActivity extends BaseActivity {
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
     public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
-    private static final String TYPE_VIP = "VIP";
-    private static final String TYPE_PREMIUM = "PREMIUM";
+    public static final String TYPE_VIP = "VIP";
+    public static final String TYPE_PREMIUM = "PREMIUM";
     private static final String WEB_CITE = " amerricards.com";
     private static final int REQUEST_CODE_SHARE = 2002;
     private boolean isFullScreen = false;
@@ -124,6 +124,7 @@ public class DetailActivity extends BaseActivity {
                     return;
                 }
                 progress.setVisibility(View.VISIBLE);
+
                 onShareItem(/*adapter.getImage(viewPager.getCurrentItem())*/cardItem.getGlideImageUrl());
                 cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
             }
@@ -155,7 +156,6 @@ public class DetailActivity extends BaseActivity {
         Intent intent = new Intent(DetailActivity.this, VipAndPremiumActivity.class);
         intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
         startActivity(intent);
-        finish();
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.devtonix.amerricard.network;
 
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
-import com.devtonix.amerricard.network.response.CardResponse;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
@@ -54,6 +53,6 @@ public interface API {
      * Celebrities
      * */
 
-    @GET("celebrities")
+    @GET("celebrity")
     Call<CelebrityResponse> getCelebrities();
 }

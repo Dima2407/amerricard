@@ -2,6 +2,7 @@ package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import com.devtonix.amerricard.network.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_PREMIUM;
+import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_VIP;
 
 public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapter.MainHolder> {
 
@@ -65,6 +69,17 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
         holder.favoriteButtonFull.setVisibility(View.VISIBLE);
         holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
 
+        if (TextUtils.equals(item.getCardType(), TYPE_VIP)) {
+            holder.ivVip. setVisibility(View.VISIBLE);
+            holder.ivPremium. setVisibility(View.GONE);
+        } else if (TextUtils.equals(item.getCardType(), TYPE_PREMIUM)) {
+            holder.ivVip. setVisibility(View.GONE);
+            holder.ivPremium. setVisibility(View.VISIBLE);
+        } else {
+            holder.ivVip. setVisibility(View.GONE);
+            holder.ivPremium. setVisibility(View.GONE);
+        }
+
         final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
 
         Glide.with(context).load(url).into(holder.icon);
@@ -81,6 +96,8 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
         ViewGroup favoriteContainer;
         ImageView favoriteButton;
         ImageView favoriteButtonFull;
+        ImageView ivVip;
+        ImageView ivPremium;
 
         public MainHolder(View itemView) {
             super(itemView);
@@ -100,6 +117,8 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
             });
             favoriteButton = (ImageView) itemView.findViewById(R.id.category_favorite_button);
             favoriteButtonFull = (ImageView) itemView.findViewById(R.id.category_favorite_button_full);
+            ivVip = (ImageView) itemView.findViewById(R.id.ivVip);
+            ivPremium = (ImageView) itemView.findViewById(R.id.ivPremium);
         }
     }
 
