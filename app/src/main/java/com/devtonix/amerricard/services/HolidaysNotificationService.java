@@ -125,8 +125,10 @@ public class HolidaysNotificationService extends Service {
                 inboxStyle.addLine(c.getName() + " (" + c.getBirthday() + ")");
             }
 
-            for (Celebrity c : celebritiesForDisplay) {
-                inboxStyle.addLine(c.getName() + " (" + c.getFormattedDate() + ")");
+            if (sharedHelper.getCelebritiesInSettings()) {
+                for (Celebrity c : celebritiesForDisplay) {
+                    inboxStyle.addLine(c.getName() + " (" + c.getFormattedDate() + ")");
+                }
             }
 
             for (EventItem item : eventsForDisplay) {
@@ -135,14 +137,13 @@ public class HolidaysNotificationService extends Service {
                                 sharedHelper.getLanguage()) + " (" + item.getFormattedDate() + ")");
             }
 
-
             StringBuilder forDisplay = new StringBuilder();
 
             if (contactsForDisplay.size() != 0) {
                 forDisplay.append(contacts.get(0).getName()).append(" happy birthday!");
             } else if (eventsForDisplay.size() != 0) {
                 forDisplay.append(LanguageUtils.convertLang(eventsForDisplay.get(0).getName(), sharedHelper.getLanguage())).append(" is celebrated today");
-            } else if (celebritiesForDisplay.size() != 0) {
+            } else if (celebritiesForDisplay.size() != 0 && sharedHelper.getCelebritiesInSettings()) {
                 forDisplay.append(celebrities.get(0).getName()).append(" happy birthday!");
             }
 

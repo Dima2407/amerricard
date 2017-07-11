@@ -132,7 +132,9 @@ public class CalendarFragment extends BaseFragment {
         baseEventsAll.addAll(sharedHelper.getEvents());
 
         eventRepository.getEvents(new MyEventGetCallback());
-        celebrityRepository.getCelebrities(new MyCelebritiesGetCallback());
+        if (sharedHelper.getCelebritiesInSettings()) {
+            celebrityRepository.getCelebrities(new MyCelebritiesGetCallback());
+        }
         if (SystemUtils.isPermissionNotGranted(getActivity())) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1001);
         } else {
