@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.devtonix.amerricard.ui.adapter.CardAdapter;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,7 +52,6 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card, null);
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
@@ -66,10 +68,10 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        
         //if this is a first time when app launch, I want to get cards from network
         //after that I load cards from storage (shared prefs)
-        if (sharedHelper.isFirstLaunchApplication()){
+        if (sharedHelper.isFirstLaunchApplication()) {
 
             cardRepository.getCards(new MyCardGetCallback());
 
@@ -77,6 +79,12 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         } else {
             final List<CategoryItem> mainCategories = cardRepository.getCardsFromStorage();
             updateData(mainCategories);
+            Collections.sort(mainCategories, new Comparator<CategoryItem>() {
+                @Override
+                public int compare(CategoryItem o1, CategoryItem o2) {
+                    return o1.getOrder() - o2.getOrder();
+                }
+            });
         }
 
         srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
