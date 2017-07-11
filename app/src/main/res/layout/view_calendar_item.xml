@@ -29,7 +29,7 @@
                 android:id="@+id/text_icon_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="27sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:textColor="@android:color/white"
@@ -54,7 +54,7 @@
                 android:maxLines="2"
                 android:text="Birthdays"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_biggest" />
+                android:textSize="@dimen/text_size_big" />
 
             <TextView
                 android:id="@+id/card_sub_text"
@@ -62,7 +62,7 @@
                 android:layout_height="26dp"
                 android:layout_marginLeft="@dimen/base_padding"
                 android:gravity="center_vertical"
-                android:textSize="@dimen/text_size_big"
+                android:textSize="@dimen/text_size_normal"
                 android:visibility="visible" />
 
         </LinearLayout>

@@ -34,7 +34,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance(items.get(position).getId(), isFullScreen);
+        return DetailFragment.getInstance(items.get(position), isFullScreen);
     }
 
     @Override
