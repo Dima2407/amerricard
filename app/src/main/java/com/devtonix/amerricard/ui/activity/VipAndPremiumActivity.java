@@ -1,11 +1,14 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.billing.IabHelper;
 import com.devtonix.amerricard.ui.adapter.VipPagerAdapter;
 
 public class VipAndPremiumActivity extends DrawerActivity {
@@ -43,11 +46,13 @@ public class VipAndPremiumActivity extends DrawerActivity {
                     break;
             }
         }
-
     }
 
     @Override
     public void onBackPressed() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }

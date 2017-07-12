@@ -158,4 +158,12 @@ public class SettingsActivity extends DrawerActivity {
         Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
         getApplicationContext().sendBroadcast(startReceiver);
     }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

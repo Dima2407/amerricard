@@ -1,10 +1,14 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
@@ -47,7 +51,6 @@ public class MainActivity extends DrawerActivity {
             mAdView.setVisibility(GONE);
         }
 
-
         //todo perhaps, needs check isAppFirstLaunch
         startNotificationReceiver();
     }
@@ -56,5 +59,31 @@ public class MainActivity extends DrawerActivity {
         Log.e(TAG, "startNotificationReceiver @(^_^)@");
         Intent startReceiver = new Intent(this, HolidaysBroadcastReceiver.class);
         getApplicationContext().sendBroadcast(startReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (getDrawer().isDrawerOpen(GravityCompat.START)) {
+            getDrawer().closeDrawer(GravityCompat.START);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.app_name);
+            builder.setMessage(R.string.exit_message);
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            });
+            builder.show();
+        }
     }
 }

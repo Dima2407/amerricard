@@ -1,5 +1,6 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,5 +78,13 @@ public class ManageActivity extends DrawerActivity {
                 sharedHelper.addContactForHide(contacts.get(position));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
