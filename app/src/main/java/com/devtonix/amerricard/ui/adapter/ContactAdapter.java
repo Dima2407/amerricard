@@ -1,8 +1,14 @@
 package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,12 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.utils.CircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.HolidaysVH> {
 
@@ -24,6 +34,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
     private List<Contact> contacts = new ArrayList<>();
     private Context context;
     private OnSwitchClickListener listener;
+    private static final int ICON_SIZE = 56;
+    private Handler uiHandler = new Handler();
 
     public interface OnSwitchClickListener {
         void onItemClicked(int position);
@@ -71,14 +83,83 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
                 return false;
             }
         });
+        holder.emptyIconText.setText(contact.getLetters());
+        holder.emptyIconText.setVisibility(View.GONE);
         holder.swContact.setChecked(!contact.isCancelled());
 
-        Glide.with(context).load(contact.getPhotoUri()).error(R.drawable.ic_no_avatar).transform(new CircleTransform(context)).into(holder.ivContactIcon);
+        Glide.with(context).load(contact.getPhotoUri())
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        uiHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.ivContactIcon.setImageBitmap(setImageIfEmpty(ICON_SIZE));
+                                holder.emptyIconText.setVisibility(View.VISIBLE);
+                            }
+                        }, 300);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                }).transform(new CircleTransform(context)).into(holder.ivContactIcon);
     }
 
     @Override
     public int getItemCount() {
         return contacts.size();
+    }
+
+    private Bitmap setImageIfEmpty(int size) {
+        if (size <= 0)
+            return null;
+        int color = getRandomColor();
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(color);
+        canvas.drawCircle(size / 2, size / 2, size / 2, paint);
+        return bitmap;
+    }
+
+    private int getRandomColor() {
+        Random rand = new Random();
+        int numberOfColor = rand.nextInt(9);
+        int color = 0;
+        switch (numberOfColor) {
+            case 0:
+                color = Color.YELLOW;
+                break;
+            case 1:
+                color = Color.DKGRAY;
+                break;
+            case 2:
+                color = Color.GRAY;
+                break;
+            case 3:
+                color = Color.LTGRAY;
+                break;
+            case 4:
+                color = Color.RED;
+                break;
+            case 5:
+                color = Color.GREEN;
+                break;
+            case 6:
+                color = Color.BLUE;
+                break;
+            case 7:
+                color = Color.CYAN;
+                break;
+            case 8:
+                color = Color.MAGENTA;
+                break;
+        }
+        return color;
     }
 
     final class HolidaysVH extends RecyclerView.ViewHolder {
@@ -87,6 +168,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
         TextView subText;
         ImageView ivContactIcon;
         SwitchCompat swContact;
+        TextView emptyIconText;
 
         public HolidaysVH(View itemView) {
             super(itemView);
@@ -100,6 +182,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
             ivContactIcon = (ImageView) itemView.findViewById(R.id.iv_contact_icon);
             swContact = (SwitchCompat) itemView.findViewById(R.id.sw_contact);
             subText = (TextView) itemView.findViewById(R.id.item_holiday_sub_text);
+            emptyIconText = (TextView) itemView.findViewById(R.id.text_icon_empty);
         }
     }
 }

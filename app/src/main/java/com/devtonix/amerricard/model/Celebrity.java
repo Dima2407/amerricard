@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Celebrity implements BaseEvent{
+public class Celebrity extends BaseEvent{
 
     @SerializedName("id")
     @Expose

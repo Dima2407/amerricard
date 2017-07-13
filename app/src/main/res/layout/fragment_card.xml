@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="50dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -19,11 +20,11 @@
             android:id="@+id/card_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:text="@string/no_cards_in_this_category"
             android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/text_size_normal"/>
-    </RelativeLayout>
+    </FrameLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
 

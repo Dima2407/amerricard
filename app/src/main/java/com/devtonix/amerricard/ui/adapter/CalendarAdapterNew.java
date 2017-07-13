@@ -88,38 +88,14 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         return new MainHolder(view, listener);
     }
 
-    private String firstLeters(CharSequence name) {
-        if (TextUtils.isEmpty(name))
-            return null;
-        String strs[] = name.toString().split(" ");
-        if (strs.length > 1) {
-            return strs[0].substring(0, 1).concat(strs[1].substring(0, 1)).toUpperCase();
-        } else
-            return name.toString().substring(0, 2).toUpperCase();
-    }
 
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
 
         final BaseEvent baseEvent = baseEvents.get(position);
 
-        switch (baseEvent.getEventType()) {
-            case BaseEvent.TYPE_EVENT:
-                Log.d(TAG, "TYPE_EVENT");
-                holder.text.setText(LanguageUtils.convertLang(baseEvent.getEventName(), currLang));
-                holder.emptyIconText.setText(firstLeters(holder.text.getText()));
-                break;
-            case BaseEvent.TYPE_CONTACT:
-                Log.d(TAG, "TYPE_CONTACT");
-                holder.text.setText(baseEvent.getEventName().getBaseName());
-                holder.emptyIconText.setText(firstLeters(holder.text.getText()));
-                break;
-            case BaseEvent.TYPE_CELEBRITY:
-                Log.d(TAG, "TYPE_CELEBRITY");
-                holder.text.setText(baseEvent.getEventName().getBaseName());
-                holder.emptyIconText.setText(firstLeters(holder.text.getText()));
-                break;
-        }
+        holder.text.setText(baseEvent.getName(currLang));
+        holder.emptyIconText.setText(baseEvent.getLetters(currLang));
         holder.emptyIconText.setVisibility(View.GONE);
 
         Log.i("loadPicture", TAG + " onBindViewHolder()  Glide");

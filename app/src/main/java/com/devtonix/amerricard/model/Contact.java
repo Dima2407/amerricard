@@ -1,10 +1,12 @@
 package com.devtonix.amerricard.model;
 
+import android.text.TextUtils;
+
 import com.bumptech.glide.load.model.GlideUrl;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Contact implements BaseEvent {
+public class Contact extends BaseEvent {
 
     @SerializedName("name")
     @Expose
@@ -51,6 +53,10 @@ public class Contact implements BaseEvent {
 
     public void setCancelled(boolean cancelled) {
         isCancelled = cancelled;
+    }
+
+    public String getLetters(){
+        return getLetters(null);
     }
 
     @Override

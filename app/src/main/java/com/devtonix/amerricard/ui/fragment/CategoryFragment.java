@@ -32,6 +32,9 @@ import javax.inject.Inject;
 
 public class CategoryFragment extends BaseFragment implements CategoryGridAdapter.OnFavoriteClickListener {
 
+    private static final String POSITION_FOR_CARD = "position_for_card";
+    private static final String POSITION_FOR_CATEGORY = "position_for_category";
+    private static final String CATEGORY_ID = "category_id";
     @Inject
     CardRepository cardRepository;
 
@@ -41,9 +44,6 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     private CategoryGridAdapter adapter;
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private int positionForCardItem = -1;
-    private int positionForCategoryItem = -1;
-    private int categoryId = -1;
     private List<CardItem> cards;
     private AdView mAdView;
 
@@ -56,33 +56,27 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     public static CategoryFragment getInstance(int positionForCard, int positionForCategory) {
         CategoryFragment categoryFragment = new CategoryFragment();
-        categoryFragment.setPositionForCardItem(positionForCard);
-        categoryFragment.setPositionForCategoryItem(positionForCategory);
+        Bundle bundle = new Bundle();
+        bundle.putInt(POSITION_FOR_CARD, positionForCard);
+        bundle.putInt(POSITION_FOR_CATEGORY, positionForCategory);
+        categoryFragment.setArguments(bundle);
         return categoryFragment;
     }
 
-    public static CategoryFragment getInstance(int positionMainCategory) {
+    public static CategoryFragment getInstance(int positionForCard) {
         CategoryFragment categoryFragment = new CategoryFragment();
-        categoryFragment.setPositionForCardItem(positionMainCategory);
+        Bundle bundle = new Bundle();
+        bundle.putInt(POSITION_FOR_CARD, positionForCard);
+        categoryFragment.setArguments(bundle);
         return categoryFragment;
     }
 
     public static CategoryFragment getInstanceForCategoryId(int categoryId) {
         CategoryFragment categoryFragment = new CategoryFragment();
-        categoryFragment.setCategoryId(categoryId);
+        Bundle bundle = new Bundle();
+        bundle.putInt(CATEGORY_ID, categoryId);
+        categoryFragment.setArguments(bundle);
         return categoryFragment;
-    }
-
-    private void setPositionForCardItem(int positionForCardItem) {
-        this.positionForCardItem = positionForCardItem;
-    }
-
-    private void setPositionForCategoryItem(int positionForCategoryItem) {
-        this.positionForCategoryItem = positionForCategoryItem;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
     }
 
     @Override
@@ -92,14 +86,14 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
 
-        final int countRow = 2;
+        final int countRow = getResources().getInteger(R.integer.span_count);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), countRow));
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
 
-                cards = ((CategoryActivity) getActivity()).getCategories(positionForCardItem);
+                cards = ((CategoryActivity) getActivity()).getCategories(getArguments().getInt(POSITION_FOR_CARD));
 
                 try {
                     if (cards.size() != 0) {
@@ -173,7 +167,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     @Override
     public void onItemClicked(int pos) {
 
-        if (categoryId != -1) {
+        if (getArguments().getInt(CATEGORY_ID, -1) != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<>(cards));
@@ -184,8 +178,8 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
             //show selected card from CARDS tab
             Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, pos);
-            intent.putExtra(DetailActivity.POSITION_FOR_CARD, positionForCardItem);
-            intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, positionForCategoryItem);
+            intent.putExtra(DetailActivity.POSITION_FOR_CARD, getArguments().getInt(POSITION_FOR_CARD));
+            intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, getArguments().getInt(POSITION_FOR_CATEGORY));
             startActivity(intent);
         }
     }
