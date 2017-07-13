@@ -52,6 +52,10 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     private SharedHelper sharedHelper;
     private int nearestPosition = -1;
 
+    public BaseEvent getItem(int position) {
+        return baseEvents.get(position);
+    }
+
     public interface OnCalendarItemClickListener {
         void onItemClicked(int position);
     }

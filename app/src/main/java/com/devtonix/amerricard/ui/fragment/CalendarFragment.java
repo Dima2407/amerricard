@@ -242,7 +242,7 @@ public class CalendarFragment extends BaseFragment {
         @Override
         public void onItemClicked(int position) {
 
-            final BaseEvent baseEvent = baseEvents.get(position);
+            final BaseEvent baseEvent = calendarAdapterNew.getItem(position);
             switch (baseEvent.getEventType()) {
                 case BaseEvent.TYPE_EVENT:
                     final int categoryId = ((EventItem) baseEvent).getCategoryId();
