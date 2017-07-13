@@ -103,7 +103,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
             advView.setAdSize(new AdSize(w, h));
             advView.setVisibility(View.VISIBLE);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("D9249F02E2CBFC6136E475B477071F48").build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             advView.loadAd(adRequest);
             ((ViewGroup) holder.itemView).addView(advView);
             Log.d("Ads", "onBindViewHolder: " + width + " х " + height);

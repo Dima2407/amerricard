@@ -25,8 +25,11 @@ import com.bumptech.glide.request.target.Target;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.BaseEvent;
 import com.devtonix.amerricard.model.Contact;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.utils.CircleTransform;
 import com.devtonix.amerricard.utils.LanguageUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,15 +49,18 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     private Context context;
     private OnCalendarItemClickListener listener;
     private Handler uiHandler = new Handler();
+    private SharedHelper sharedHelper;
+    private int nearestPosition = -1;
 
     public interface OnCalendarItemClickListener {
         void onItemClicked(int position);
     }
 
-    public CalendarAdapterNew(String currLang, Context context, OnCalendarItemClickListener listener) {
+    public CalendarAdapterNew(String currLang, Context context, OnCalendarItemClickListener listener, SharedHelper sharedHelper) {
         this.currLang = currLang;
         this.context = context;
         this.listener = listener;
+        this.sharedHelper = sharedHelper;
         baseEventComparator = new Comparator<BaseEvent>() {
             @Override
             public int compare(BaseEvent o1, BaseEvent o2) {
@@ -64,21 +70,30 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     }
 
     public int getNearestDatePosition() {
-        int position = 0;
+        if(nearestPosition != -1){
+            return nearestPosition;
+        }
+        nearestPosition = 0;
         for (int i = 0; i < baseEvents.size(); i++) {
             String[] dateStrs = baseEvents.get(i).getEventDate().split("[.]");
             Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
             if (date.getTime() > GregorianCalendar.getInstance().getTime().getTime()) {
-                position = i;
+                nearestPosition = i;
                 break;
             }
         }
-        return position;
+        return nearestPosition;
     }
 
     public void updateAdapter(List<BaseEvent> baseEvents) {
-        this.baseEvents = baseEvents;
-        Collections.sort(baseEvents, baseEventComparator);
+        nearestPosition = -1;
+        this.baseEvents.clear();
+        this.baseEvents.addAll(baseEvents);
+        Collections.sort(this.baseEvents, baseEventComparator);
+        nearestPosition = getNearestDatePosition();
+        if (!sharedHelper.isVipOrPremium() && !this.baseEvents.isEmpty()) {
+            this.baseEvents.add(nearestPosition, BaseEvent.EMPTY);
+        }
         notifyDataSetChanged();
     }
 
@@ -93,6 +108,16 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     public void onBindViewHolder(final MainHolder holder, int position) {
 
         final BaseEvent baseEvent = baseEvents.get(position);
+        if(baseEvent == BaseEvent.EMPTY){
+            AdRequest adRequest = new AdRequest.Builder().build();
+            holder.adView.loadAd(adRequest);
+            holder.adView.setVisibility(View.VISIBLE);
+            holder.itemContent.setVisibility(View.INVISIBLE);
+            return;
+        }else {
+            holder.adView.setVisibility(View.GONE);
+            holder.itemContent.setVisibility(View.VISIBLE);
+        }
 
         holder.text.setText(baseEvent.getName(currLang));
         holder.emptyIconText.setText(baseEvent.getLetters(currLang));
@@ -101,30 +126,30 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         Log.i("loadPicture", TAG + " onBindViewHolder()  Glide");
 
         DrawableTypeRequest<?> request;
-        if(baseEvent instanceof Contact){
+        if (baseEvent instanceof Contact) {
             request = Glide.with(context).load(((Contact) baseEvent).getPhotoUri());
-        }else {
+        } else {
             request = Glide.with(context).load(baseEvent.getThumbImageUrl());
         }
         request.listener(new RequestListener<Object, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {
+                uiHandler.postDelayed(new Runnable() {
                     @Override
-                    public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        uiHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                holder.icon.setImageBitmap(setImageIfEmpty(ICON_SIZE));
-                                holder.emptyIconText.setVisibility(View.VISIBLE);
-                            }
-                        }, 300);
-                        return false;
+                    public void run() {
+                        holder.icon.setImageBitmap(setImageIfEmpty(ICON_SIZE));
+                        holder.emptyIconText.setVisibility(View.VISIBLE);
                     }
+                }, 300);
+                return false;
+            }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, Object model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, Object model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 
-                        return false;
-                    }
-                })
+                return false;
+            }
+        })
                 .transform(new CircleTransform(context))
                 .into(holder.icon);
 
@@ -192,11 +217,14 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         TextView subtext;
         ImageView icon;
         TextView emptyIconText;
+        View itemContent;
+        AdView adView;
 
         public MainHolder(View itemView, final OnCalendarItemClickListener listener) {
             super(itemView);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemContent = itemView.findViewById(R.id.item_content);
+            adView = (AdView) itemView.findViewById(R.id.adView);
+            itemContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClicked(getAdapterPosition());

@@ -7,6 +7,33 @@ import com.devtonix.amerricard.utils.LanguageUtils;
 
 public abstract class BaseEvent {
 
+    public static final BaseEvent EMPTY = new BaseEvent() {
+        @Override
+        public String getEventDate() {
+            return null;
+        }
+
+        @Override
+        public Name getEventName() {
+            return null;
+        }
+
+        @Override
+        public int getEventType() {
+            return 0;
+        }
+
+        @Override
+        public GlideUrl getEventImage() {
+            return null;
+        }
+
+        @Override
+        public GlideUrl getThumbImageUrl() {
+            return null;
+        }
+    };
+
     public static final int TYPE_EVENT = 0;
     public static final int TYPE_CONTACT = 1;
     public static final int TYPE_CELEBRITY = 2;

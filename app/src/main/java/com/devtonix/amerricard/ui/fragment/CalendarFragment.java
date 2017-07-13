@@ -36,11 +36,7 @@ import com.devtonix.amerricard.ui.callback.GetContactBirthdayCallback;
 import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Handler;
 
 import javax.inject.Inject;
 
@@ -84,7 +80,7 @@ public class CalendarFragment extends BaseFragment {
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
 
-        calendarAdapterNew = new CalendarAdapterNew(sharedHelper.getLanguage(), getContext(), new MyOnCalendarItemClickListener());
+        calendarAdapterNew = new CalendarAdapterNew(sharedHelper.getLanguage(), getContext(), new MyOnCalendarItemClickListener(), sharedHelper);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(calendarAdapterNew);
 
@@ -121,7 +117,6 @@ public class CalendarFragment extends BaseFragment {
     }
 
     private void setPosition() {
-        recyclerView.scrollToPosition(calendarAdapterNew.getItemCount() - 1);
         recyclerView.scrollToPosition(calendarAdapterNew.getNearestDatePosition());
     }
 
