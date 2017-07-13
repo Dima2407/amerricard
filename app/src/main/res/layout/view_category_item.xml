@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/smaller_padding">
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/smaller_padding">
 
     <RelativeLayout
+        android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/categoryGray"
@@ -14,13 +16,13 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_placeholder2"/>
+            android:src="@drawable/ic_placeholder2" />
 
         <ImageView
             android:id="@+id/category_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/ivVip"
@@ -29,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/ic_vip_v2"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivPremium"
@@ -38,7 +40,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/ic_premium_v2"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/category_favorite_container"
@@ -56,16 +58,15 @@
                 android:layout_height="28dp"
                 android:src="@drawable/ic_favorite_full"
                 android:tint="@color/colorPrimary"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/category_favorite_button"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_favorite"
-                />
+                android:src="@drawable/ic_favorite" />
         </RelativeLayout>
 
     </RelativeLayout>
+
 </RelativeLayout>

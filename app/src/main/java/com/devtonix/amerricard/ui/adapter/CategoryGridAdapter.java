@@ -14,12 +14,21 @@ import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.network.NetworkModule;
+import com.devtonix.amerricard.storage.SharedHelper;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapter.MainHolder> {
+
+    private static final int SIMPLE = 0;
+    private static final int ADV = 1;
 
     private List<CardItem> cards = new ArrayList<>();
     private List<CardItem> favorites = new ArrayList<>();
@@ -43,9 +52,20 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
     public CategoryGridAdapter(Context context, List<CardItem> cards, OnFavoriteClickListener listener,
                                int width, int height, List<CardItem> favoriteCards,
-                               List<CardItem> vipCards, List<CardItem> premiumCards) {
+                               List<CardItem> vipCards, List<CardItem> premiumCards, SharedHelper sharedHelper) {
         this.context = context;
         this.cards = cards;
+        if (!sharedHelper.isVipOrPremium()) {
+            if (!this.cards.isEmpty() && this.cards.size() <= 2) {
+                this.cards.add(1, CardItem.EMPTY);
+            } else if (this.cards.size() >= 3) {
+                if (new Random().nextBoolean()) {
+                    this.cards.add(2, CardItem.EMPTY);
+                } else {
+                    this.cards.add(3, CardItem.EMPTY);
+                }
+            }
+        }
         this.listener = listener;
         this.width = width;
         this.height = height;
@@ -70,6 +90,32 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     @Override
     public void onBindViewHolder(final MainHolder holder, int position) {
         final CardItem item = cards.get(position);
+        if (item == CardItem.EMPTY) {
+            final NativeExpressAdView advView = new NativeExpressAdView(context);
+            advView.setAdUnitId(context.getString(R.string.banner_ad_unit_id));
+
+
+            float density = context.getResources().getDisplayMetrics().density;
+            int count = context.getResources().getInteger(R.integer.span_count);
+            int w = (int) (this.width / count / density) - 10;
+            int h = (int) (this.height / density) - 10;
+            Log.d("Ads", "onBindViewHolder: " + w + " x " + h);
+
+            advView.setAdSize(new AdSize(w, h));
+            advView.setVisibility(View.VISIBLE);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("D9249F02E2CBFC6136E475B477071F48").build();
+            advView.loadAd(adRequest);
+            ((ViewGroup) holder.itemView).addView(advView);
+            Log.d("Ads", "onBindViewHolder: " + width + " х " + height);
+            holder.content.setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            ViewGroup itemView = (ViewGroup) holder.itemView;
+            if (itemView.getChildCount() == 2) {
+                itemView.getChildAt(1).setVisibility(View.GONE);
+            }
+            holder.content.setVisibility(View.VISIBLE);
+        }
 
         if (isFavorite(item)) {
             holder.favoriteButton.setVisibility(View.GONE);
@@ -127,10 +173,13 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         ImageView favoriteButtonFull;
         ImageView ivVip;
         ImageView ivPremium;
+        View content;
 
         public MainHolder(View itemView, final OnFavoriteClickListener listener) {
             super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            content = itemView.findViewById(R.id.item_content);
+
+            content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClicked(getAdapterPosition());

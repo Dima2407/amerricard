@@ -102,6 +102,7 @@ public class CategoryActivity extends BaseActivity {
             ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
             adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
             pager.setAdapter(adapter);
+            pager.setOffscreenPageLimit(1);
             RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
             recyclerTabLayout.setUpWithViewPager(pager);
 

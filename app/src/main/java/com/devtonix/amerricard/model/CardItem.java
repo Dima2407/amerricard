@@ -22,6 +22,7 @@ public class CardItem implements Parcelable {
             return new CardItem[size];
         }
     };
+    public static final CardItem EMPTY = new CardItem();
 
     @SerializedName("type")
     @Expose
@@ -61,7 +62,7 @@ public class CardItem implements Parcelable {
     private Thumbnail [] thumbnails;
 
 
-    public CardItem(Parcel in) {
+    private CardItem(Parcel in) {
         type = in.readString();
         name = in.readString();
         author = in.readString();
@@ -73,6 +74,9 @@ public class CardItem implements Parcelable {
         id = in.readInt();
         image = in.readString();
         imageUrl = in.readString();
+    }
+
+    public CardItem() {
     }
 
     public String getType() {

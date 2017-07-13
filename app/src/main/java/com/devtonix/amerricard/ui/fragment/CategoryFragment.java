@@ -45,7 +45,6 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     private RecyclerView recyclerView;
     private TextView emptyText;
     private List<CardItem> cards;
-    private AdView mAdView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,11 +129,12 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
                                 getActivity(),
                                 cards,
                                 CategoryFragment.this,
-                                width,
+                                recyclerView.getWidth(),
                                 height,
                                 favoriteCards,
                                 vipCards,
-                                premiumCards);
+                                premiumCards,
+                                sharedHelper);
 
                         recyclerView.setAdapter(adapter);
                     } else {
@@ -148,20 +148,6 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         });
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mAdView = (AdView) view.findViewById(R.id.adView);
-
-        if (!sharedHelper.isVipOrPremium()) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-        } else {
-            mAdView.setVisibility(View.GONE);
-        }
     }
 
     @Override
