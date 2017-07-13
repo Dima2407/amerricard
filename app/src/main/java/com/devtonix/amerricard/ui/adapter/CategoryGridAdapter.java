@@ -82,9 +82,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         holder.ivVip.setVisibility(isVip(item) ? View.VISIBLE : View.GONE);
         holder.ivPremium.setVisibility(isPremium(item) ? View.VISIBLE : View.GONE);
 
-        final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
-
-        Glide.with(context).load(url).into(holder.icon);
+        Glide.with(context).load(item.getThumbImageUrl()).into(holder.icon);
 
 
     }

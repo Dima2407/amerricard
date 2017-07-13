@@ -1,5 +1,6 @@
 package com.devtonix.amerricard.model;
 
+import com.bumptech.glide.load.model.GlideUrl;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -93,7 +94,12 @@ public class Contact implements BaseEvent {
     }
 
     @Override
-    public String getEventImage() {
-        return getPhotoUri();
+    public GlideUrl getEventImage() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public GlideUrl getThumbImageUrl() {
+        throw new UnsupportedOperationException();
     }
 }

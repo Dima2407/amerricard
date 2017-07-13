@@ -23,12 +23,11 @@ public class DetailFragment extends BaseFragment {
     private ImageView image;
     private ImageView ivVip;
     private ImageView ivPremium;
-    private String url = "";
 
     public static DetailFragment getInstance(CardItem item, boolean isFullScreen) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle b = new Bundle();
-        b.putString("id", String.valueOf(item.getId()));
+        b.putParcelable("card", item);
         b.putBoolean("fullscreen", isFullScreen);
         b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
         b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
@@ -37,7 +36,7 @@ public class DetailFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, null);
 
         detailContainer = (ViewGroup) view.findViewById(R.id.detail_container);
@@ -45,6 +44,8 @@ public class DetailFragment extends BaseFragment {
         image = (ImageView) view.findViewById(R.id.detail_image);
         ivVip = (ImageView) view.findViewById(R.id.ivVip);
         ivPremium = (ImageView) view.findViewById(R.id.ivPremium);
+
+        final CardItem item = getArguments().getParcelable("card");
 
         if (getArguments().getBoolean("isVip")) {
             ivVip.setVisibility(View.VISIBLE);
@@ -60,11 +61,7 @@ public class DetailFragment extends BaseFragment {
         image.post(new Runnable() {
             @Override
             public void run() {
-                url = NetworkModule.BASE_URL
-                        + NetworkModule.CARD_SUFFIX
-                        + getArguments().getString("id") + "/image";
-
-                Glide.with(getActivity()).load(url + "?width="+image.getHeight()+"&height="+image.getWidth()+"&type=fit")
+                Glide.with(getActivity()).load(item.getGlideImageUrl())
                         .into(image);
             }
         });
@@ -76,11 +73,6 @@ public class DetailFragment extends BaseFragment {
         });
         return view;
     }
-
-    public String getImageUrl() {
-        return url;
-    }
-
 
     public void updateFragment(boolean isFullScreen) {
         image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);

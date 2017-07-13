@@ -1,6 +1,7 @@
 package com.devtonix.amerricard.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
-    public static final String BASE_URL = "http://188.226.178.46:8888/amerricards/api/";
+    private static final String BASE_URL = "http://188.226.178.46:8888/amerricards/api/";
     public static final String CATEGORY_SUFFIX = "category/";
     public static final String CARD_SUFFIX = "card/";
     public static final String EVENT_SUFFIX = "event/";
@@ -27,7 +28,12 @@ public class NetworkModule {
     @Singleton
     final API provideNetworkService(Context context) {
 
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Log.d(NetworkModule.class.getSimpleName(), message);
+            }
+        });
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)

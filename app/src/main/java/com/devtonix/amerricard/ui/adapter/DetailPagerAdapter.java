@@ -58,8 +58,4 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
             }
         }
     }
-
-    public String getImage(int position) {
-        return ((DetailFragment) tourFragments.get(position)).getImageUrl();
-    }
 }

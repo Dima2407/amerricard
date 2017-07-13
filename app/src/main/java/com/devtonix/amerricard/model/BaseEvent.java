@@ -1,5 +1,7 @@
 package com.devtonix.amerricard.model;
 
+import com.bumptech.glide.load.model.GlideUrl;
+
 public interface BaseEvent {
 
     int TYPE_EVENT = 0;
@@ -9,5 +11,6 @@ public interface BaseEvent {
     String getEventDate();
     Name getEventName();
     int getEventType();
-    String getEventImage();
+    GlideUrl getEventImage();
+    GlideUrl getThumbImageUrl();
 }

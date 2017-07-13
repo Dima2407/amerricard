@@ -53,10 +53,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MainHolder> {
         CategoryItem item = items.get(position);
         holder.text.setText(LanguageUtils.convertLang(item.getName(), currLang));
 
-        final String url = NetworkModule.BASE_URL + NetworkModule.CATEGORY_SUFFIX + item.getId() + "/image?width=100&height=200&type=fit";
 
         holder.subtext.setVisibility(View.GONE);
-        Glide.with(context).load(url).into(holder.icon);
+        Glide.with(context).load(item.getGlideImageUrl()).into(holder.icon);
     }
 
     @Override

@@ -80,9 +80,7 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
             holder.ivPremium. setVisibility(View.GONE);
         }
 
-        final String url = NetworkModule.BASE_URL + item.getType() + "/" + item.getId() + "/image?width=" + width + "&height=" + height + "&type=fit";
-
-        Glide.with(context).load(url).into(holder.icon);
+        Glide.with(context).load(item.getThumbImageUrl()).into(holder.icon);
     }
 
     @Override
