@@ -139,11 +139,4 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
         }
     }
 
-    @Override
-    public void onBackPressed() {
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
 }

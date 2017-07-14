@@ -9,13 +9,16 @@ import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.billing.IabHelper;
+import com.devtonix.amerricard.billing.IabResult;
 import com.devtonix.amerricard.ui.adapter.VipPagerAdapter;
 
 public class VipAndPremiumActivity extends DrawerActivity {
 
+
     public static final String TAB_POSITION = "tab_position";
     public static final String SHOW_VIP_ACTION = "action_vip";
     public static final String SHOW_PREMIUM_ACTION = "action_premium";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +49,6 @@ public class VipAndPremiumActivity extends DrawerActivity {
                     break;
             }
         }
-    }
 
-    @Override
-    public void onBackPressed() {
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

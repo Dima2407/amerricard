@@ -113,7 +113,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
-        this.finish();
+        drawer.closeDrawers();
     }
 
 }
