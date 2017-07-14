@@ -65,4 +65,5 @@ public interface MainComponent {
     void inject(HolidaysNotificationService holidaysNotificationService);
     void inject(HolidaysBroadcastReceiver holidaysBroadcastReceiver);
     void inject(ContactRepository contactRepository);
+    void inject(NetworkModule module);
 }

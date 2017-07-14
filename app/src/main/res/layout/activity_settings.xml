@@ -92,6 +92,38 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/settings_use_server_container"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:tint="@color/colorIconsActive"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_star"
+                android:padding="@dimen/small_padding"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/use_server"
+                android:textColor="@color/colorTextDefault"
+                android:textSize="@dimen/text_size_big" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/settings_use_server_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/settings_timer_container"
             android:layout_width="match_parent"
             android:layout_height="56dp"

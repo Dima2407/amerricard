@@ -48,6 +48,7 @@ public class SharedHelper {
         String CELEBRITIES = "celebrities";
         String LIST_OF_CELEBRITIES = "list_of_celebrities";
         String CONTACS_FOR_HIDE = "contacs_for_hide";
+        String USE_FIRST_SERVER = "use_first_server";
     }
 
     public SharedHelper(Context context) {
@@ -184,6 +185,14 @@ public class SharedHelper {
     public boolean isVipOrPremium() {
         return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_VIP) ||
                 sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
+    }
+
+    public boolean getCurrentServer() {
+        return sharedPreferences.getBoolean(Fields.USE_FIRST_SERVER, true);
+    }
+
+    public void setServer(boolean isFirst) {
+        sharedPreferences.edit().putBoolean(Fields.USE_FIRST_SERVER, isFirst).apply();
     }
 }
 

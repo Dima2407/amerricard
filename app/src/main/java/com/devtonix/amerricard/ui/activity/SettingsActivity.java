@@ -31,6 +31,7 @@ public class SettingsActivity extends DrawerActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
     private SwitchCompat notificationSwitch;
     private SwitchCompat celebritiesSwitch;
+    private SwitchCompat useServerSwitch;
     private ViewGroup timerContainer;
     private TextView timerText;
     private ViewGroup languageContainer;
@@ -68,6 +69,8 @@ public class SettingsActivity extends DrawerActivity {
         timerContainer = (ViewGroup) findViewById(R.id.settings_timer_container);
         celebritiesSwitch = (SwitchCompat) findViewById(R.id.settings_celebrity_switcher);
         notificationSwitch = (SwitchCompat) findViewById(R.id.settings_notification_switcher);
+        useServerSwitch = (SwitchCompat) findViewById(R.id.settings_use_server_switcher);
+        useServerSwitch.setChecked(sharedHelper.getCurrentServer());
         timerText = (TextView) findViewById(R.id.setting_timer_value);
 
     }
@@ -99,6 +102,13 @@ public class SettingsActivity extends DrawerActivity {
                 manageNotifications();
             }
         });
+        useServerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedHelper.setServer(isChecked);
+              // manageUseServer();
+            }
+        });
     }
 
     private void manageNotifications() {
@@ -108,6 +118,11 @@ public class SettingsActivity extends DrawerActivity {
     private void manageCelebrities() {
         celebritiesSwitch.setChecked(sharedHelper.getCelebritiesInSettings());
     }
+
+    private void manageUseServer() {
+        useServerSwitch.setChecked(sharedHelper.getCurrentServer());
+    }
+
 
     private void onTimeClick() {
         TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
