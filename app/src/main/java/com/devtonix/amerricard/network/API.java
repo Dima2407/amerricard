@@ -6,8 +6,14 @@ import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
+import com.devtonix.amerricard.storage.SharedHelper;
 
+import javax.inject.Inject;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -15,44 +21,100 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface API {
+public class API {
+    private static final String BASE_URL_1 = "http://188.226.178.46:8888/amerricards/api/";
+    private static final String BASE_URL_2 = "http://67.205.182.69:8080/amerricards/api/";
 
-    /**
-     * Sharing and retrieving cards
-     * */
+    private RequestApi server1;
+    private RequestApi server2;
+    private SharedHelper helper;
 
-    @POST("card/{cardId}/share")
-    Call<SimpleResponse> shareCard(@Path("cardId") long cardId);
+    public API(OkHttpClient client, SharedHelper helper) {
 
-    @POST("card/{cardId}/favorite")
-    Call<SimpleResponse> addFavoriteCard(@Path("cardId") long cardId);
+        this.server1 = new Retrofit.Builder()
+                .baseUrl(BASE_URL_1)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(RequestApi.class);
+        this.server2 = new Retrofit.Builder()
+                .baseUrl(BASE_URL_2)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(RequestApi.class);
+        this.helper = helper;
+    }
 
-    @DELETE("card/{cardId}/favorite")
-    Call<SimpleResponse> deleteFavoriteCard(@Path("cardId") long cardId);
+    public Call<SimpleResponse> shareCard(long cardId){
+        if(helper.getCurrentServer()){
+            return server1.shareCard(cardId);
+        }else {
+            return server2.shareCard(cardId);
+        }
+    }
 
-    @GET("card")
-    Call<CardResponseNew> getCard();
+    public Call<SimpleResponse> addFavoriteCard(long cardId){
+        if(helper.getCurrentServer()){
+            return server1.addFavoriteCard(cardId);
+        }else {
+            return server2.addFavoriteCard(cardId);
+        }
+    }
 
-    /**
-     * CRUD event
-     * */
+    public Call<SimpleResponse> deleteFavoriteCard(long cardId){
+        if(helper.getCurrentServer()){
+            return server1.deleteFavoriteCard(cardId);
+        }else {
+            return server2.deleteFavoriteCard(cardId);
+        }
+    }
 
-    @POST("event")
-    Call<SimpleResponse> createEvent(@Body CreateEventRequest createEventRequest);
+    public Call<CardResponseNew> getCard(){
+        if(helper.getCurrentServer()){
+            return server1.getCard();
+        }else {
+            return server2.getCard();
+        }
+    }
 
-    @PUT("event/{eventId}")
-    Call<SimpleResponse> editEvent(@Body EditEventRequest editEventRequest);
+    public Call<SimpleResponse> createEvent(CreateEventRequest createEventRequest){
+        if(helper.getCurrentServer()){
+            return server1.createEvent(createEventRequest);
+        }else {
+            return server2.createEvent(createEventRequest);
+        }
+    }
 
-    @DELETE("event/{eventId}")
-    Call<SimpleResponse> deleteEvent(@Path("eventId") long eventId);
+    public Call<SimpleResponse> editEvent(EditEventRequest editEventRequest){
+        if(helper.getCurrentServer()){
+            return server1.editEvent(editEventRequest);
+        }else {
+            return server2.editEvent(editEventRequest);
+        }
+    }
 
-    @GET("event")
-    Call<EventResponse> getEvents();
+    public Call<SimpleResponse> deleteEvent(long eventId){
+        if(helper.getCurrentServer()){
+            return server1.deleteEvent(eventId);
+        }else {
+            return server2.deleteEvent(eventId);
+        }
+    }
 
-    /**
-     * Celebrities
-     * */
+    public Call<EventResponse> getEvents(){
+        if(helper.getCurrentServer()){
+            return server1.getEvents();
+        }else {
+            return server2.getEvents();
+        }
+    }
 
-    @GET("celebrity")
-    Call<CelebrityResponse> getCelebrities();
+    public Call<CelebrityResponse> getCelebrities(){
+        if(helper.getCurrentServer()){
+            return server1.getCelebrities();
+        }else {
+            return server2.getCelebrities();
+        }
+    }
 }
