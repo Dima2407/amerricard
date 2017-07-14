@@ -70,4 +70,6 @@
     <string name="share_via">Share</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>
     <string name="use_server">Использовать первый сервер</string>
+    <string name="creat_new_contact">Добавить контакт</string>
+    <string name="regresh">Обновить список</string>
 </resources>

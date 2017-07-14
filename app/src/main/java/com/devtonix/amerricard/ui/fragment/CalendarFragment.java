@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,12 @@ public class CalendarFragment extends BaseFragment {
     private List<BaseEvent> baseEvents = new ArrayList<>();
     private List<BaseEvent> baseEventsAll = new ArrayList<>();
     private CalendarAdapterNew calendarAdapterNew;
+    private FloatingActionButton fabCalendar;
+    private FloatingActionButton fabAdd;
+    private FloatingActionButton fabRefresh;
+    private boolean isFabMenuOpen = false;
+    private LinearLayout linearFabCalendar;
+    private LinearLayout linearFabRefresh;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,8 +81,7 @@ public class CalendarFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, null);
-
-        Log.i("loadPicture", "CalendarFragment onCreateView");
+        
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
@@ -95,13 +101,40 @@ public class CalendarFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabCalendar);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabAdd = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+        fabRefresh = (FloatingActionButton) view.findViewById(R.id.fabRefresh);
+        fabCalendar = (FloatingActionButton) view.findViewById(R.id.fabCalendar);
+
+        linearFabCalendar = (LinearLayout) view.findViewById(R.id.linear_fab_calendar);
+        linearFabRefresh = (LinearLayout) view.findViewById(R.id.linear_fab_refresh);
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFabMenuOpen) {
+                    showFabMenu();
+                } else {
+                    closeFabMenu();
+                }
+            }
+        });
+
+        fabRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                srlContainer.setRefreshing(true);
+                fill();
+                closeFabMenu();
+            }
+        });
+
+        fabCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
                 startActivityForResult(intent, REQUEST_CODE_FOR_CREATING_CONTACT);
+                closeFabMenu();
             }
         });
 
@@ -114,6 +147,18 @@ public class CalendarFragment extends BaseFragment {
             }
         });
 
+    }
+
+    private void showFabMenu() {
+        isFabMenuOpen = true;
+        linearFabCalendar.setVisibility(View.VISIBLE);
+        linearFabRefresh.setVisibility(View.VISIBLE);
+    }
+
+    private void closeFabMenu() {
+        isFabMenuOpen = false;
+        linearFabCalendar.setVisibility(View.GONE);
+        linearFabRefresh.setVisibility(View.GONE);
     }
 
     private void setPosition() {

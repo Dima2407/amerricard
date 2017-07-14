@@ -1,23 +1,25 @@
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/srlContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/srlContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabCalendar"
+            android:id="@+id/fabAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_add_something_white"/>
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add_something_white" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,7 +30,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -38,7 +40,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@color/colorAccent"
                 android:indeterminate="true"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/card_empty_text"
@@ -47,9 +49,72 @@
                 android:layout_centerInParent="true"
                 android:text="@string/no_cards_in_this_category"
                 android:textColor="@color/colorTextDefault"
-                android:textSize="@dimen/text_size_normal"/>
+                android:textSize="@dimen/text_size_normal" />
         </RelativeLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_fab_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/fabAdd"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_refresh"
+                android:textSize="15sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="cursive"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="@string/regresh" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_add_something_white" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linear_fab_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/linear_fab_refresh"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/text_calendar"
+                android:textSize="15sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:textStyle="bold"
+                android:fontFamily="cursive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text= "@string/creat_new_contact" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabCalendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_add_something_white" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

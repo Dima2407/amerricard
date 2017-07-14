@@ -24,4 +24,6 @@
     <dimen name="text_size_smaller">12sp</dimen>
     <dimen name="text_size_smallest">10sp</dimen>
     <dimen name="calendar_item_icon_size">56dp</dimen>
+    <dimen name="standard_55">20dp</dimen>
+    <dimen name="standard_105">40dp</dimen>
 </resources>
