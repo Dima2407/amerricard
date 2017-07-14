@@ -25,9 +25,6 @@ public class NetworkModule {
     @Inject
     SharedHelper sharedHelper;
 
-    private static final String BASE_URL_1 = "http://188.226.178.46:8888/amerricards/api/";
-    private static final String BASE_URL_2 = "http://67.205.182.69:8080/amerricards/api/";
-
     public static final String CATEGORY_SUFFIX = "category/";
     public static final String CARD_SUFFIX = "card/";
     public static final String EVENT_SUFFIX = "event/";
@@ -51,13 +48,7 @@ public class NetworkModule {
                 .connectTimeout(2, TimeUnit.MINUTES)
                 .build();
 
-        final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(sharedHelper.getCurrentServer() ? BASE_URL_1 : BASE_URL_2)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(API.class);
+        return new API(client, sharedHelper);
     }
 
 
