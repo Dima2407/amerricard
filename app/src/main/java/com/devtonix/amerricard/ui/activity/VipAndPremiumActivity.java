@@ -1,6 +1,5 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,13 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.billing.IabHelper;
-import com.devtonix.amerricard.billing.IabResult;
+
 import com.devtonix.amerricard.ui.adapter.VipPagerAdapter;
 
 public class VipAndPremiumActivity extends DrawerActivity {
 
 
+    public static final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzLiI3hjLJQjyFbj1JK8U6QM46jX7ZEW7xsKAqGgrVuXejydWOi+f0tyAVyRM6UPQOEygJWfnVNr5Fabg43KacO6HMPytpJt83wL3s0hwcx8jicqj/L3WIQfGPEYrvLXDubtzwDT4Wqc6YtY17BQNyEXDOEZ6PXMQBiIxNDvYALGpVXChS8xNmadeTlbkiUeBrvl75eJUs6CMc/wzKiB2P5JH1geHMk2dg6/+p+v7UdtRDzkfWiPKAJZ5Vm6h7WPL4VdeRB+KlIHD6+2AAxqKLbyicUbe27NL3ihTcr9+YTMuvgB0acWmPejMrICGOz7XG5WHSqo4anV2L62iJVUjqQIDAQAB";
     public static final String TAB_POSITION = "tab_position";
     public static final String SHOW_VIP_ACTION = "action_vip";
     public static final String SHOW_PREMIUM_ACTION = "action_premium";
