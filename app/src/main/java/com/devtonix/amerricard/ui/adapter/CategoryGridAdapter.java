@@ -36,6 +36,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     private List<CardItem> premiumCards = new ArrayList<>();
     private Context context;
     private OnFavoriteClickListener listener;
+    private int reclamPosition;
 
     private int width;
     private int height;
@@ -55,14 +56,18 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
                                List<CardItem> vipCards, List<CardItem> premiumCards, SharedHelper sharedHelper) {
         this.context = context;
         this.cards = cards;
+        reclamPosition = -1;
         if (!sharedHelper.isVipOrPremium()) {
             if (!this.cards.isEmpty() && this.cards.size() <= 2) {
                 this.cards.add(1, CardItem.EMPTY);
+                reclamPosition = 1;
             } else if (this.cards.size() >= 3) {
                 if (new Random().nextBoolean()) {
                     this.cards.add(2, CardItem.EMPTY);
+                    reclamPosition = 2;
                 } else {
                     this.cards.add(3, CardItem.EMPTY);
+                    reclamPosition = 3;
                 }
             }
         }
@@ -218,5 +223,9 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     public void setFavorites(List<CardItem> favorites) {
         this.favorites = favorites;
         notifyDataSetChanged();
+    }
+
+    public int getReclamPosition() {
+        return reclamPosition;
     }
 }

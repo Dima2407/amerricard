@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +35,8 @@ import com.google.android.gms.ads.InterstitialAd;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,6 +67,7 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
+    private ImageView iconVip;
    // private List<CardItem> cardItems;
 
     @Override
@@ -78,6 +82,12 @@ public class DetailActivity extends BaseActivity {
         initToolbar();
 
         mainCategories = cardRepository.getCardsFromStorage();
+        Collections.sort(mainCategories, new Comparator<CategoryItem>() {
+            @Override
+            public int compare(CategoryItem o1, CategoryItem o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
 
         final List<CardItem> cards;
         final CardItem currentCardItem;

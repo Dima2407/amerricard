@@ -152,18 +152,21 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onItemClicked(int pos) {
-
+        int realPosition = pos;
+        if (adapter.getReclamPosition() >= 0 && pos > adapter.getReclamPosition()) {
+            realPosition--;
+        }
         if (getArguments().getInt(CATEGORY_ID, -1) != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<>(cards));
-            intent.putExtra(DetailActivity.POSITION_FOR_CARD_FROM_EVENT_SCREEN, pos);
+            intent.putExtra(DetailActivity.POSITION_FOR_CARD_FROM_EVENT_SCREEN, realPosition);
             intent.setAction(DetailActivity.ACTION_SHOW_CARD_FROM_EVENT_SCREEN);
             startActivity(intent);
         } else {
             //show selected card from CARDS tab
             Intent intent = new Intent(getActivity(), DetailActivity.class);
-            intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, pos);
+            intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, realPosition);
             intent.putExtra(DetailActivity.POSITION_FOR_CARD, getArguments().getInt(POSITION_FOR_CARD));
             intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, getArguments().getInt(POSITION_FOR_CATEGORY));
             startActivity(intent);

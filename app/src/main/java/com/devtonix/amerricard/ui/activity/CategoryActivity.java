@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.devtonix.amerricard.R;
@@ -19,6 +20,8 @@ import com.devtonix.amerricard.utils.LanguageUtils;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -57,6 +60,13 @@ public class CategoryActivity extends BaseActivity {
         }
 
         mainCategories = cardRepository.getCardsFromStorage();
+        Collections.sort(mainCategories, new Comparator<CategoryItem>() {
+            @Override
+            public int compare(CategoryItem o1, CategoryItem o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
+
         final CategoryItem currentCategory = mainCategories.get(positionForCategory);
         final String title = LanguageUtils.convertLang(currentCategory.getName(), sharedHelper.getLanguage());
 
@@ -99,7 +109,7 @@ public class CategoryActivity extends BaseActivity {
             findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
             findViewById(R.id.single_fragment).setVisibility(View.GONE);
 
-            ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
+            final ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
             adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
             pager.setAdapter(adapter);
             pager.setOffscreenPageLimit(1);
@@ -151,6 +161,7 @@ public class CategoryActivity extends BaseActivity {
         }
 
         //if it is not category so this is cards
+
         if (categoriesSecondLvl.size() == 0) {
             return mainCategories.get(positionForCategory).getCardItems();
         }
