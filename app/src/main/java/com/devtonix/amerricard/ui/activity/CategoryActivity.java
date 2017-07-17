@@ -60,12 +60,6 @@ public class CategoryActivity extends BaseActivity {
         }
 
         mainCategories = cardRepository.getCardsFromStorage();
-        Collections.sort(mainCategories, new Comparator<CategoryItem>() {
-            @Override
-            public int compare(CategoryItem o1, CategoryItem o2) {
-                return o1.getOrder() - o2.getOrder();
-            }
-        });
 
         final CategoryItem currentCategory = mainCategories.get(positionForCategory);
         final String title = LanguageUtils.convertLang(currentCategory.getName(), sharedHelper.getLanguage());
@@ -122,6 +116,9 @@ public class CategoryActivity extends BaseActivity {
             findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
 
             Fragment fragment = CategoryFragment.getInstance(positionForCategory);
+            Bundle bundle = new Bundle();
+            bundle.putInt(CategoryFragment.POSITION_FOR_CATEGORY, positionForCategory);
+            fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
         }
     }

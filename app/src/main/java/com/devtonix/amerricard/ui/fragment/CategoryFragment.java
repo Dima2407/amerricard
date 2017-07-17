@@ -33,7 +33,7 @@ import javax.inject.Inject;
 public class CategoryFragment extends BaseFragment implements CategoryGridAdapter.OnFavoriteClickListener {
 
     private static final String POSITION_FOR_CARD = "position_for_card";
-    private static final String POSITION_FOR_CATEGORY = "position_for_category";
+    public static final String POSITION_FOR_CATEGORY = "position_for_category";
     private static final String CATEGORY_ID = "category_id";
     @Inject
     CardRepository cardRepository;
@@ -45,6 +45,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     private RecyclerView recyclerView;
     private TextView emptyText;
     private List<CardItem> cards;
+    private int positionForCategory;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -168,7 +169,8 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
             Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putExtra(DetailActivity.POSITION_FOR_CURRENT_CARD, realPosition);
             intent.putExtra(DetailActivity.POSITION_FOR_CARD, getArguments().getInt(POSITION_FOR_CARD));
-            intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, getArguments().getInt(POSITION_FOR_CATEGORY));
+            positionForCategory = getArguments().getInt(POSITION_FOR_CATEGORY);
+            intent.putExtra(DetailActivity.POSITION_FOR_CATEGORY, positionForCategory);
             startActivity(intent);
         }
     }

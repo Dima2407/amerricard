@@ -82,12 +82,6 @@ public class DetailActivity extends BaseActivity {
         initToolbar();
 
         mainCategories = cardRepository.getCardsFromStorage();
-        Collections.sort(mainCategories, new Comparator<CategoryItem>() {
-            @Override
-            public int compare(CategoryItem o1, CategoryItem o2) {
-                return o1.getOrder() - o2.getOrder();
-            }
-        });
 
         final List<CardItem> cards;
         final CardItem currentCardItem;
@@ -115,8 +109,14 @@ public class DetailActivity extends BaseActivity {
                 currentCardItem = mainCategories.get(positionForCard).getCardItems().get(positionForCurrentCard);
             } else {
                 //this are categories with cards
-                cards = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems();
-                currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
+                if (mainCategories.get(positionForCategory).getCategoryItems().size() > 0) {
+                    cards = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems();
+                    currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
+                } else {
+                    cards = mainCategories.get(positionForCategory).getCardItems();
+                    currentCardItem = mainCategories.get(positionForCategory).getCardItems().get(positionForCurrentCard);
+
+                }
             }
         }
 

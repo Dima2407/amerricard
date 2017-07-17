@@ -19,6 +19,8 @@ import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -113,6 +115,7 @@ public class CardRepository {
     }
 
     public void getCards(final CardGetCallback callback) {
+        Log.i(TAG, "CardRepository getCards");
         Call<CardResponseNew> call = api.getCard();
         call.enqueue(new Callback<CardResponseNew>() {
             @Override
@@ -128,6 +131,12 @@ public class CardRepository {
                             Log.d(TAG, "["+mainCategory.getName().getEn()+"]"+"card="+card.getName());
                         }
                     }
+                    Collections.sort(categories, new Comparator<CategoryItem>() {
+                        @Override
+                        public int compare(CategoryItem o1, CategoryItem o2) {
+                            return o1.getOrder() - o2.getOrder();
+                        }
+                    });
                     saveCardsToStorage(categories);
 
                     callback.onSuccess(categories);
