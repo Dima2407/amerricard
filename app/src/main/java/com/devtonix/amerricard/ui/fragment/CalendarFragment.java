@@ -54,13 +54,13 @@ public class CalendarFragment extends BaseFragment {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
+    private static final int AMOUNT_OF_EVENT_TYPES = 3;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
     private SwipeRefreshLayout srlContainer;
     private ContentResolver contentResolver;
     private List<BaseEvent> baseEvents = new ArrayList<>();
-    private List<BaseEvent> baseEventsAll = new ArrayList<>();
     private CalendarAdapterNew calendarAdapterNew;
     private FloatingActionButton fabCalendar;
     private FloatingActionButton fabAdd;
@@ -68,6 +68,7 @@ public class CalendarFragment extends BaseFragment {
     private boolean isFabMenuOpen = false;
     private LinearLayout linearFabCalendar;
     private LinearLayout linearFabRefresh;
+    private int amountOfUpdate = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,9 +168,7 @@ public class CalendarFragment extends BaseFragment {
 
     private void fill() {
 
-        baseEventsAll.clear();
         baseEvents.clear();
-        baseEventsAll.addAll(sharedHelper.getEvents());
 
         eventRepository.getEvents(new MyEventGetCallback());
         if (sharedHelper.getCelebritiesInSettings()) {
@@ -218,8 +217,13 @@ public class CalendarFragment extends BaseFragment {
     }
 
     public void updateEventsNew() {
+        amountOfUpdate++;
         controlVisibility();
-        calendarAdapterNew.updateAdapter(baseEvents);
+        if (amountOfUpdate == AMOUNT_OF_EVENT_TYPES) {
+            calendarAdapterNew.updateAdapter(baseEvents);
+            amountOfUpdate = 0;
+        }
+        setPosition();
     }
 
     @Override
@@ -241,7 +245,6 @@ public class CalendarFragment extends BaseFragment {
             baseEvents.addAll(events);
             updateEventsNew();
             srlContainer.setRefreshing(false);
-            setPosition();
         }
 
         @Override
@@ -261,7 +264,6 @@ public class CalendarFragment extends BaseFragment {
             baseEvents.addAll(celebrities);
             updateEventsNew();
             srlContainer.setRefreshing(false);
-            setPosition();
         }
 
         @Override
@@ -280,7 +282,6 @@ public class CalendarFragment extends BaseFragment {
         public void onSuccess(List<Contact> contacts) {
             baseEvents.addAll(contacts);
             updateEventsNew();
-            setPosition();
         }
     }
 

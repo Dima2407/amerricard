@@ -103,4 +103,25 @@ public class Celebrity extends BaseEvent{
         @SerializedName("imageUrl")
         private String imageUrl;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Celebrity celebrity = (Celebrity) o;
+
+        if (!id.equals(celebrity.id)) return false;
+        if (!name.equals(celebrity.name)) return false;
+        return date.equals(celebrity.date);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + date.hashCode();
+        return result;
+    }
 }

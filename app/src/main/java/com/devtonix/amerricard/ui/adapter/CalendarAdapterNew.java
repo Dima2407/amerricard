@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -27,7 +25,6 @@ import com.devtonix.amerricard.model.BaseEvent;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.utils.CircleTransform;
-import com.devtonix.amerricard.utils.LanguageUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -37,7 +34,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Random;
 
 public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.MainHolder> {
 
@@ -74,30 +70,58 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     }
 
     public int getNearestDatePosition() {
-        if(nearestPosition != -1){
+        if (nearestPosition != -1) {
             return nearestPosition;
         }
         nearestPosition = 0;
         for (int i = 0; i < baseEvents.size(); i++) {
-            String[] dateStrs = baseEvents.get(i).getEventDate().split("[.]");
-            Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
-            if (date.getTime() > GregorianCalendar.getInstance().getTime().getTime()) {
-                nearestPosition = i;
-                break;
+            if (baseEvents.get(i).getEventDate() != null) {
+                String[] dateStrs = baseEvents.get(i).getEventDate().split("[.]");
+                Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
+                if (date.getTime() > GregorianCalendar.getInstance().getTime().getTime()) {
+                    nearestPosition = i;
+                    break;
+                }
             }
         }
         return nearestPosition;
     }
 
+    private boolean isEquals(List<BaseEvent> baseEvents) {
+        List<BaseEvent> eventsWithoutReclam = new ArrayList<>();
+        for (BaseEvent baseEvent : this.baseEvents) {
+            if (baseEvent.getEventDate() != null) {
+                eventsWithoutReclam.add(baseEvent);
+            }
+        }
+        if (eventsWithoutReclam.size() != baseEvents.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < eventsWithoutReclam.size(); i++) {
+            if (!eventsWithoutReclam.get(i).equals(baseEvents.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void updateAdapter(List<BaseEvent> baseEvents) {
         nearestPosition = -1;
+
+        Collections.sort(baseEvents, baseEventComparator);
+        if (isEquals(baseEvents)) {
+            return;
+        }
+
         this.baseEvents.clear();
         this.baseEvents.addAll(baseEvents);
-        Collections.sort(this.baseEvents, baseEventComparator);
         nearestPosition = getNearestDatePosition();
         if (!sharedHelper.isVipOrPremium() && !this.baseEvents.isEmpty()) {
             this.baseEvents.add(nearestPosition, BaseEvent.EMPTY);
         }
+
         notifyDataSetChanged();
     }
 
@@ -112,13 +136,13 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     public void onBindViewHolder(final MainHolder holder, int position) {
 
         final BaseEvent baseEvent = baseEvents.get(position);
-        if(baseEvent == BaseEvent.EMPTY){
+        if (baseEvent == BaseEvent.EMPTY) {
             AdRequest adRequest = new AdRequest.Builder().build();
             holder.adView.loadAd(adRequest);
             holder.adView.setVisibility(View.VISIBLE);
             holder.itemContent.setVisibility(View.INVISIBLE);
             return;
-        }else {
+        } else {
             holder.adView.setVisibility(View.GONE);
             holder.itemContent.setVisibility(View.VISIBLE);
         }
@@ -126,8 +150,6 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         holder.text.setText(baseEvent.getName(currLang));
         holder.emptyIconText.setText(baseEvent.getLetters(currLang));
         holder.emptyIconText.setVisibility(View.GONE);
-
-        Log.i("loadPicture", TAG + " onBindViewHolder()  Glide");
 
         DrawableTypeRequest<?> request;
         if (baseEvent instanceof Contact) {
@@ -141,7 +163,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
                 uiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        holder.icon.setImageBitmap(setImageIfEmpty(ICON_SIZE));
+                        holder.icon.setImageBitmap(setImageIfEmpty(baseEvent.getColor(), ICON_SIZE));
                         holder.emptyIconText.setVisibility(View.VISIBLE);
                     }
                 }, 300);
@@ -166,10 +188,9 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         return baseEvents.size();
     }
 
-    private Bitmap setImageIfEmpty(int size) {
+    private Bitmap setImageIfEmpty(int color, int size) {
         if (size <= 0)
             return null;
-        int color = getRandomColor();
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
@@ -177,42 +198,6 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         paint.setColor(color);
         canvas.drawCircle(size / 2, size / 2, size / 2, paint);
         return bitmap;
-    }
-
-    private int getRandomColor() {
-        Random rand = new Random();
-        int numberOfColor = rand.nextInt(9);
-        int color = 0;
-        switch (numberOfColor) {
-            case 0:
-                color = Color.YELLOW;
-                break;
-            case 1:
-                color = Color.DKGRAY;
-                break;
-            case 2:
-                color = Color.GRAY;
-                break;
-            case 3:
-                color = Color.LTGRAY;
-                break;
-            case 4:
-                color = Color.RED;
-                break;
-            case 5:
-                color = Color.GREEN;
-                break;
-            case 6:
-                color = Color.BLUE;
-                break;
-            case 7:
-                color = Color.CYAN;
-                break;
-            case 8:
-                color = Color.MAGENTA;
-                break;
-        }
-        return color;
     }
 
     static final class MainHolder extends RecyclerView.ViewHolder {
