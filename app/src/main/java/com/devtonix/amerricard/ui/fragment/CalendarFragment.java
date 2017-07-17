@@ -81,7 +81,7 @@ public class CalendarFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, null);
-        
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         emptyText = (TextView) view.findViewById(R.id.card_empty_text);
         srlContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlContainer);
@@ -193,6 +193,7 @@ public class CalendarFragment extends BaseFragment {
             } else {
 
                 fill();
+                updateEventsNew();
 
             }
         }
