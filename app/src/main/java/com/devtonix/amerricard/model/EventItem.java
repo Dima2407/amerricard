@@ -114,4 +114,20 @@ public class EventItem extends BaseEvent {
         @SerializedName("imageUrl")
         private String imageUrl;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventItem eventItem = (EventItem) o;
+
+        return id.equals(eventItem.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

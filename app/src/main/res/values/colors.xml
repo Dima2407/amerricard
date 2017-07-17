@@ -15,4 +15,23 @@
     <color name="colorIconsInactive">#FFBFBFBF</color>
 
     <color name="opacity_50">#a7ffffff</color>
+    <color name="colorRed">#E57373</color>
+    <color name="colorPink">#F06292</color>
+    <color name="colorPurple">#BA68C8</color>
+    <color name="colorDeepPurple">#9575CD</color>
+    <color name="colorIndigo">#7986CB</color>
+    <color name="colorBlue">#64B5F6</color>
+    <color name="colorLightBlue">#4FC3F7</color>
+    <color name="colorCyan">#4DD0E1</color>
+    <color name="colorTeal">#4DB6AC</color>
+    <color name="colorGreen">#81C784</color>
+    <color name="colorLightGreen">#AED581</color>
+    <color name="colorLime">#DCE775</color>
+    <color name="colorYellow">#FFF176</color>
+    <color name="colorAmber">#FFD54F</color>
+    <color name="colorOrange">#FFB74D</color>
+    <color name="colorDeepOrange">#FF8A65</color>
+    <color name="colorBrown">#A1887F</color>
+    <color name="colorGrey">#E0E0E0</color>
+    <color name="colorBlueGrey">#90A4AE</color>
 </resources>
