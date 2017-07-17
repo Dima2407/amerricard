@@ -57,7 +57,14 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         this.context = context;
         this.cards = cards;
         reclamPosition = -1;
-        if (!sharedHelper.isVipOrPremium()) {
+        boolean isReclamOnThisPage = false;
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getName() == null) {
+                isReclamOnThisPage = true;
+                reclamPosition = i;
+            }
+        }
+        if (!sharedHelper.isVipOrPremium() && !isReclamOnThisPage) {
             if (!this.cards.isEmpty() && this.cards.size() <= 2) {
                 this.cards.add(1, CardItem.EMPTY);
                 reclamPosition = 1;
