@@ -1,6 +1,6 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -38,8 +38,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -70,7 +68,6 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
-    private ImageView iconVip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,11 +131,19 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 final CardItem cardItem = cards.get(viewPager.getCurrentItem());
-                if (TextUtils.equals(cardItem.getCardType(), TYPE_VIP) ||
-                        TextUtils.equals(cardItem.getCardType(), TYPE_PREMIUM)) {
-                    loadVipScreen();
-                    return;
+
+                if (TextUtils.equals(cardItem.getCardType(), TYPE_VIP)) {
+                    if (!sharedHelper.isVip()) {
+                        showBuyDialog(getString(R.string.are_your_want_to_buy_vip));
+                        return;
+                    }
+                } else if (TextUtils.equals(cardItem.getCardType(), TYPE_PREMIUM)) {
+                    if (!sharedHelper.isVipOrPremium()) {
+                        showBuyDialog(getString(R.string.are_your_want_to_buy_premium));
+                        return;
+                    }
                 }
+
                 progress.setVisibility(View.VISIBLE);
 
                 onShareItem(/*adapter.getImage(viewPager.getCurrentItem())*/cardItem.getGlideImageUrl());
@@ -274,5 +279,26 @@ public class DetailActivity extends BaseActivity {
         public void onRetrofitError(String message) {
             Log.d(TAG, "onRetrofitError: error");
         }
+    }
+
+    private void showBuyDialog(String message) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(R.string.app_name)
+                .setMessage(message)
+                .setIcon(R.drawable.ic_logo)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        loadVipScreen();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .show();
     }
 }
