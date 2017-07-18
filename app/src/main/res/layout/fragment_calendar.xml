@@ -10,17 +10,6 @@
         android:layout_height="match_parent">
 
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="16dp"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/ic_add_something_white" />
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,6 +41,15 @@
                 android:textSize="@dimen/text_size_normal" />
         </RelativeLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add_something_white" />
 
         <LinearLayout
             android:id="@+id/linear_fab_refresh"
@@ -60,20 +58,20 @@
             android:layout_above="@id/fabAdd"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/text_refresh"
-                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:layout_width="wrap_content"
-                android:fontFamily="cursive"
-                android:textStyle="bold"
                 android:background="@android:color/white"
-                android:layout_height="wrap_content"
-                android:text="@string/regresh" />
+                android:fontFamily="cursive"
+                android:text="@string/regresh"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabRefresh"
@@ -92,21 +90,21 @@
             android:layout_above="@id/linear_fab_refresh"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
 
             <TextView
                 android:id="@+id/text_calendar"
-                android:textSize="15sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
-                android:textStyle="bold"
-                android:fontFamily="cursive"
-                android:background="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text= "@string/creat_new_contact" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@android:color/white"
+                android:fontFamily="cursive"
+                android:text="@string/creat_new_contact"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabCalendar"
@@ -114,6 +112,7 @@
                 android:layout_height="wrap_content"
                 app:fabSize="mini"
                 app:srcCompat="@drawable/ic_add_something_white" />
+
 
         </LinearLayout>
 
