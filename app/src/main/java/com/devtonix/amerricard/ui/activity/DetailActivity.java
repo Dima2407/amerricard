@@ -1,5 +1,6 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -68,11 +71,14 @@ public class DetailActivity extends BaseActivity {
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
     private ImageView iconVip;
-   // private List<CardItem> cardItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_detail);
 
         ACApplication.getMainComponent().inject(this);
