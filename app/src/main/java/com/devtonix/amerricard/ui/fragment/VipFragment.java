@@ -1,7 +1,6 @@
 package com.devtonix.amerricard.ui.fragment;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
@@ -26,7 +24,6 @@ import com.devtonix.amerricard.billing.IabHelper;
 import com.devtonix.amerricard.billing.IabResult;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.activity.BillingActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 
 import org.json.JSONException;
