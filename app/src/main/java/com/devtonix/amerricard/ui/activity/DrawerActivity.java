@@ -59,7 +59,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
 
         headerEmail = (TextView) findViewById(R.id.drawer_nav_email);
 
-        addItem(R.id.drawer_cards, getString(R.string.category), R.drawable.ic_category);
+        addItem(R.id.drawer_cards, getString(R.string.category), R.drawable.categories_icon);
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
         addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
         addItem(R.id.drawer_manage_holidays, getString(R.string.manage_birthdays), R.drawable.ic_edit);
