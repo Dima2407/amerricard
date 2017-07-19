@@ -54,7 +54,7 @@ public class CalendarFragment extends BaseFragment {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
-    private static final int AMOUNT_OF_EVENT_TYPES = 2;
+    private static int AMOUNT_OF_EVENT_TYPES;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
@@ -76,6 +76,8 @@ public class CalendarFragment extends BaseFragment {
 
         ACApplication.getMainComponent().inject(this);
         contentResolver = getActivity().getContentResolver();
+
+        AMOUNT_OF_EVENT_TYPES = sharedHelper.getCelebritiesInSettings() ? 3 : 2;
     }
 
     @Nullable
