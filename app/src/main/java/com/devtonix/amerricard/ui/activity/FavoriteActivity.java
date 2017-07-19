@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,7 +12,6 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.FavoriteCardAdapter;
-import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -96,11 +94,8 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
 
     @Override
     public void onFavoriteClicked(int position, CardItem item) {
-
-        progressDialog.show();
-
         cardRepository.removeCardFromFavorites(item);
-        cardRepository.sendDeleteFavoriteCardRequest(item.getId(), new MyCardDeleteFromFavoriteCallback());
+        cardRepository.sendDeleteFavoriteCardRequest(item.getId());
 
         final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
         adapter.setItems(freshFavoritesCards);
@@ -120,23 +115,6 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private class MyCardDeleteFromFavoriteCallback implements CardDeleteFromFavoriteCallback {
-        @Override
-        public void onSuccess() {
-            progressDialog.dismiss();
-        }
-
-        @Override
-        public void onError() {
-            progressDialog.dismiss();
-        }
-
-        @Override
-        public void onRetrofitError(String message) {
-            progressDialog.dismiss();
         }
     }
 

@@ -71,7 +71,6 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
 
         holder.favoriteButton.setVisibility(View.GONE);
         holder.favoriteButtonFull.setVisibility(View.VISIBLE);
-        holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
 
         if (TextUtils.equals(item.getCardType(), TYPE_VIP)) {
             holder.ivVip.setVisibility(View.VISIBLE);

@@ -2,7 +2,6 @@ package com.devtonix.amerricard.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
@@ -20,7 +19,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class SharedHelper {
 
@@ -160,7 +158,7 @@ public class SharedHelper {
     }
 
     public boolean getCelebritiesInSettings() {
-        return sharedPreferences.getBoolean(Fields.CELEBRITIES, true);
+        return sharedPreferences.getBoolean(Fields.CELEBRITIES, false);
     }
 
     public void setLanguage(String token) {
