@@ -1,7 +1,6 @@
 package com.devtonix.amerricard.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +12,9 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
-import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.NativeExpressAdView;
 
 
@@ -37,6 +34,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     private Context context;
     private OnFavoriteClickListener listener;
     private int reclamPosition;
+    private int displayWidth;
 
     private int width;
     private int height;
@@ -84,6 +82,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         this.favorites = favoriteCards;
         this.vipCards = vipCards;
         this.premiumCards = premiumCards;
+        this.displayWidth = sharedHelper.getDisplayWidth();
     }
 
     public void updateData(List<CardItem> items) {
@@ -140,7 +139,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         holder.ivVip.setVisibility(isVip(item) ? View.VISIBLE : View.GONE);
         holder.ivPremium.setVisibility(isPremium(item) ? View.VISIBLE : View.GONE);
 
-        Glide.with(context).load(item.getThumbImageUrl()).into(holder.icon);
+        Glide.with(context).load(item.getThumbImageUrl(displayWidth / 2)).into(holder.icon);
 
 
     }

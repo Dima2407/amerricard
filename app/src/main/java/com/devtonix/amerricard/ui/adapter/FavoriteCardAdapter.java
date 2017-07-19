@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
-import com.devtonix.amerricard.network.NetworkModule;
+import com.devtonix.amerricard.storage.SharedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,8 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
     private int width;
     private int height;
 
+    private int displayWidth;
+
     public interface OnFavoriteClickListener {
         void onItemClicked(int position);
 
@@ -39,13 +41,15 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
             Context context,
             List<CardItem> items,
             OnFavoriteClickListener listener,
-            int width, int height) {
+            int width, int height,
+            SharedHelper sharedHelper) {
 
         this.context = context;
         this.items = items;
         this.listener = listener;
         this.width = width;
         this.height = height;
+        this.displayWidth = sharedHelper.getDisplayWidth();
     }
 
     public void setItems(List<CardItem> items) {
@@ -70,17 +74,17 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
         holder.favoriteContainer.setBackgroundResource(R.drawable.shape_white_circle);
 
         if (TextUtils.equals(item.getCardType(), TYPE_VIP)) {
-            holder.ivVip. setVisibility(View.VISIBLE);
-            holder.ivPremium. setVisibility(View.GONE);
+            holder.ivVip.setVisibility(View.VISIBLE);
+            holder.ivPremium.setVisibility(View.GONE);
         } else if (TextUtils.equals(item.getCardType(), TYPE_PREMIUM)) {
-            holder.ivVip. setVisibility(View.GONE);
-            holder.ivPremium. setVisibility(View.VISIBLE);
+            holder.ivVip.setVisibility(View.GONE);
+            holder.ivPremium.setVisibility(View.VISIBLE);
         } else {
-            holder.ivVip. setVisibility(View.GONE);
-            holder.ivPremium. setVisibility(View.GONE);
+            holder.ivVip.setVisibility(View.GONE);
+            holder.ivPremium.setVisibility(View.GONE);
         }
 
-        Glide.with(context).load(item.getThumbImageUrl()).into(holder.icon);
+        Glide.with(context).load(item.getThumbImageUrl(displayWidth / 2)).into(holder.icon);
     }
 
     @Override

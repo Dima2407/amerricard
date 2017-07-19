@@ -77,7 +77,8 @@ public class FavoriteActivity extends DrawerActivity implements FavoriteCardAdap
                     cards,
                     FavoriteActivity.this,
                     width,
-                    height);
+                    height,
+                    sharedHelper);
             recyclerView.setAdapter(adapter);
         } else {
             manageVisible(false);

@@ -20,11 +20,13 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
     private List<CardItem> items = new ArrayList<>();
     private SparseArray<Fragment> tourFragments = new SparseArray<>();
     private boolean isFullScreen = false;
+    private int displayWidth;
 
-    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<CardItem> items) {
+    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<CardItem> items, int displayWidht) {
         super(fragmentManager);
         this.context = context;
         this.items = items;
+        this.displayWidth = displayWidht;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance(items.get(position), isFullScreen);
+        return DetailFragment.getInstance(items.get(position), isFullScreen, displayWidth);
     }
 
     @Override

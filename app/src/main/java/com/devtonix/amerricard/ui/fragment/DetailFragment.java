@@ -22,14 +22,16 @@ public class DetailFragment extends BaseFragment {
     private ImageView image;
     private ImageView ivVip;
     private ImageView ivPremium;
+    private int displayWidth;
 
-    public static DetailFragment getInstance(CardItem item, boolean isFullScreen) {
+    public static DetailFragment getInstance(CardItem item, boolean isFullScreen, int displayWidth) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle b = new Bundle();
         b.putParcelable("card", item);
         b.putBoolean("fullscreen", isFullScreen);
         b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
         b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
+        b.putInt("displayWidth", displayWidth);
         detailFragment.setArguments(b);
         return detailFragment;
     }
@@ -45,6 +47,7 @@ public class DetailFragment extends BaseFragment {
         ivPremium = (ImageView) view.findViewById(R.id.ivPremium);
 
         final CardItem item = getArguments().getParcelable("card");
+        displayWidth = getArguments().getInt("displayWidth");
 
         if (getArguments().getBoolean("isVip")) {
             ivVip.setVisibility(View.VISIBLE);
@@ -60,7 +63,7 @@ public class DetailFragment extends BaseFragment {
         image.post(new Runnable() {
             @Override
             public void run() {
-                Glide.with(getActivity()).load(item.getThumbImageUrl())
+                Glide.with(getActivity()).load(item.getThumbImageUrl(displayWidth))
                         .into(image);
             }
         });

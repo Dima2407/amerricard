@@ -49,6 +49,7 @@ public class SharedHelper {
         String LIST_OF_CELEBRITIES = "list_of_celebrities";
         String CONTACS_FOR_HIDE = "contacs_for_hide";
         String USE_FIRST_SERVER = "use_first_server";
+        String DISPLAY_WIDTH = "display_width";
     }
 
     public SharedHelper(Context context) {
@@ -197,6 +198,14 @@ public class SharedHelper {
 
     public void setServer(boolean isFirst) {
         sharedPreferences.edit().putBoolean(Fields.USE_FIRST_SERVER, isFirst).apply();
+    }
+
+    public void saveDisplayWidth(int width) {
+        sharedPreferences.edit().putInt(Fields.DISPLAY_WIDTH, width).apply();
+    }
+
+    public int getDisplayWidth() {
+        return sharedPreferences.getInt(Fields.DISPLAY_WIDTH, 0);
     }
 }
 
