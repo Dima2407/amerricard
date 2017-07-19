@@ -73,6 +73,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
                 android:gravity="center_vertical">
 
                 <ImageView
