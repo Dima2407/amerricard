@@ -31,4 +31,12 @@
     <string name="become_vip_title">Стати VIP</string>
     <string name="share_via">Поділитися з</string>
     <string name="category">Категорії</string>
+    <string name="exit_message">Ви дійсно бажаєте вийти?</string>
+    <string name="use_server">Використовувати перший сервер?</string>
+    <string name="creat_new_contact">Добавити контакт</string>
+    <string name="regresh">Оновити список</string>
+    <string name="are_your_want_to_buy_vip">Ця картинка доступна лише для VIP користувачів. Ви бажаєте продовжити купівлю?</string>
+    <string name="are_your_want_to_buy_premium">Ця картинка доступна лише для PREMIUM користувачів. Ви бажаєте продовжити купівлю?</string>
+    <string name="no">Ні</string>
+    <string name="yes">Так</string>
 </resources>

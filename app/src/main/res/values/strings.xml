@@ -68,12 +68,12 @@
     </string-array>
     <string name="created_with">Created with</string>
     <string name="share_via">Share</string>
-    <string name="exit_message">Вы действительно хотите выйти?</string>
-    <string name="use_server">Использовать первый сервер</string>
-    <string name="creat_new_contact">Добавить контакт</string>
-    <string name="regresh">Обновить список</string>
-    <string name="are_your_want_to_buy_vip">Эта картинка доступна только для VIP-пользователей. Вы хотите продолжить покупку?</string>
-    <string name="are_your_want_to_buy_premium">Эта картинка доступна только для PREMIUM-пользователей. Вы хотите продолжить покупку?</string>
-    <string name="no">Нет</string>
-    <string name="yes">Да</string>
+    <string name="exit_message">Do you really want to leave?</string>
+    <string name="use_server">Use first server?</string>
+    <string name="creat_new_contact">Create new contact</string>
+    <string name="regresh">Refresh list</string>
+    <string name="are_your_want_to_buy_vip">This picture is only available for VIP users. Do you want to continue purshase?</string>
+    <string name="are_your_want_to_buy_premium">This picture is only available for PREMIUM users. Do you want to continue purshase?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

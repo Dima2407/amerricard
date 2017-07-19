@@ -31,4 +31,12 @@
     <string name="become_vip_title">Hazte VIP</string>
     <string name="share_via">Compartir</string>
     <string name="category">Categoría</string>
+    <string name="exit_message">¿De verdad quieres irte?</string>
+    <string name="use_server">¿Utilizar el primer servidor?</string>
+    <string name="creat_new_contact">Crear nuevo contacto</string>
+    <string name="regresh">Actualizar lista</string>
+    <string name="are_your_want_to_buy_vip">Esta imagen está disponible solo para usuarios VIP. ¿Desea continuar con la compra?</string>
+    <string name="are_your_want_to_buy_premium">Esta imagen solo está disponible para usuarios de PREMIUM. ¿Desea continuar con la compra?</string>
+    <string name="no">No</string>
+    <string name="yes">Sí</string>
 </resources>
