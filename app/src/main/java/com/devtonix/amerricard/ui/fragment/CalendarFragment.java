@@ -54,7 +54,7 @@ public class CalendarFragment extends BaseFragment {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
-    private static final int AMOUNT_OF_EVENT_TYPES = 3;
+    private static final int AMOUNT_OF_EVENT_TYPES = 2;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
@@ -250,11 +250,13 @@ public class CalendarFragment extends BaseFragment {
 
         @Override
         public void onError() {
+            updateEventsNew();
             srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onRetrofitError(String message) {
+            updateEventsNew();
             srlContainer.setRefreshing(false);
         }
     }
@@ -269,11 +271,13 @@ public class CalendarFragment extends BaseFragment {
 
         @Override
         public void onError() {
+            updateEventsNew();
             srlContainer.setRefreshing(false);
         }
 
         @Override
         public void onRetrofitError(String message) {
+            updateEventsNew();
             srlContainer.setRefreshing(false);
         }
     }

@@ -163,7 +163,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
                 uiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        holder.icon.setImageBitmap(setImageIfEmpty(baseEvent.getColor(), ICON_SIZE));
+                        holder.icon.setImageBitmap(setImageIfEmpty(context.getResources().getColor(baseEvent.getColor()), ICON_SIZE));
                         holder.emptyIconText.setVisibility(View.VISIBLE);
                     }
                 }, 300);

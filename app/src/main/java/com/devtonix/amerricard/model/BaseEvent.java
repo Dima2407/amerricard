@@ -1,6 +1,5 @@
 package com.devtonix.amerricard.model;
 
-import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.bumptech.glide.load.model.GlideUrl;
