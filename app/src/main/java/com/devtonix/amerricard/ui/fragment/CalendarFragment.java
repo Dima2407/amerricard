@@ -192,6 +192,7 @@ public class CalendarFragment extends BaseFragment {
             } else {
 
                 fill();
+                amountOfUpdate--;
                 updateEventsNew();
 
             }
