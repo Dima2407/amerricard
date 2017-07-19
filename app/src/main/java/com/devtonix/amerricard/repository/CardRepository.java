@@ -6,16 +6,11 @@ import android.util.Log;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItem;
-import com.devtonix.amerricard.model.CategoryItemFirstLevel;
-import com.devtonix.amerricard.model.CategoryItemSecondLevel;
 import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
-import com.devtonix.amerricard.network.response.CardResponse;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
-import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 
@@ -45,49 +40,19 @@ public class CardRepository {
         this.context = context;
     }
 
-    public void sendAddFavoriteCardRequest(long id, final CardAddToFavoriteCallback callback) {
+    public void sendAddFavoriteCardRequest(long id) {
         Call<SimpleResponse> call = api.addFavoriteCard(id);
         call.enqueue(new Callback<SimpleResponse>() {
-            @Override
-            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
-                } else {
-                    callback.onError();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                if (t != null && t.getMessage() != null) {
-                    callback.onRetrofitError(t.getMessage());
-                } else {
-                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
-                }
-            }
+            @Override public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {}
+            @Override public void onFailure(Call<SimpleResponse> call, Throwable t) {}
         });
     }
 
-    public void sendDeleteFavoriteCardRequest(long id, final CardDeleteFromFavoriteCallback callback) {
+    public void sendDeleteFavoriteCardRequest(long id) {
         Call<SimpleResponse> call = api.deleteFavoriteCard(id);
         call.enqueue(new Callback<SimpleResponse>() {
-            @Override
-            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
-                } else {
-                    callback.onError();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                if (t != null && t.getMessage() != null) {
-                    callback.onRetrofitError(t.getMessage());
-                } else {
-                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
-                }
-            }
+            @Override public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {}
+            @Override public void onFailure(Call<SimpleResponse> call, Throwable t) {}
         });
     }
 

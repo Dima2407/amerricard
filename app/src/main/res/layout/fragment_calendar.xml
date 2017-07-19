@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fabSize="mini"
-                app:srcCompat="@drawable/ic_add_something_white" />
+                app:srcCompat="@drawable/ic_add_from_contacts" />
 
         </LinearLayout>
 
@@ -113,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fabSize="mini"
-                app:srcCompat="@drawable/ic_add_something_white" />
+                app:srcCompat="@drawable/ic_add_manual" />
 
         </LinearLayout>
 

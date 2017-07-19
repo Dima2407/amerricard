@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
-import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 
 import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_PREMIUM;
@@ -61,7 +60,7 @@ public class DetailFragment extends BaseFragment {
         image.post(new Runnable() {
             @Override
             public void run() {
-                Glide.with(getActivity()).load(item.getGlideImageUrl())
+                Glide.with(getActivity()).load(item.getThumbImageUrl())
                         .into(image);
             }
         });
