@@ -20,8 +20,6 @@ import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.adapter.CategoryGridAdapter;
-import com.devtonix.amerricard.ui.callback.CardAddToFavoriteCallback;
-import com.devtonix.amerricard.ui.callback.CardDeleteFromFavoriteCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +156,13 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
         if (getArguments().getInt(CATEGORY_ID, -1) != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);
-            intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<>(cards));
+            List<CardItem> cardsWithoutReclam = new ArrayList<>();
+            for (CardItem cardItem : cards) {
+                if (cardItem.getName() != null) {
+                    cardsWithoutReclam.add(cardItem);
+                }
+            }
+            intent.putParcelableArrayListExtra(DetailActivity.PARCELABLE_CARDS, new ArrayList<>(cardsWithoutReclam));
             intent.putExtra(DetailActivity.POSITION_FOR_CARD_FROM_EVENT_SCREEN, realPosition);
             intent.setAction(DetailActivity.ACTION_SHOW_CARD_FROM_EVENT_SCREEN);
             startActivity(intent);
