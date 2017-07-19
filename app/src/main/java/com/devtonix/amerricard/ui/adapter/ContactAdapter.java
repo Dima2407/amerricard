@@ -3,12 +3,10 @@ package com.devtonix.amerricard.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +24,6 @@ import com.devtonix.amerricard.utils.CircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.HolidaysVH> {
 
@@ -94,7 +91,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
                         uiHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                holder.ivContactIcon.setImageBitmap(setImageIfEmpty(ICON_SIZE));
+                                holder.ivContactIcon.setImageBitmap(setImageIfEmpty(context.getResources().getColor(contact.getColor()), ICON_SIZE));
                                 holder.emptyIconText.setVisibility(View.VISIBLE);
                             }
                         }, 300);
@@ -113,10 +110,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
         return contacts.size();
     }
 
-    private Bitmap setImageIfEmpty(int size) {
+    private Bitmap setImageIfEmpty(int color, int size) {
         if (size <= 0)
             return null;
-        int color = getRandomColor();
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
@@ -124,42 +120,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holidays
         paint.setColor(color);
         canvas.drawCircle(size / 2, size / 2, size / 2, paint);
         return bitmap;
-    }
-
-    private int getRandomColor() {
-        Random rand = new Random();
-        int numberOfColor = rand.nextInt(9);
-        int color = 0;
-        switch (numberOfColor) {
-            case 0:
-                color = Color.YELLOW;
-                break;
-            case 1:
-                color = Color.DKGRAY;
-                break;
-            case 2:
-                color = Color.GRAY;
-                break;
-            case 3:
-                color = Color.LTGRAY;
-                break;
-            case 4:
-                color = Color.RED;
-                break;
-            case 5:
-                color = Color.GREEN;
-                break;
-            case 6:
-                color = Color.BLUE;
-                break;
-            case 7:
-                color = Color.CYAN;
-                break;
-            case 8:
-                color = Color.MAGENTA;
-                break;
-        }
-        return color;
     }
 
     final class HolidaysVH extends RecyclerView.ViewHolder {
