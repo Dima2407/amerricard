@@ -74,7 +74,7 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_detail);
 
@@ -123,7 +123,7 @@ public class DetailActivity extends BaseActivity {
             }
         }
 
-        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
+        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards, sharedHelper.getDisplayWidth());
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
 

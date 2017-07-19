@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.devtonix.amerricard.R;
@@ -53,6 +54,15 @@ public class MainActivity extends DrawerActivity {
 
         //todo perhaps, needs check isAppFirstLaunch
         startNotificationReceiver();
+        saveDislayWidth();
+    }
+
+    private void saveDislayWidth() {
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        sharedHelper.saveDisplayWidth(screenWidth);
     }
 
     private void startNotificationReceiver() {

@@ -59,7 +59,7 @@ public class CardItem implements Parcelable {
     private String imageUrl;
     @Expose
     @SerializedName("thumbnails")
-    private Thumbnail [] thumbnails;
+    private Thumbnail[] thumbnails;
 
 
     private CardItem(Parcel in) {
@@ -192,11 +192,17 @@ public class CardItem implements Parcelable {
         return GetS3Object.fromS3toUrl(imageUrl);
     }
 
-    public GlideUrl getThumbImageUrl(){
-        if(thumbnails == null || thumbnails.length == 0 && thumbnails[0] == null){
+    public GlideUrl getThumbImageUrl(int width) {
+        if (thumbnails == null || thumbnails.length == 0 && thumbnails[0] == null) {
             return getGlideImageUrl();
-        }else {
-            return GetS3Object.fromS3toUrl(thumbnails[0].imageUrl);
+        } else {
+            Thumbnail readyThumbnail = thumbnails[0];
+            for (Thumbnail thumbnail : thumbnails) {
+                if (Math.abs(thumbnail.width - width) < Math.abs(readyThumbnail.width - width)) {
+                    readyThumbnail = thumbnail;
+                }
+            }
+            return GetS3Object.fromS3toUrl(readyThumbnail.imageUrl);
         }
     }
 
