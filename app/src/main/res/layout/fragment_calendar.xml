@@ -41,6 +41,14 @@
                 android:textSize="@dimen/text_size_normal" />
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/img_white_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.3"
+            android:src="@android:color/white"
+            android:visibility="gone"/>
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabAdd"
             android:layout_width="wrap_content"

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +70,7 @@ public class CalendarFragment extends BaseFragment {
     private LinearLayout linearFabCalendar;
     private LinearLayout linearFabRefresh;
     private int amountOfUpdate = 0;
+    private ImageView imgWhiteBackground;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +112,15 @@ public class CalendarFragment extends BaseFragment {
 
         linearFabCalendar = (LinearLayout) view.findViewById(R.id.linear_fab_calendar);
         linearFabRefresh = (LinearLayout) view.findViewById(R.id.linear_fab_refresh);
+
+        imgWhiteBackground = (ImageView) view.findViewById(R.id.img_white_background);
+
+        imgWhiteBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeFabMenu();
+            }
+        });
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,12 +165,16 @@ public class CalendarFragment extends BaseFragment {
 
     private void showFabMenu() {
         isFabMenuOpen = true;
+        fabAdd.setRotation(45);
+        imgWhiteBackground.setVisibility(View.VISIBLE);
         linearFabCalendar.setVisibility(View.VISIBLE);
         linearFabRefresh.setVisibility(View.VISIBLE);
     }
 
     private void closeFabMenu() {
         isFabMenuOpen = false;
+        fabAdd.setRotation(0);
+        imgWhiteBackground.setVisibility(View.GONE);
         linearFabCalendar.setVisibility(View.GONE);
         linearFabRefresh.setVisibility(View.GONE);
     }
@@ -233,9 +248,7 @@ public class CalendarFragment extends BaseFragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1001) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 fill();
-
             } else {
                 Toast.makeText(getActivity(), "Until you grant the permission, we can not display the names", Toast.LENGTH_SHORT).show();
             }
