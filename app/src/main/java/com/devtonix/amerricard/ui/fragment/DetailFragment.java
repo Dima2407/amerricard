@@ -49,16 +49,7 @@ public class DetailFragment extends BaseFragment {
         final CardItem item = getArguments().getParcelable("card");
         displayWidth = getArguments().getInt("displayWidth");
 
-        if (getArguments().getBoolean("isVip")) {
-            ivVip.setVisibility(View.VISIBLE);
-            ivPremium.setVisibility(View.GONE);
-        } else if (getArguments().getBoolean("isPremium")) {
-            ivVip.setVisibility(View.GONE);
-            ivPremium.setVisibility(View.VISIBLE);
-        } else {
-            ivVip.setVisibility(View.GONE);
-            ivPremium.setVisibility(View.GONE);
-        }
+        updateBadge(true);
 
         image.post(new Runnable() {
             @Override
@@ -78,5 +69,25 @@ public class DetailFragment extends BaseFragment {
 
     public void updateFragment(boolean isFullScreen) {
         image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
+        updateBadge(!isFullScreen);
     }
+
+    private void updateBadge(boolean isBadgeVisible) {
+        if (isBadgeVisible) {
+            if (getArguments().getBoolean("isVip")) {
+                ivVip.setVisibility(View.VISIBLE);
+                ivPremium.setVisibility(View.GONE);
+            } else if (getArguments().getBoolean("isPremium")) {
+                ivVip.setVisibility(View.GONE);
+                ivPremium.setVisibility(View.VISIBLE);
+            } else {
+                ivVip.setVisibility(View.GONE);
+                ivPremium.setVisibility(View.GONE);
+            }
+        } else {
+            ivVip.setVisibility(View.GONE);
+            ivPremium.setVisibility(View.GONE);
+        }
+    }
+
 }
