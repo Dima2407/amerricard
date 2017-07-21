@@ -6,6 +6,7 @@ import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
+import com.devtonix.amerricard.network.response.SettingsResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 
 import retrofit2.Call;
@@ -56,4 +57,11 @@ public interface RequestApi {
 
     @GET("celebrity")
     Call<CelebrityResponse> getCelebrities();
+
+    /**
+     * Settings
+     * */
+
+    @GET("settings")
+    Call<SettingsResponse> getSettings();
 }

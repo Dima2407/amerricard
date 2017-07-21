@@ -76,4 +76,5 @@
     <string name="are_your_want_to_buy_premium">This picture is only available for PREMIUM users. Do you want to continue purchase?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="choise_category">Please, choise category</string>
 </resources>

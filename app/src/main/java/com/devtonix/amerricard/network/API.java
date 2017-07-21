@@ -5,21 +5,14 @@ import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
+import com.devtonix.amerricard.network.response.SettingsResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
-
-import javax.inject.Inject;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 
 public class API {
     private static final String BASE_URL_1 = "http://188.226.178.46:8888/amerricards/api/";
@@ -115,6 +108,14 @@ public class API {
             return server1.getCelebrities();
         }else {
             return server2.getCelebrities();
+        }
+    }
+
+    public Call<SettingsResponse> getSettings(){
+        if(helper.getCurrentServer()){
+            return server1.getSettings();
+        }else {
+            return server2.getSettings();
         }
     }
 }

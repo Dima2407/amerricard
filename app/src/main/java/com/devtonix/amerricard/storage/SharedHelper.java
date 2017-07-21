@@ -48,6 +48,7 @@ public class SharedHelper {
         String CONTACS_FOR_HIDE = "contacs_for_hide";
         String USE_FIRST_SERVER = "use_first_server";
         String DISPLAY_WIDTH = "display_width";
+        String BIRTHDAY_CATEGORY_ID = "birthday_category_id";
     }
 
     public SharedHelper(Context context) {
@@ -204,6 +205,15 @@ public class SharedHelper {
 
     public int getDisplayWidth() {
         return sharedPreferences.getInt(Fields.DISPLAY_WIDTH, 0);
+    }
+
+
+    public void saveBithrayCategoryId(int id) {
+        sharedPreferences.edit().putInt(Fields.BIRTHDAY_CATEGORY_ID, id).apply();
+    }
+
+    public int getBithrayCategoryId() {
+        return sharedPreferences.getInt(Fields.BIRTHDAY_CATEGORY_ID, 0);
     }
 }
 

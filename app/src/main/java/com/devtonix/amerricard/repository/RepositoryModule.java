@@ -33,4 +33,10 @@ public class RepositoryModule {
     public ContactRepository getContactRepository(Context context) {
         return new ContactRepository(context);
     }
+
+    @Provides
+    @Singleton
+    public SettingsRepository getSettingsRepository(Context context) {
+        return new SettingsRepository(context);
+    }
 }

@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +23,23 @@ import android.widget.Toast;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.BaseEvent;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.model.Celebrity;
 import com.devtonix.amerricard.model.Contact;
 import com.devtonix.amerricard.model.EventItem;
+import com.devtonix.amerricard.model.Setting;
+import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.repository.CelebrityRepository;
 import com.devtonix.amerricard.repository.ContactRepository;
 import com.devtonix.amerricard.repository.EventRepository;
+import com.devtonix.amerricard.repository.SettingsRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.adapter.CalendarAdapterNew;
 import com.devtonix.amerricard.ui.callback.CelebritiesGetCallback;
 import com.devtonix.amerricard.ui.callback.EventGetCallback;
 import com.devtonix.amerricard.ui.callback.GetContactBirthdayCallback;
+import com.devtonix.amerricard.ui.callback.SettingsGetCallback;
 import com.devtonix.amerricard.utils.SystemUtils;
 
 import java.util.ArrayList;
@@ -51,6 +57,10 @@ public class CalendarFragment extends BaseFragment {
     CelebrityRepository celebrityRepository;
     @Inject
     ContactRepository contactRepository;
+    @Inject
+    SettingsRepository settingsRepository;
+    @Inject
+    CardRepository cardRepository;
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FOR_CREATING_CONTACT = 4455;
@@ -70,6 +80,8 @@ public class CalendarFragment extends BaseFragment {
     private LinearLayout linearFabRefresh;
     private int amountOfUpdate = 0;
     private ImageView imgWhiteBackground;
+    private Setting settings;
+    private List<CategoryItem> categories;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,7 +106,11 @@ public class CalendarFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(calendarAdapterNew);
 
+        categories = cardRepository.getCardsFromStorage();
+
         fill();
+
+        settingsRepository.getSettings(new MyGetSettingsCallback());
 
         manageVisible(false);
 
@@ -304,6 +320,27 @@ public class CalendarFragment extends BaseFragment {
         }
     }
 
+    private class MyGetSettingsCallback implements SettingsGetCallback {
+
+        @Override
+        public void onSucces(Setting settings) {
+            CalendarFragment.this.settings = settings;
+            Log.d(TAG, "MyGetSettingsCallback onSucces = " + settings.getBirthdayCategoryId());
+        }
+
+        @Override
+        public void onError() {
+            CalendarFragment.this.settings = null;
+            Log.d(TAG, "MyGetSettingsCallback onError");
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            CalendarFragment.this.settings = null;
+            Log.d(TAG, "MyGetSettingsCallback onRetrofitError = " + message);
+        }
+    }
+
     private class MyOnCalendarItemClickListener implements CalendarAdapterNew.OnCalendarItemClickListener {
         @Override
         public void onItemClicked(int position) {
@@ -318,9 +355,15 @@ public class CalendarFragment extends BaseFragment {
                     startActivity(intent);
                     break;
                 case BaseEvent.TYPE_CONTACT:
-                    final int birthdayPosition = 2;
+                    final int birthdayCategoryId = settingsRepository.getCategoryIdFromStorage();
+                    int positionForCategory = -1;
+                    for (CategoryItem categoryItem : categories) {
+                        if (categoryItem.getId() == birthdayCategoryId) {
+                            positionForCategory = categoryItem.getOrder() - 1;
+                        }
+                    }
                     Intent intentForContact = new Intent(getActivity(), CategoryActivity.class);
-                    intentForContact.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, birthdayPosition);
+                    intentForContact.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, positionForCategory);
                     startActivity(intentForContact);
                     break;
                 case BaseEvent.TYPE_CELEBRITY:

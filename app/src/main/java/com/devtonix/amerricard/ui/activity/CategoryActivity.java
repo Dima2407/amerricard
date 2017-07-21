@@ -16,12 +16,11 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.adapter.CategoryAdapter;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.ui.fragment.SelecteCategoryFragment;
 import com.devtonix.amerricard.utils.LanguageUtils;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -61,65 +60,72 @@ public class CategoryActivity extends BaseActivity {
 
         mainCategories = cardRepository.getCardsFromStorage();
 
-        final CategoryItem currentCategory = mainCategories.get(positionForCategory);
-        final String title = LanguageUtils.convertLang(currentCategory.getName(), sharedHelper.getLanguage());
-
-        setTitle(title);
-
-        if (currentCategory.getData() != null && currentCategory.getData().size() != 0) {
-            categoriesSecondLvl = currentCategory.getCategoryItems();
-        }
-
-        if (TextUtils.equals(getIntent().getAction(), ACTION_FROM_EVENTS)) {
-            //for display content of only one category (list of card)
-            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+        CategoryItem currentCategory = null;
+        if (positionForCategory < 0) {
+            SelecteCategoryFragment fragment = new SelecteCategoryFragment();
             findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment).commit();
+        } else {
+            currentCategory = mainCategories.get(positionForCategory);
+            final String title = LanguageUtils.convertLang(currentCategory.getName(), sharedHelper.getLanguage());
 
-            final String currLang = sharedHelper.getLanguage();
+            setTitle(title);
 
-            categoryId = getIntent().getIntExtra(EXTRA_CATEGORY_ID, 0);
+            if (currentCategory.getData() != null && currentCategory.getData().size() != 0) {
+                categoriesSecondLvl = currentCategory.getCategoryItems();
+            }
 
-            for (CategoryItem category : mainCategories) {
-                if (category.getId() == categoryId) {
-                    final String categoryName = LanguageUtils.convertLang(category.getName(), currLang);
-                    setTitle(categoryName);
-                } else {
-                    final List<CategoryItem> innerCategories = category.getCategoryItems();
-                    for (CategoryItem innerCategory : innerCategories) {
-                        if (innerCategory.getId() == categoryId) {
-                            final String categoryName = LanguageUtils.convertLang(innerCategory.getName(), currLang);
-                            setTitle(categoryName);
-                        } else {
-                            // there is no required cards
+            if (TextUtils.equals(getIntent().getAction(), ACTION_FROM_EVENTS)) {
+                //for display content of only one category (list of card)
+                findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+                findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
+
+                final String currLang = sharedHelper.getLanguage();
+
+                categoryId = getIntent().getIntExtra(EXTRA_CATEGORY_ID, 0);
+
+                for (CategoryItem category : mainCategories) {
+                    if (category.getId() == categoryId) {
+                        final String categoryName = LanguageUtils.convertLang(category.getName(), currLang);
+                        setTitle(categoryName);
+                    } else {
+                        final List<CategoryItem> innerCategories = category.getCategoryItems();
+                        for (CategoryItem innerCategory : innerCategories) {
+                            if (innerCategory.getId() == categoryId) {
+                                final String categoryName = LanguageUtils.convertLang(innerCategory.getName(), currLang);
+                                setTitle(categoryName);
+                            } else {
+                                // there is no required cards
+                            }
                         }
                     }
                 }
+
+                Fragment fragment = CategoryFragment.getInstanceForCategoryId(categoryId);
+                getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
+            } else if (categoriesSecondLvl.size() > 0) {
+                //for display categories with cards
+                findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
+                findViewById(R.id.single_fragment).setVisibility(View.GONE);
+
+                final ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
+                adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
+                pager.setAdapter(adapter);
+                pager.setOffscreenPageLimit(1);
+                RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
+                recyclerTabLayout.setUpWithViewPager(pager);
+
+            } else {
+                //for display cards only
+                findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
+                findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
+
+                Fragment fragment = CategoryFragment.getInstance(positionForCategory);
+                Bundle bundle = new Bundle();
+                bundle.putInt(CategoryFragment.POSITION_FOR_CATEGORY, positionForCategory);
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
             }
-
-            Fragment fragment = CategoryFragment.getInstanceForCategoryId(categoryId);
-            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
-        } else if (categoriesSecondLvl.size() > 0) {
-            //for display categories with cards
-            findViewById(R.id.multiple_fragment).setVisibility(View.VISIBLE);
-            findViewById(R.id.single_fragment).setVisibility(View.GONE);
-
-            final ViewPager pager = (ViewPager) findViewById(R.id.category_view_pager);
-            adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
-            pager.setAdapter(adapter);
-            pager.setOffscreenPageLimit(1);
-            RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
-            recyclerTabLayout.setUpWithViewPager(pager);
-
-        } else {
-            //for display cards only
-            findViewById(R.id.multiple_fragment).setVisibility(View.GONE);
-            findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
-
-            Fragment fragment = CategoryFragment.getInstance(positionForCategory);
-            Bundle bundle = new Bundle();
-            bundle.putInt(CategoryFragment.POSITION_FOR_CATEGORY, positionForCategory);
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
         }
     }
 
