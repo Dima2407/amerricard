@@ -221,4 +221,10 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
             emptyText.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
 }

@@ -80,6 +80,8 @@ public class DetailActivity extends BaseActivity {
 
         ACApplication.getMainComponent().inject(this);
 
+        isFullScreen = savedInstanceState != null && savedInstanceState.getBoolean("fullscreen");
+
         setTitle(getString(R.string.send_card));
         initViews();
         initToolbar();
@@ -118,7 +120,6 @@ public class DetailActivity extends BaseActivity {
                 } else {
                     cards = mainCategories.get(positionForCategory).getCardItems();
                     currentCardItem = mainCategories.get(positionForCategory).getCardItems().get(positionForCurrentCard);
-
                 }
             }
         }
@@ -156,6 +157,8 @@ public class DetailActivity extends BaseActivity {
         interstitialAd.setAdUnitId(getResources().getString(R.string.fullscreen_ad_unit_id));
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
+
+        setMode();
     }
 
     private void initViews() {
@@ -187,7 +190,10 @@ public class DetailActivity extends BaseActivity {
 
     public void changeMode() {
         isFullScreen = !isFullScreen;
+        setMode();
+    }
 
+    private void setMode() {
         if (isFullScreen) {
             bar.setVisibility(View.GONE);
             container.setVisibility(View.GONE);
@@ -300,5 +306,11 @@ public class DetailActivity extends BaseActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("fullscreen", isFullScreen);
     }
 }

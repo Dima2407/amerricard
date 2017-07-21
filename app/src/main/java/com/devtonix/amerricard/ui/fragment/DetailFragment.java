@@ -24,14 +24,13 @@ public class DetailFragment extends BaseFragment {
     private ImageView ivPremium;
     private int displayWidth;
 
+    private Bundle args;
+
     public static DetailFragment getInstance(CardItem item, boolean isFullScreen, int displayWidth) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle b = new Bundle();
-        b.putParcelable("card", item);
-        b.putBoolean("fullscreen", isFullScreen);
-        b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
-        b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
-        b.putInt("displayWidth", displayWidth);
+        setBundle(b, item, isFullScreen, displayWidth);
+
         detailFragment.setArguments(b);
         return detailFragment;
     }
@@ -46,10 +45,10 @@ public class DetailFragment extends BaseFragment {
         ivVip = (ImageView) view.findViewById(R.id.ivVip);
         ivPremium = (ImageView) view.findViewById(R.id.ivPremium);
 
-        final CardItem item = getArguments().getParcelable("card");
-        displayWidth = getArguments().getInt("displayWidth");
+        args = savedInstanceState != null ? savedInstanceState : getArguments();
 
-        updateBadge(true);
+        final CardItem item = args.getParcelable("card");
+        displayWidth = args.getInt("displayWidth");
 
         image.post(new Runnable() {
             @Override
@@ -64,30 +63,50 @@ public class DetailFragment extends BaseFragment {
                 ((DetailActivity) getActivity()).changeMode();
             }
         });
+
+        updateFragment(args.getBoolean("fullscreen"));
+
         return view;
     }
 
     public void updateFragment(boolean isFullScreen) {
         image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
-        updateBadge(!isFullScreen);
+        args.putBoolean("fullscreen", isFullScreen);
+        updateBadge(isFullScreen);
     }
 
-    private void updateBadge(boolean isBadgeVisible) {
-        if (isBadgeVisible) {
-            if (getArguments().getBoolean("isVip")) {
+    private void updateBadge(boolean isFullScreen) {
+        if (isFullScreen) {
+            ivVip.setVisibility(View.GONE);
+            ivPremium.setVisibility(View.GONE);
+        } else {
+            if (args.getBoolean("isVip")) {
                 ivVip.setVisibility(View.VISIBLE);
                 ivPremium.setVisibility(View.GONE);
-            } else if (getArguments().getBoolean("isPremium")) {
+            } else if (args.getBoolean("isPremium")) {
                 ivVip.setVisibility(View.GONE);
                 ivPremium.setVisibility(View.VISIBLE);
             } else {
                 ivVip.setVisibility(View.GONE);
                 ivPremium.setVisibility(View.GONE);
             }
-        } else {
-            ivVip.setVisibility(View.GONE);
-            ivPremium.setVisibility(View.GONE);
         }
     }
 
+    private static void setBundle(Bundle b, CardItem item, boolean isFullScreen, int displayWidth) {
+        b.putParcelable("card", item);
+        b.putBoolean("fullscreen", isFullScreen);
+        b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
+        b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
+        b.putInt("displayWidth", displayWidth);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        setBundle(outState,
+                (CardItem) args.getParcelable("card"),
+                args.getBoolean("fullscreen"),
+                args.getInt("displayWidth"));
+    }
 }
