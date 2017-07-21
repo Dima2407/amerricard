@@ -26,43 +26,47 @@
 
         <ImageView
             android:id="@+id/ivVip"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_vip_v2"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginRight="@dimen/small_padding"
+            android:src="@drawable/ic_vip"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivPremium"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_premium_v2"
+            android:src="@drawable/ic_premium"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginRight="@dimen/small_padding"
             android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/category_favorite_container"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginBottom="@dimen/smaller_padding"
-            android:layout_marginRight="@dimen/smaller_padding"
+            android:layout_marginLeft="@dimen/smaller_padding"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/category_favorite_button_full"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_favorite_full"
                 android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/category_favorite_button"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_favorite" />
         </RelativeLayout>
 

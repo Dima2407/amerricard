@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +164,7 @@ public class CalendarFragment extends BaseFragment {
 
     private void showFabMenu() {
         isFabMenuOpen = true;
-        fabAdd.setRotation(45);
+        fabAdd.setImageResource(R.drawable.ic_cancel);
         imgWhiteBackground.setVisibility(View.VISIBLE);
         linearFabCalendar.setVisibility(View.VISIBLE);
         linearFabRefresh.setVisibility(View.VISIBLE);
@@ -173,7 +172,7 @@ public class CalendarFragment extends BaseFragment {
 
     private void closeFabMenu() {
         isFabMenuOpen = false;
-        fabAdd.setRotation(0);
+        fabAdd.setImageResource(R.drawable.ic_add_something_white);
         imgWhiteBackground.setVisibility(View.GONE);
         linearFabCalendar.setVisibility(View.GONE);
         linearFabRefresh.setVisibility(View.GONE);
