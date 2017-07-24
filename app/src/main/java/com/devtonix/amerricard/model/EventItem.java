@@ -2,7 +2,6 @@
 package com.devtonix.amerricard.model;
 
 import com.bumptech.glide.load.model.GlideUrl;
-import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.utils.AmazonUtils.GetS3Object;
 import com.devtonix.amerricard.utils.RegexDateUtils;
 import com.google.gson.annotations.Expose;
@@ -96,7 +95,7 @@ public class EventItem extends BaseEvent {
 
     @Override
     public GlideUrl getThumbImageUrl(){
-        if(thumbnails == null || thumbnails.length == 0 && thumbnails[0] == null){
+        if(thumbnails == null || thumbnails.length == 0 || thumbnails[0] == null){
             return getEventImage();
         }else {
             return GetS3Object.fromS3toUrl(thumbnails[0].imageUrl);
