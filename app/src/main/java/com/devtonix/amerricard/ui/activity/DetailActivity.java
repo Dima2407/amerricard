@@ -1,11 +1,17 @@
 package com.devtonix.amerricard.ui.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -19,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -38,6 +45,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -56,6 +64,8 @@ public class DetailActivity extends BaseActivity {
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
     public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
+    private final static String VIP = "vip_test";
+    private final static String PREMIUM = "premium_test";
     public static final String TYPE_VIP = "VIP";
     public static final String TYPE_PREMIUM = "PREMIUM";
     private static final String WEB_CITE = " amerricards.com";
@@ -68,6 +78,22 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
+    private Thread thread1;
+    private Thread thread2;
+    private Bundle ownedItems;
+    private Handler handler;
+    private IInAppBillingService mService;
+    private ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +117,11 @@ public class DetailActivity extends BaseActivity {
         final List<CardItem> cards;
         final CardItem currentCardItem;
         int positionForCurrentCard;
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
 
         if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
@@ -124,6 +155,8 @@ public class DetailActivity extends BaseActivity {
             }
         }
 
+        handler = new Handler();
+
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards, sharedHelper.getDisplayWidth());
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
@@ -133,16 +166,14 @@ public class DetailActivity extends BaseActivity {
             public void onClick(View view) {
                 final CardItem cardItem = cards.get(viewPager.getCurrentItem());
 
-                if (TextUtils.equals(cardItem.getCardType(), TYPE_VIP)) {
-                    if (!sharedHelper.isVip()) {
-                        showBuyDialog(getString(R.string.are_your_want_to_buy_vip));
-                        return;
-                    }
-                } else if (TextUtils.equals(cardItem.getCardType(), TYPE_PREMIUM)) {
-                    if (!sharedHelper.isVipOrPremium()) {
-                        showBuyDialog(getString(R.string.are_your_want_to_buy_premium));
-                        return;
-                    }
+                if (TextUtils.equals(cardItem.getCardType(), TYPE_VIP) && !sharedHelper.isVip()) {
+                    chekMyPurchases();
+                    showBuyDialog(getString(R.string.are_your_want_to_buy_vip));
+                    return;
+                } else if (TextUtils.equals(cardItem.getCardType(), TYPE_PREMIUM) && !sharedHelper.isVipOrPremium()) {
+                    chekMyPurchases();
+                    showBuyDialog(getString(R.string.are_your_want_to_buy_premium));
+                    return;
                 }
 
                 progress.setVisibility(View.VISIBLE);
@@ -159,7 +190,9 @@ public class DetailActivity extends BaseActivity {
         interstitialAd.loadAd(adRequest);
 
         setMode();
+
     }
+
 
     private void initViews() {
         bar = (AppBarLayout) findViewById(R.id.detail_appbar);
@@ -312,5 +345,66 @@ public class DetailActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("fullscreen", isFullScreen);
+    }
+
+    private void chekMyPurchases() {
+
+        thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int response = ownedItems.getInt("RESPONSE_CODE");
+                if (response == 0) {
+                    ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+                    ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                    ArrayList<String> signatureList = ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+                    String continuationToken = ownedItems.getString("INAPP_CONTINUATION_TOKEN");
+
+                    for (int i = 0; i < purchaseDataList.size(); ++i) {
+                        if (ownedSkus.get(i).contains(VIP)) {
+                            Log.d(TAG, " vip_test was purchased");
+                            sharedHelper.setUserStatus(TYPE_VIP);
+                            return;
+                        }
+                        if (ownedSkus.get(i).contains(PREMIUM)) {
+                            Log.d(TAG, " vip_test was purchased");
+                            sharedHelper.setUserStatus(TYPE_PREMIUM);
+                            return;
+                        }
+                        String purchaseData = purchaseDataList.get(i);
+                        String signature = signatureList.get(i);
+                        String sku = ownedSkus.get(i);
+
+                        Log.d(TAG, "purchaseData = " + purchaseData);
+                        Log.d(TAG, "thread4 signature = " + signature);
+                        Log.d(TAG, "thread4 sku = " + sku);
+                    }
+                }
+
+            }
+        });
+
+        handler.post(thread1);
+        handler.post(thread2);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 }
