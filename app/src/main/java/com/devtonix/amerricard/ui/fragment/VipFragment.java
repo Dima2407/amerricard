@@ -180,8 +180,9 @@ public class VipFragment extends BaseFragment {
 
         try {
             buyIntentBundle = mService.getBuyIntent(3, getContext().getPackageName(), VIP, "subs", VipAndPremiumActivity.base64EncodedPublicKey);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");

@@ -28,33 +28,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_marginTop="?actionBarSize"
-            android:layout_height="match_parent">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/settings_notification_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
-                    android:tint="@color/colorIconsActive"
-                    android:layout_width="49dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/imageView2"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_padding"
                     android:src="@drawable/ic_notification"
-                    android:padding="@dimen/small_padding"/>
+                    android:tint="@color/colorIconsActive" />
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/daily_notification"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
@@ -70,23 +72,23 @@
                 android:id="@+id/settings_celebrity_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone"
-                android:gravity="center_vertical">
+                android:visibility="gone">
 
                 <ImageView
-                    android:tint="@color/colorIconsActive"
-                    android:layout_width="49dp"
+                    android:layout_width="42dp"
                     android:layout_height="match_parent"
+                    android:padding="@dimen/small_padding"
                     android:src="@drawable/ic_star"
-                    android:padding="@dimen/small_padding"/>
+                    android:tint="@color/colorIconsActive" />
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/celebrities"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
@@ -102,22 +104,23 @@
                 android:id="@+id/settings_use_server_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
-                    android:tint="@color/colorIconsActive"
-                    android:layout_width="49dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/imageView"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_padding"
                     android:src="@drawable/ic_star"
-                    android:padding="@dimen/small_padding"/>
+                    android:tint="@color/colorIconsActive" />
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/use_server"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
@@ -134,80 +137,81 @@
                 android:id="@+id/settings_timer_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
                     android:id="@+id/setting_timer_icon"
-                    android:tint="@color/colorIconsActive"
-                    android:layout_width="49dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_padding"
                     android:src="@drawable/ic_alarm"
-                    android:padding="@dimen/small_padding"/>
+                    android:tint="@color/colorIconsActive" />
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/scheduled_time"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
 
                 <TextView
                     android:id="@+id/setting_timer_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="8:00"
                     android:textColor="@color/colorTextDefault"
-                    android:textSize="@dimen/text_size_big"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="@dimen/text_size_normal" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/language_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/small_padding"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
                     android:id="@+id/setting_language_icon"
-                    android:tint="@color/colorIconsActive"
-                    android:layout_width="49dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_padding"
                     android:src="@drawable/ic_language"
-                    android:padding="@dimen/small_padding"/>
+                    android:tint="@color/colorIconsActive" />
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/language"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
 
                 <TextView
                     android:id="@+id/setting_language_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="English"
                     android:textColor="@color/colorTextDefault"
-                    android:textSize="@dimen/text_size_big"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="@dimen/text_size_normal" />
 
             </LinearLayout>
 
 
         </LinearLayout>
+
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id">
-        </com.google.android.gms.ads.AdView>
+            ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

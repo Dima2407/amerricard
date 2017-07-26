@@ -76,7 +76,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:background="@android:color/white"
-                android:fontFamily="cursive"
                 android:text="@string/regresh"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -109,7 +108,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:background="@android:color/white"
-                android:fontFamily="cursive"
                 android:text="@string/creat_new_contact"
                 android:textSize="15sp"
                 android:textStyle="bold" />

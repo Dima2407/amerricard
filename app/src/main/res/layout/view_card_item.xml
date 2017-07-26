@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/card_icon"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_report_image" />
 
@@ -26,9 +26,8 @@
                 android:id="@+id/card_text"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorTextDefault"
                 android:textSize="@dimen/text_size_big"
-                android:textStyle="bold"
                 android:layout_marginLeft="@dimen/base_padding"
                 android:maxLines="2"
                 android:ellipsize="end"

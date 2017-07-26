@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
@@ -179,8 +178,9 @@ public class PremiumFragment extends BaseFragment {
 
         try {
             buyIntentBundle = mService.getBuyIntent(3, getContext().getPackageName(), PREMIUM, "subs", VipAndPremiumActivity.base64EncodedPublicKey);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");

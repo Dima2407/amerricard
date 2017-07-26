@@ -10,7 +10,7 @@
 
         <ImageView
             android:id="@+id/view_drawer_item_icon"
-            android:layout_width="49dp"
+            android:layout_width="42dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/small_padding"
             android:padding="@dimen/small_padding"/>
@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_big"
+            android:textSize="15sp"
+            android:textColor="@color/colorTextDefault"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
             android:maxLines="2"
             android:ellipsize="end"
             android:paddingLeft="@dimen/activity_horizontal_margin"
