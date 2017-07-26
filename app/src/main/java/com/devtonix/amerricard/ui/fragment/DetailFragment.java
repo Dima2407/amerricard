@@ -70,7 +70,7 @@ public class DetailFragment extends BaseFragment {
     }
 
     public void updateFragment(boolean isFullScreen) {
-        image.setScaleType(isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
+        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         args.putBoolean("fullscreen", isFullScreen);
         updateBadge(isFullScreen);
     }
