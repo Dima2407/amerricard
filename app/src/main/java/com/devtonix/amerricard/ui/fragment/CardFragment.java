@@ -68,7 +68,7 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         //if this is a first time when app launch, I want to get cards from network
         //after that I load cards from storage (shared prefs)
         if (sharedHelper.isFirstLaunchApplication()) {

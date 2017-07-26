@@ -22,7 +22,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     private List<CategoryItem> categories = new ArrayList<>();
     private String lang;
 
-    private SparseArray<Fragment> categoryFragments = new SparseArray<Fragment>();
+  //  private SparseArray<Fragment> categoryFragments = new SparseArray<Fragment>();
 
     public CategoryAdapter(Context context, FragmentManager fragmentManager, List<CategoryItem> categories, int positionForCategoryFirstLvl, String language) {
         super(fragmentManager);
@@ -39,19 +39,38 @@ public class CategoryAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return CategoryFragment.getInstance(position, positionForCategoryFirstLvl);
+        return CategoryFragment.getInstance(getRealPosition(position), positionForCategoryFirstLvl);
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
 
-        return LanguageUtils.convertLang(categories.get(position).getName(), lang);
+        return LanguageUtils.convertLang(categories.get(getRealPosition(position)).getName(), lang);
+    }
+
+    private int getRealPosition(int position) {
+        int realPosition;
+        if (categories.size() > 2) {
+            if (position == categories.size() - 1) {
+                realPosition = 3;
+            } else if (position == categories.size() - 2) {
+                realPosition = 2;
+            } else if (position == 0) {
+                realPosition = categories.size() - 4;
+            } else if (position == 1) {
+                realPosition = categories.size() - 3;
+            } /*else
+                realPosition = position;*/
+        } /*else
+            realPosition = position;
+        return realPosition - 2;*/
+        return position;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        categoryFragments.put(position, fragment);
+        Fragment fragment = (Fragment) super.instantiateItem(container, getRealPosition(position));
+        //categoryFragments.put(getRealPosition(position), fragment);
         return fragment;
     }
 
