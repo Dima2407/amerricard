@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
@@ -41,7 +42,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     private RecyclerView recyclerView;
     private TextView emptyText;
     private List<CardItem> cards;
-//    private List<CategoryItem> categories;
+    private List<CategoryItem> categories;
     private int positionForCategory;
     private int positionForCard;
 
@@ -86,7 +87,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
         final int countRow = getResources().getInteger(R.integer.span_count);
 
-//        categories = cardRepository.getCardsFromStorage();
+        categories = cardRepository.getCardsFromStorage();
 
         positionForCard = getArguments().getInt(POSITION_FOR_CARD);
 
@@ -100,7 +101,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
                 if (fragmentActivity != null) {
                     cards = fragmentActivity.getCategories(positionForCard);
                 } else {
-//                    cards = categories.get(positionForCard).getCardItems();
+                    cards = categories.get(positionForCard).getCardItems();
                 }
 
                 try {

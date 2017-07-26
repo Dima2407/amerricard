@@ -26,8 +26,8 @@ android {
         applicationId "com.devtonix.amerricard"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 35
-        versionName "0.1.20"
+        versionCode 37
+        versionName "0.2.2"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
