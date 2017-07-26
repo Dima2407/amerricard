@@ -112,7 +112,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
             int h = (int) (this.height / density) - 10;
             Log.d("Ads", "onBindViewHolder: " + w + " x " + h);
 
-          //  advView.setAdSize(new AdSize(w, h));
+            advView.setAdSize(new AdSize(w, h));
             advView.setVisibility(View.VISIBLE);
             AdRequest adRequest = new AdRequest.Builder().build();
             advView.loadAd(adRequest);
