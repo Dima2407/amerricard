@@ -35,6 +35,9 @@ public class SharedHelper{
     private File cacheDirectory;
     private List<CategoryItem> categoryItemList = null;
     private List<Contact> contactsList = null;
+    private List<EventItem> eventItemList = null;
+    private List<Celebrity> celebrityList = null;
+    private List<CardItem> favoritesList = null;
 
     private SharedPreferences sharedPreferences;
 
@@ -69,13 +72,13 @@ public class SharedHelper{
         cacheDirectory = context.getCacheDir();
     }
 
-    private <K> void fromGsonToCacheFile(List<K> items, String fileName) {
+    private <K> void fromGsonToCacheFile(Object items, String fileName) {
         File f = new File(cacheDirectory, fileName);
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(f);
             Gson gson = new Gson();
-            gson.toJson(new ArrayList<>(items), fileWriter);
+            gson.toJson(items, fileWriter);
 
         } catch (Exception e) {
             Log.w(TAG, "saveCards: ", e);
@@ -92,7 +95,7 @@ public class SharedHelper{
 
     public void saveCards(List<CategoryItem> items) {
         categoryItemList = new ArrayList<>(items);
-        fromGsonToCacheFile(items, Fields.CARDS);
+        fromGsonToCacheFile(new ListCategoryItem(items), Fields.CARDS);
     }
 
     public List<CategoryItem> getCards() {
@@ -127,8 +130,7 @@ public class SharedHelper{
 
     public void saveContacts(List<Contact> contacts) {
         contactsList = new ArrayList<>(contacts);
-        fromGsonToCacheFile(contacts, Fields.CONTACTS);
-      //  sharedPreferences.edit().putString(Fields.CONTACTS, new Gson().toJson(new ListContact(contacts))).apply();
+        fromGsonToCacheFile(new ListContact(contacts), Fields.CONTACTS);
     }
 
     public List<Contact> getContacts() {
@@ -148,39 +150,90 @@ public class SharedHelper{
                     return contactsList;
                 }
             } catch (FileNotFoundException e) {
-                Log.w(TAG, "getCards: ", e);
+                Log.w(TAG, "getContacts: ", e);
             } finally {
                 try {
                     if (fr != null) {
                         fr.close();
                     }
                 } catch (IOException e) {
-                    Log.w(TAG, "getCards: ", e);
+                    Log.w(TAG, "getContacts: ", e);
                 }
             }
         }
         return new ArrayList<>();
-
-       /* ListContact listContact = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACTS, ""), ListContact.class);
-        return listContact == null ? new ArrayList<Contact>() : listContact.getListContacs();*/
     }
 
     public void saveEvents(List<EventItem> items) {
-        sharedPreferences.edit().putString(Fields.EVENTS, new Gson().toJson(new ListEventItem(items))).apply();
+        eventItemList = new ArrayList<>(items);
+        fromGsonToCacheFile(new ListEventItem(items), Fields.EVENTS);
     }
 
     public List<EventItem> getEvents() {
-        ListEventItem li = new Gson().fromJson(sharedPreferences.getString(Fields.EVENTS, ""), ListEventItem.class);
-        return li == null ? new ArrayList<EventItem>() : li.getEvents();
+        if (eventItemList != null) {
+            return eventItemList;
+        }
+
+        File f = new File(cacheDirectory, Fields.EVENTS);
+        if (f.exists()) {
+            FileReader fr = null;
+            try {
+                fr = new FileReader(f);
+                Gson gson = new Gson();
+                ListEventItem listEventItem = gson.fromJson(fr, ListEventItem.class);
+                if (listEventItem != null) {
+                    eventItemList = new ArrayList<>(listEventItem.getEvents());
+                    return eventItemList;
+                }
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "getEvents: ", e);
+            } finally {
+                try {
+                    if (fr != null) {
+                        fr.close();
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "getEvents: ", e);
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 
     public void saveCelebrities(List<Celebrity> celebrities) {
-        sharedPreferences.edit().putString(Fields.LIST_OF_CELEBRITIES, new Gson().toJson(new ListCelebrities(celebrities))).apply();
+        celebrityList = new ArrayList<>(celebrities);
+        fromGsonToCacheFile(new ListCelebrities(celebrities), Fields.CELEBRITIES);
     }
 
     public List<Celebrity> getCelebrities() {
-        ListCelebrities celebrities = new Gson().fromJson(sharedPreferences.getString(Fields.LIST_OF_CELEBRITIES, ""), ListCelebrities.class);
-        return celebrities == null ? new ArrayList<Celebrity>() : celebrities.getCelebrities();
+        if (celebrityList != null) {
+            return celebrityList;
+        }
+
+        File f = new File(cacheDirectory, Fields.CELEBRITIES);
+        if (f.exists()) {
+            FileReader fr = null;
+            try {
+                fr = new FileReader(f);
+                Gson gson = new Gson();
+                ListCelebrities listCelebrities = gson.fromJson(fr, ListCelebrities.class);
+                if (listCelebrities != null) {
+                    celebrityList = new ArrayList<>(listCelebrities.getCelebrities());
+                    return celebrityList;
+                }
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "getCelebrities: ", e);
+            } finally {
+                try {
+                    if (fr != null) {
+                        fr.close();
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "getCelebrities: ", e);
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 
     public void saveEventsForHide(List<EventItem> items) {
@@ -219,12 +272,39 @@ public class SharedHelper{
     }
 
     public void saveFavorites(List<CardItem> items) {
-        sharedPreferences.edit().putString(Fields.FAVORITES, new Gson().toJson(new ListCardItem(items))).apply();
+        favoritesList = new ArrayList<>(items);
+        fromGsonToCacheFile(new ListCardItem(items), Fields.FAVORITES);
     }
 
     public List<CardItem> getFavorites() {
-        ListCardItem li = new Gson().fromJson(sharedPreferences.getString(Fields.FAVORITES, ""), ListCardItem.class);
-        return li == null ? new ArrayList<CardItem>() : li.getCards();
+        if (favoritesList != null) {
+            return favoritesList;
+        }
+
+        File f = new File(cacheDirectory, Fields.FAVORITES);
+        if (f.exists()) {
+            FileReader fr = null;
+            try {
+                fr = new FileReader(f);
+                Gson gson = new Gson();
+                ListCardItem listCardItem = gson.fromJson(fr, ListCardItem.class);
+                if (listCardItem != null) {
+                    favoritesList = new ArrayList<>(listCardItem.getCards());
+                    return favoritesList;
+                }
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "getFavorites: ", e);
+            } finally {
+                try {
+                    if (fr != null) {
+                        fr.close();
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "getFavorites: ", e);
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 
     public void saveNotificationsTime(String time) {
