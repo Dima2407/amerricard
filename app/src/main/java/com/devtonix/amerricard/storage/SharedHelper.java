@@ -72,13 +72,13 @@ public class SharedHelper{
         cacheDirectory = context.getCacheDir();
     }
 
-    private <K> void fromGsonToCacheFile(List<K> items, String fileName) {
+    private <K> void fromGsonToCacheFile(Object items, String fileName) {
         File f = new File(cacheDirectory, fileName);
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(f);
             Gson gson = new Gson();
-            gson.toJson(new ArrayList<>(items), fileWriter);
+            gson.toJson(items, fileWriter);
 
         } catch (Exception e) {
             Log.w(TAG, "saveCards: ", e);
@@ -95,7 +95,7 @@ public class SharedHelper{
 
     public void saveCards(List<CategoryItem> items) {
         categoryItemList = new ArrayList<>(items);
-        fromGsonToCacheFile(items, Fields.CARDS);
+        fromGsonToCacheFile(new ListCategoryItem(items), Fields.CARDS);
     }
 
     public List<CategoryItem> getCards() {
@@ -130,7 +130,7 @@ public class SharedHelper{
 
     public void saveContacts(List<Contact> contacts) {
         contactsList = new ArrayList<>(contacts);
-        fromGsonToCacheFile(contacts, Fields.CONTACTS);
+        fromGsonToCacheFile(new ListContact(contacts), Fields.CONTACTS);
     }
 
     public List<Contact> getContacts() {
@@ -166,7 +166,7 @@ public class SharedHelper{
 
     public void saveEvents(List<EventItem> items) {
         eventItemList = new ArrayList<>(items);
-        fromGsonToCacheFile(eventItemList, Fields.EVENTS);
+        fromGsonToCacheFile(new ListEventItem(items), Fields.EVENTS);
     }
 
     public List<EventItem> getEvents() {
@@ -202,7 +202,7 @@ public class SharedHelper{
 
     public void saveCelebrities(List<Celebrity> celebrities) {
         celebrityList = new ArrayList<>(celebrities);
-        fromGsonToCacheFile(celebrityList, Fields.CELEBRITIES);
+        fromGsonToCacheFile(new ListCelebrities(celebrities), Fields.CELEBRITIES);
     }
 
     public List<Celebrity> getCelebrities() {
@@ -273,7 +273,7 @@ public class SharedHelper{
 
     public void saveFavorites(List<CardItem> items) {
         favoritesList = new ArrayList<>(items);
-        fromGsonToCacheFile(favoritesList, Fields.FAVORITES);
+        fromGsonToCacheFile(new ListCardItem(items), Fields.FAVORITES);
     }
 
     public List<CardItem> getFavorites() {

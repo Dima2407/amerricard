@@ -163,9 +163,9 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     @Override
     public void onItemClicked(int pos) {
         int realPosition = pos;
-        if (adapter.getReclamPosition() >= 0 && pos > adapter.getReclamPosition()) {
+      /*  if (adapter.getReclamPosition() >= 0 && pos > adapter.getReclamPosition()) {
             realPosition--;
-        }
+        }*/
         if (getArguments().getInt(CATEGORY_ID, -1) != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);

@@ -1,8 +1,11 @@
 package com.devtonix.amerricard.core;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+
+import java.io.File;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -26,4 +29,5 @@ public class ACApplication extends Application {
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
     }
+
 }

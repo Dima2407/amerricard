@@ -15,6 +15,7 @@
 
 package com.devtonix.amerricard.billing;
 
+import android.support.compat.BuildConfig;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -61,6 +62,18 @@ public class Security {
 
         PublicKey key = Security.generatePublicKey(base64PublicKey);
         return Security.verify(key, signedData, signature);
+
+       /* if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey) || TextUtils.isEmpty(signature)) {
+            Log.i("getBilling", "Purchase verification failed: missing data.");
+            if (BuildConfig.DEBUG) {
+                return true;
+            }
+            return false;
+        }
+
+        PublicKey key = Security.generatePublicKey(base64PublicKey);
+        Log.i("getBilling", "Security verifyPurchase");
+        return Security.verify(key, signedData, signature);*/
     }
 
     /**
