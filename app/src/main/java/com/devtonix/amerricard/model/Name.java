@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class Name implements Serializable{
 
@@ -26,6 +27,17 @@ public class Name implements Serializable{
 
     private String baseName;
 
+
+    public Name() {
+    }
+
+    public Name(Map<String, String> map) {
+        en = map.get("en");
+        es = map.get("es");
+        ru = map.get("ru");
+        ua = map.get("ua");
+        fr = map.get("fr");
+    }
 
     public void setBaseName(String baseName) {
         this.baseName = baseName;

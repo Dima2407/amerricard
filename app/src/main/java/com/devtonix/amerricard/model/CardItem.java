@@ -8,6 +8,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.devtonix.amerricard.utils.AmazonUtils.GetS3Object;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.devtonix.amerricard.model.CardResponseItem.Thumbnail;
 
 public class CardItem implements Parcelable {
 
@@ -60,6 +61,21 @@ public class CardItem implements Parcelable {
     @Expose
     @SerializedName("thumbnails")
     private Thumbnail[] thumbnails;
+
+    public CardItem(CardResponseItem cardResponseItem) {
+        type = cardResponseItem.type;
+        name = cardResponseItem.getCardName();
+        author = cardResponseItem.author;
+        owner = cardResponseItem.owner;
+        price = cardResponseItem.price;
+        favorite = cardResponseItem.favorite;
+        shared = cardResponseItem.shared;
+        cardType = cardResponseItem.cardType;
+        id = cardResponseItem.id;
+        image = cardResponseItem.image;
+        imageUrl = cardResponseItem.imageUrl;
+        thumbnails = cardResponseItem.thumbnails;
+    }
 
 
     private CardItem(Parcel in) {
@@ -204,17 +220,5 @@ public class CardItem implements Parcelable {
             }
             return GetS3Object.fromS3toUrl(readyThumbnail.imageUrl);
         }
-    }
-
-    private static class Thumbnail {
-        @Expose
-        @SerializedName("width")
-        private int width;
-        @Expose
-        @SerializedName("height")
-        private int height;
-        @Expose
-        @SerializedName("imageUrl")
-        private String imageUrl;
     }
 }

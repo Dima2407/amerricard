@@ -44,9 +44,9 @@ public class EventRepository {
         call.enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     callback.onSuccess();
-                } else{
+                } else {
                     callback.onError();
                 }
             }
@@ -102,8 +102,13 @@ public class EventRepository {
         });
     }
 
-    public void saveEventToStorage(List<EventItem> data) {
-        sharedHelper.saveEvents(data);
+    public void saveEventToStorage(final List<EventItem> data) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedHelper.saveEvents(data);
+            }
+        }).start();
     }
 
     public List<EventItem> getEventFromStorage() {

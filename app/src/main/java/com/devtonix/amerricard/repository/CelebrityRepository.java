@@ -64,8 +64,13 @@ public class CelebrityRepository {
         });
     }
 
-    public void saveCelebritiesToStorage(List<Celebrity> celebrities) {
-        sharedHelper.saveCelebrities(celebrities);
+    public void saveCelebritiesToStorage(final List<Celebrity> celebrities) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedHelper.saveCelebrities(celebrities);
+            }
+        }).start();
     }
 
     public List<Celebrity> getCelebritiesFromStorage() {

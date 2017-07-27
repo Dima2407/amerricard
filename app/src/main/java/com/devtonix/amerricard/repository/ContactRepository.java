@@ -113,11 +113,17 @@ public class ContactRepository {
         });
     }
 
-    public void saveContactsToStorage(List<Contact> contacts) {
-        sharedHelper.saveContacts(contacts);
+    public void saveContactsToStorage(final List<Contact> contacts) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedHelper.saveContacts(contacts);
+            }
+        }).start();
+
     }
 
-    public List<Contact> getContactsFromStorage(){
+    public List<Contact> getContactsFromStorage() {
         return sharedHelper.getContacts();
     }
 }
