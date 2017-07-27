@@ -1,7 +1,10 @@
 
 package com.devtonix.amerricard.network.response;
 
+import android.util.Log;
+
 import com.devtonix.amerricard.model.CardItem;
+import com.devtonix.amerricard.model.CardResponseItem;
 import com.devtonix.amerricard.model.CategoryItem;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -23,7 +26,7 @@ public class CardResponseNew {
     private Integer code;
     @SerializedName("data")
     @Expose
-    private List<JsonElement> data = null;
+    private List<CategoryItem> data = null;
 
     public String getStatus() {
         return status;
@@ -34,38 +37,26 @@ public class CardResponseNew {
     }
 
     public List<CategoryItem> getCategories() {
+        long startTime = System.currentTimeMillis();
 
-        final List<CategoryItem> resultCategories = new ArrayList<>();
 
         //base cycle, ~5 iterations
         for (int i = 0; i < data.size(); i++) {
 
             //first json element in current hierarchy is always a category
-            final CategoryItem baseCategoryItem = new Gson().fromJson(data.get(i), CategoryItem.class);
-            final List<CardItem> cards = new ArrayList<>();
-            final List<CategoryItem> categories = new ArrayList<>();
-
-            for (int j = 0; j < baseCategoryItem.getData().size(); j++) {
-                if (baseCategoryItem.getData().get(j).toString().contains("category")) {
-                    final CategoryItem secondLvl = new Gson().fromJson(baseCategoryItem.getData().get(j), CategoryItem.class);
-                    final List<CardItem> innerCards = new ArrayList<>();
-                    for (JsonElement c : secondLvl.getData()) {
-                        final CardItem cardItem = new Gson().fromJson(c, CardItem.class);
-                        innerCards.add(cardItem);
-                    }
-                    secondLvl.setCardItems(innerCards);
-                    categories.add(secondLvl);
-                } else {
-                    final  CardItem cardItem = new Gson().fromJson(baseCategoryItem.getData().get(j), CardItem.class);
-                    cards.add(cardItem);
+            final CategoryItem baseCategoryItem = data.get(i);
+            Gson gson = new Gson();
+            CardResponseItem[] responseItems = gson.fromJson(baseCategoryItem.getData(), CardResponseItem[].class);
+            for (CardResponseItem responseItem : responseItems) {
+                if ("category".equals(responseItem.getType())){
+                    baseCategoryItem.addCategoryItem(new CategoryItem(responseItem));
+                } else if ("card".equals(responseItem.getType())) {
+                    baseCategoryItem.addCardItem(new CardItem(responseItem));
                 }
             }
-
-            baseCategoryItem.setCardItems(cards);
-            baseCategoryItem.setCategoryItems(categories);
-            resultCategories.add(baseCategoryItem);
         }
+        Log.i(TAG, "onResponse: " + (System.currentTimeMillis() - startTime) );
 
-        return resultCategories;
+        return data;
     }
 }

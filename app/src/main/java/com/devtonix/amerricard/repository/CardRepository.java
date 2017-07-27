@@ -43,16 +43,26 @@ public class CardRepository {
     public void sendAddFavoriteCardRequest(long id) {
         Call<SimpleResponse> call = api.addFavoriteCard(id);
         call.enqueue(new Callback<SimpleResponse>() {
-            @Override public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {}
-            @Override public void onFailure(Call<SimpleResponse> call, Throwable t) {}
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+            }
         });
     }
 
     public void sendDeleteFavoriteCardRequest(long id) {
         Call<SimpleResponse> call = api.deleteFavoriteCard(id);
         call.enqueue(new Callback<SimpleResponse>() {
-            @Override public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {}
-            @Override public void onFailure(Call<SimpleResponse> call, Throwable t) {}
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+            }
         });
     }
 
@@ -80,7 +90,6 @@ public class CardRepository {
     }
 
     public void getCards(final CardGetCallback callback) {
-        Log.i(TAG, "CardRepository getCards");
         Call<CardResponseNew> call = api.getCard();
         call.enqueue(new Callback<CardResponseNew>() {
             @Override
@@ -88,14 +97,6 @@ public class CardRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     final List<CategoryItem> categories = response.body().getCategories();
 
-                    for (CategoryItem mainCategory: categories){
-                        for (CategoryItem category: mainCategory.getCategoryItems()){
-                            Log.d(TAG, "["+mainCategory.getName().getEn()+"]"+"category=" + category.getName().getEn());
-                        }
-                        for (CardItem card : mainCategory.getCardItems()){
-                            Log.d(TAG, "["+mainCategory.getName().getEn()+"]"+"card="+card.getName());
-                        }
-                    }
                     Collections.sort(categories, new Comparator<CategoryItem>() {
                         @Override
                         public int compare(CategoryItem o1, CategoryItem o2) {
@@ -103,7 +104,6 @@ public class CardRepository {
                         }
                     });
                     saveCardsToStorage(categories);
-
                     callback.onSuccess(categories);
                 } else {
                     Log.d(TAG, "getCards() onResponse: error");
@@ -129,9 +129,13 @@ public class CardRepository {
         return sharedHelper.getCards();
     }
 
-    public void saveCardsToStorage(List<CategoryItem> itemFirstLevels) {
-
-        sharedHelper.saveCards(itemFirstLevels);
+    public void saveCardsToStorage(final List<CategoryItem> itemFirstLevels) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedHelper.saveCards(itemFirstLevels);
+            }
+        }).start();
     }
 
 

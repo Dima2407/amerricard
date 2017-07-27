@@ -72,7 +72,7 @@ public class SharedHelper{
         cacheDirectory = context.getCacheDir();
     }
 
-    private <K> void fromGsonToCacheFile(Object items, String fileName) {
+    private void fromGsonToCacheFile(Object items, String fileName) {
         File f = new File(cacheDirectory, fileName);
         FileWriter fileWriter = null;
         try {

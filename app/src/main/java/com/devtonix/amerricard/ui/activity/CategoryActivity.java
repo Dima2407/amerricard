@@ -78,7 +78,7 @@ public class CategoryActivity extends BaseActivity {
 
             setTitle(title);
 
-            if (currentCategory.getData() != null && currentCategory.getData().size() != 0) {
+            if (currentCategory.getData() != null) {
       /*      categoriesSecondLvlBegin = currentCategory.getCategoryItems();
             if (categoriesSecondLvlBegin.size() > 2) {
                 categoriesSecondLvl.add(categoriesSecondLvlBegin.get(categoriesSecondLvlBegin.size() - 2));
