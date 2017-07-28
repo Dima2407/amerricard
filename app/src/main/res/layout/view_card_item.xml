@@ -51,4 +51,13 @@
         android:layout_marginLeft="72dp"
         android:layout_alignParentBottom="true"
         android:background="@color/divider"/>
+
+    <ImageView
+        android:layout_width="8dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_arrow_right"
+        android:tint="@color/colorTextDefault"
+        android:layout_marginRight="@dimen/base_padding"/>
 </RelativeLayout>
