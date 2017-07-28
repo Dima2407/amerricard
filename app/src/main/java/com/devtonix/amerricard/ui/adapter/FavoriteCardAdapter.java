@@ -42,14 +42,14 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
             List<CardItem> items,
             OnFavoriteClickListener listener,
             int width, int height,
-            SharedHelper sharedHelper) {
+            int displayWidth) {
 
         this.context = context;
         this.items = items;
         this.listener = listener;
         this.width = width;
         this.height = height;
-        this.displayWidth = sharedHelper.getDisplayWidth();
+        this.displayWidth = displayWidth;
     }
 
     public void setItems(List<CardItem> items) {

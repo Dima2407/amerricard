@@ -1,14 +1,20 @@
 package com.devtonix.amerricard.ui.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
@@ -18,19 +24,14 @@ import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_VIP;
 
 public class DetailFragment extends BaseFragment {
 
-    private ViewGroup detailContainer;
     private ImageView image;
     private ImageView ivVip;
     private ImageView ivPremium;
-    private int displayWidth;
 
-    private Bundle args;
-
-    public static DetailFragment getInstance(CardItem item, boolean isFullScreen, int displayWidth) {
+    public static DetailFragment getInstance(CardItem item) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle b = new Bundle();
-        setBundle(b, item, isFullScreen, displayWidth);
-
+        setBundle(b, item);
         detailFragment.setArguments(b);
         return detailFragment;
     }
@@ -39,40 +40,77 @@ public class DetailFragment extends BaseFragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, null);
 
-        detailContainer = (ViewGroup) view.findViewById(R.id.detail_container);
-
         image = (ImageView) view.findViewById(R.id.detail_image);
         ivVip = (ImageView) view.findViewById(R.id.ivVip);
         ivPremium = (ImageView) view.findViewById(R.id.ivPremium);
 
-        args = savedInstanceState != null ? savedInstanceState : getArguments();
-
-        final CardItem item = args.getParcelable("card");
-        displayWidth = args.getInt("displayWidth");
-
-        image.post(new Runnable() {
-            @Override
-            public void run() {
-                Glide.with(getActivity()).load(item.getThumbImageUrl(displayWidth))
-                        .into(image);
-            }
-        });
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DetailActivity) getActivity()).changeMode();
+                changeFullScreenMode();
+                updateFragment();
             }
         });
-
-        updateFragment(args.getBoolean("fullscreen"));
-
         return view;
     }
 
-    public void updateFragment(boolean isFullScreen) {
-        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        args.putBoolean("fullscreen", isFullScreen);
+    private void changeFullScreenMode() {
+        ((DetailActivity) getActivity()).changeMode();
+    }
+
+    private CardItem getCurrentItem() {
+        return getArguments().getParcelable("card");
+    }
+
+    private boolean isVip() {
+        return getArguments().getBoolean("isVip");
+    }
+
+    private boolean isPremium() {
+        return getArguments().getBoolean("isPremium");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        int screenOrientation = getResources().getConfiguration().orientation;
+        final int screenWidth = screenOrientation == Configuration.ORIENTATION_PORTRAIT ? sharedHelper.getDisplayWidth() : sharedHelper.getDisplayHight();
+
+
+        Glide.with(getActivity())
+                .load(getCurrentItem().getThumbImageUrl(screenWidth))
+                .listener(new RequestListener<GlideUrl, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                return false;
+            }
+        }).into(image);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateFragment();
+    }
+
+    public void updateFragment() {
+        boolean isFullScreen = isFullScreen();
+
+        image.setAdjustViewBounds(true);
+        image.setScaleType( isFullScreen ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
         updateBadge(isFullScreen);
+    }
+
+    private boolean isFullScreen(){
+        return ((DetailActivity) getActivity()).isFullScreen();
     }
 
     private void updateBadge(boolean isFullScreen) {
@@ -80,10 +118,10 @@ public class DetailFragment extends BaseFragment {
             ivVip.setVisibility(View.GONE);
             ivPremium.setVisibility(View.GONE);
         } else {
-            if (args.getBoolean("isVip")) {
+            if (isVip()) {
                 ivVip.setVisibility(View.VISIBLE);
                 ivPremium.setVisibility(View.GONE);
-            } else if (args.getBoolean("isPremium")) {
+            } else if (isPremium()) {
                 ivVip.setVisibility(View.GONE);
                 ivPremium.setVisibility(View.VISIBLE);
             } else {
@@ -93,20 +131,15 @@ public class DetailFragment extends BaseFragment {
         }
     }
 
-    private static void setBundle(Bundle b, CardItem item, boolean isFullScreen, int displayWidth) {
+    private static void setBundle(Bundle b, CardItem item) {
         b.putParcelable("card", item);
-        b.putBoolean("fullscreen", isFullScreen);
         b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
         b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
-        b.putInt("displayWidth", displayWidth);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        setBundle(outState,
-                (CardItem) args.getParcelable("card"),
-                args.getBoolean("fullscreen"),
-                args.getInt("displayWidth"));
+        setBundle(outState, getCurrentItem());
     }
 }

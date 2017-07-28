@@ -3,7 +3,6 @@ package com.devtonix.amerricard.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -164,9 +163,9 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
     @Override
     public void onItemClicked(int pos) {
         int realPosition = pos;
-      /*  if (adapter.getReclamPosition() >= 0 && pos > adapter.getReclamPosition()) {
+        if (adapter.getReclamPosition() >= 0 && pos > adapter.getReclamPosition()) {
             realPosition--;
-        }*/
+        }
         if (getArguments().getInt(CATEGORY_ID, -1) != -1) {
             //show selected card from CALENDAR tab (click on some event)
             Intent intent = new Intent(getActivity(), DetailActivity.class);

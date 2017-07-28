@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,6 +69,7 @@ public class DetailActivity extends BaseActivity {
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
     public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
+    public static final String RECLAM_POSITION = "reclam_position";
     private final static String VIP = "vip_test";
     private final static String PREMIUM = "premium_test";
     public static final String TYPE_VIP = "VIP";
@@ -172,7 +176,7 @@ public class DetailActivity extends BaseActivity {
             }
         }
 
-        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards, sharedHelper.getDisplayWidth());
+        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
 
@@ -239,7 +243,6 @@ public class DetailActivity extends BaseActivity {
     public void changeMode() {
         isFullScreen = !isFullScreen;
         setMode();
-        DetailFragment.getInstance(item, isFullScreen, sharedHelper.getDisplayWidth());
     }
 
     private void setMode() {
@@ -250,11 +253,14 @@ public class DetailActivity extends BaseActivity {
             bar.setVisibility(View.VISIBLE);
             container.setVisibility(View.VISIBLE);
         }
-        adapter.setFullScreen(isFullScreen);
     }
 
     public void setFragment(CardItem item) {
         this.item = item;
+    }
+
+    public boolean isFullScreen() {
+        return isFullScreen;
     }
 
     @Override

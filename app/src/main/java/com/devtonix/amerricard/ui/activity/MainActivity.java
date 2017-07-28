@@ -54,15 +54,16 @@ public class MainActivity extends DrawerActivity {
 
         //todo perhaps, needs check isAppFirstLaunch
         startNotificationReceiver();
-        saveDislayWidth();
+       saveDislaySize();
     }
 
-    private void saveDislayWidth() {
+    private void saveDislaySize() {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
-        sharedHelper.saveDisplayWidth(screenWidth);
+        int screenHight = displayMetrics.heightPixels;
+        sharedHelper.saveDisplaySize(screenWidth, screenHight);
     }
 
     private void startNotificationReceiver() {
