@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
@@ -39,6 +40,7 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.ui.fragment.DetailFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -78,6 +80,7 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
+    private CardItem item;
     private Thread thread1;
     private Thread thread2;
     private Bundle ownedItems;
@@ -99,6 +102,10 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            item = savedInstanceState.getParcelable("item");
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -114,7 +121,7 @@ public class DetailActivity extends BaseActivity {
 
         mainCategories = cardRepository.getCardsFromStorage();
 
-        final List<CardItem> cards;
+        final List<CardItem> cards = new ArrayList<>();
         final CardItem currentCardItem;
         int positionForCurrentCard;
 
@@ -125,11 +132,13 @@ public class DetailActivity extends BaseActivity {
 
         if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
-            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            cards.addAll(list);
             currentCardItem = cards.get(positionForCurrentCard);
         } else if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_CARD_FROM_EVENT_SCREEN)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CARD_FROM_EVENT_SCREEN, 0);
-            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            cards.addAll(list);
             currentCardItem = cards.get(positionForCurrentCard);
         } else {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
@@ -141,21 +150,27 @@ public class DetailActivity extends BaseActivity {
 
             if (positionForCategory == CategoryFragment.POSITION_NOT_SET) {
                 //this are not categories with cards, there are cards only
-                cards = mainCategories.get(positionForCard).getCardItems();
+                cards.addAll(mainCategories.get(positionForCard).getCardItems());
                 currentCardItem = mainCategories.get(positionForCard).getCardItems().get(positionForCurrentCard);
             } else {
                 //this are categories with cards
                 if (mainCategories.get(positionForCategory).getCategoryItems().size() > 0) {
-                    cards = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems();
+                    cards.addAll(mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems());
                     currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
                 } else {
-                    cards = mainCategories.get(positionForCategory).getCardItems();
+                    cards.addAll(mainCategories.get(positionForCategory).getCardItems());
                     currentCardItem = mainCategories.get(positionForCategory).getCardItems().get(positionForCurrentCard);
                 }
             }
         }
 
         handler = new Handler();
+
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getType() == null) {
+                cards.remove(i);
+            }
+        }
 
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards, sharedHelper.getDisplayWidth());
         viewPager.setAdapter(adapter);
@@ -224,6 +239,7 @@ public class DetailActivity extends BaseActivity {
     public void changeMode() {
         isFullScreen = !isFullScreen;
         setMode();
+        DetailFragment.getInstance(item, isFullScreen, sharedHelper.getDisplayWidth());
     }
 
     private void setMode() {
@@ -235,6 +251,10 @@ public class DetailActivity extends BaseActivity {
             container.setVisibility(View.VISIBLE);
         }
         adapter.setFullScreen(isFullScreen);
+    }
+
+    public void setFragment(CardItem item) {
+        this.item = item;
     }
 
     @Override
@@ -406,5 +426,11 @@ public class DetailActivity extends BaseActivity {
         if (mService != null) {
             unbindService(mServiceConn);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelable("item", item);
     }
 }
