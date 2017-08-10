@@ -27,6 +27,7 @@ import javax.inject.Inject;
 public class ContactRepository {
 
     private static final String TAG = ContactRepository.class.getSimpleName();
+    private static final String ZERO_DATE = "01.01.1970";
 
     @Inject
     SharedHelper sharedHelper;
@@ -73,10 +74,15 @@ public class ContactRepository {
                 final int photoUriColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
 
                 while (cursor.moveToNext()) {
-                    final long dateInMillis = RegexDateUtils.verifyDateFormat(cursor.getString(birthdayColumn));
-                    final String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
-                    if (TextUtils.equals(formatterBirthday, "01.01.1970")) {
-                        continue;
+                    Log.d(TAG, " getContactsWithBirthday name = " + cursor.getString(contactNameColumn));
+                    String dateStr = cursor.getString(birthdayColumn);
+                    final long dateInMillis = RegexDateUtils.verifyDateFormat(dateStr);
+                    String formatterBirthday = RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.format(new Date(dateInMillis));
+                    if (TextUtils.equals(formatterBirthday, ZERO_DATE)) {
+                        formatterBirthday = parseDate(dateStr);
+                        if (TextUtils.equals(formatterBirthday, ZERO_DATE)) {
+                            continue;
+                        }
                     }
                     final Contact contact = new Contact();
                     contact.setName(cursor.getString(contactNameColumn));
@@ -100,17 +106,65 @@ public class ContactRepository {
                     }
                 });
 
-
-//                List<Contact> oldContacts = new ArrayList<Contact>();
-//                oldContacts = getContactsFromStorage();
-//                if (oldContacts.size() > 0){
-//                    for (Contact contact : oldContacts ){
-//                        if (contact.equals())
-//                    }
-//                }
                 saveContactsToStorage(contactsAndBirthdays);
             }
         });
+    }
+
+    private String parseDate(String date) {
+        String month;
+        if (TextUtils.isEmpty(date)) {
+            return ZERO_DATE;
+        }
+        String[] dates = date.split("[ -]");
+        if (dates.length < 3) {
+            return ZERO_DATE;
+        }
+        String dayStr = dates[0];
+        String monthStr = dates[1];
+        String yearStr = dates[2];
+
+        if (monthStr.contains("янв")) {
+            month = "01";
+        } else if (monthStr.contains("фев")) {
+            month = "02";
+        } else if (monthStr.contains("мар")) {
+            month = "03";
+        } else if (monthStr.contains("апр")) {
+            month = "04";
+        } else if (monthStr.contains("май") || monthStr.contains("мая")) {
+            month = "05";
+        } else if (monthStr.contains("июн")) {
+            month = "06";
+        } else if (monthStr.contains("июл")) {
+            month = "07";
+        } else if (monthStr.contains("авг")) {
+            month = "08";
+        } else if (monthStr.contains("сен")) {
+            month = "09";
+        } else if (monthStr.contains("окт")) {
+            month = "10";
+        } else if (monthStr.contains("ноя")) {
+            month = "11";
+        } else if (monthStr.contains("дек")) {
+            month = "12";
+        } else {
+            return ZERO_DATE;
+        }
+
+        try {
+            if (Integer.valueOf(dayStr) < 1 || Integer.valueOf(dayStr) > 31) {
+                return ZERO_DATE;
+            } else if (yearStr.length() == 4) {
+                int year = Integer.valueOf(yearStr);
+            } else {
+                return ZERO_DATE;
+            }
+        } catch (NumberFormatException e) {
+            return ZERO_DATE;
+        }
+
+        return dayStr.concat(".").concat(month).concat(".").concat(yearStr);
     }
 
     public void saveContactsToStorage(final List<Contact> contacts) {

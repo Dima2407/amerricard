@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
@@ -18,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,7 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.ui.fragment.DetailFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -46,6 +50,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,6 +69,7 @@ public class DetailActivity extends BaseActivity {
     public static final String ACTION_SHOW_FAVORITE_CARDS = "action_show_favorite_cards";
     public static final String POSITION_FOR_CARD_FROM_EVENT_SCREEN = "position_for_card_from_event_screen";
     public static final String ACTION_SHOW_CARD_FROM_EVENT_SCREEN = "action_show_card_from_event_screen";
+    public static final String RECLAM_POSITION = "reclam_position";
     private final static String VIP = "vip_test";
     private final static String PREMIUM = "premium_test";
     public static final String TYPE_VIP = "VIP";
@@ -78,6 +84,7 @@ public class DetailActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
+    private CardItem item;
     private Thread thread1;
     private Thread thread2;
     private Bundle ownedItems;
@@ -99,6 +106,10 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            item = savedInstanceState.getParcelable("item");
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -114,7 +125,7 @@ public class DetailActivity extends BaseActivity {
 
         mainCategories = cardRepository.getCardsFromStorage();
 
-        final List<CardItem> cards;
+        final List<CardItem> cards = new ArrayList<>();
         final CardItem currentCardItem;
         int positionForCurrentCard;
 
@@ -125,11 +136,13 @@ public class DetailActivity extends BaseActivity {
 
         if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
-            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            cards.addAll(list);
             currentCardItem = cards.get(positionForCurrentCard);
         } else if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_CARD_FROM_EVENT_SCREEN)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CARD_FROM_EVENT_SCREEN, 0);
-            cards = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
+            cards.addAll(list);
             currentCardItem = cards.get(positionForCurrentCard);
         } else {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
@@ -141,15 +154,15 @@ public class DetailActivity extends BaseActivity {
 
             if (positionForCategory == CategoryFragment.POSITION_NOT_SET) {
                 //this are not categories with cards, there are cards only
-                cards = mainCategories.get(positionForCard).getCardItems();
+                cards.addAll(mainCategories.get(positionForCard).getCardItems());
                 currentCardItem = mainCategories.get(positionForCard).getCardItems().get(positionForCurrentCard);
             } else {
                 //this are categories with cards
                 if (mainCategories.get(positionForCategory).getCategoryItems().size() > 0) {
-                    cards = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems();
+                    cards.addAll(mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems());
                     currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
                 } else {
-                    cards = mainCategories.get(positionForCategory).getCardItems();
+                    cards.addAll(mainCategories.get(positionForCategory).getCardItems());
                     currentCardItem = mainCategories.get(positionForCategory).getCardItems().get(positionForCurrentCard);
                 }
             }
@@ -157,7 +170,13 @@ public class DetailActivity extends BaseActivity {
 
         handler = new Handler();
 
-        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards, sharedHelper.getDisplayWidth());
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getType() == null) {
+                cards.remove(i);
+            }
+        }
+
+        adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
 
@@ -234,7 +253,14 @@ public class DetailActivity extends BaseActivity {
             bar.setVisibility(View.VISIBLE);
             container.setVisibility(View.VISIBLE);
         }
-        adapter.setFullScreen(isFullScreen);
+    }
+
+    public void setFragment(CardItem item) {
+        this.item = item;
+    }
+
+    public boolean isFullScreen() {
+        return isFullScreen;
     }
 
     @Override
@@ -406,5 +432,11 @@ public class DetailActivity extends BaseActivity {
         if (mService != null) {
             unbindService(mServiceConn);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelable("item", item);
     }
 }

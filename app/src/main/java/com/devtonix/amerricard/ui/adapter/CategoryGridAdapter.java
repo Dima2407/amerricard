@@ -54,6 +54,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
                                List<CardItem> vipCards, List<CardItem> premiumCards, SharedHelper sharedHelper) {
         this.context = context;
         this.cards = cards;
+        this.displayWidth = sharedHelper.getDisplayWidth();
         reclamPosition = -1;
         boolean isReclamOnThisPage = false;
         for (int i = 0; i < cards.size(); i++) {
@@ -82,7 +83,6 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         this.favorites = favoriteCards;
         this.vipCards = vipCards;
         this.premiumCards = premiumCards;
-        this.displayWidth = sharedHelper.getDisplayWidth();
     }
 
     public void updateData(List<CardItem> items) {

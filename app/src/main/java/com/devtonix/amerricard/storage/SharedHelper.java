@@ -61,6 +61,7 @@ public class SharedHelper{
         String CONTACS_FOR_HIDE = "contacs_for_hide";
         String USE_FIRST_SERVER = "use_first_server";
         String DISPLAY_WIDTH = "display_width";
+        String DISPLAY_HIGHT = "display_hight";
         String BIRTHDAY_CATEGORY_ID = "birthday_category_id";
     }
 
@@ -368,12 +369,17 @@ public class SharedHelper{
         sharedPreferences.edit().putBoolean(Fields.USE_FIRST_SERVER, isFirst).apply();
     }
 
-    public void saveDisplayWidth(int width) {
+    public void saveDisplaySize(int width, int hight) {
         sharedPreferences.edit().putInt(Fields.DISPLAY_WIDTH, width).apply();
+        sharedPreferences.edit().putInt(Fields.DISPLAY_HIGHT, hight).apply();
     }
 
     public int getDisplayWidth() {
         return sharedPreferences.getInt(Fields.DISPLAY_WIDTH, 0);
+    }
+
+    public int getDisplayHight() {
+        return sharedPreferences.getInt(Fields.DISPLAY_HIGHT, 0);
     }
 
 

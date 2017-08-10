@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -18,15 +19,11 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private List<CardItem> items = new ArrayList<>();
-    private SparseArray<Fragment> tourFragments = new SparseArray<>();
-    private boolean isFullScreen = false;
-    private int displayWidth;
 
-    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<CardItem> items, int displayWidht) {
+    public DetailPagerAdapter(Context context, FragmentManager fragmentManager, List<CardItem> items) {
         super(fragmentManager);
         this.context = context;
         this.items = items;
-        this.displayWidth = displayWidht;
     }
 
     @Override
@@ -36,7 +33,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance(items.get(position), isFullScreen, displayWidth);
+        return DetailFragment.getInstance(items.get(position));
     }
 
     @Override
@@ -44,20 +41,4 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
         return context.getString(R.string.cards);
     }
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        DetailFragment fragment = (DetailFragment) super.instantiateItem(container, position);
-        tourFragments.put(position, fragment);
-        return fragment;
-    }
-
-    public void setFullScreen(boolean isFullScreen) {
-        this.isFullScreen = isFullScreen;
-
-        for (int i = 0; i < tourFragments.size(); i++) {
-            if (tourFragments.get(i) != null) {
-                ((DetailFragment) tourFragments.get(i)).updateFragment(isFullScreen);
-            }
-        }
-    }
 }
