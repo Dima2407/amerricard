@@ -57,7 +57,7 @@
                     android:maxLines="2"
                     android:text="Birthdays"
                     android:textColor="@color/colorTextDefault"
-                    android:textSize="@dimen/text_size_big"/>
+                    android:textSize="@dimen/text_size_big" />
 
                 <TextView
                     android:id="@+id/card_sub_text"
@@ -71,14 +71,16 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--<ImageView-->
-            <!--android:layout_width="12dp"-->
-            <!--android:layout_height="32dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:src="@drawable/ic_arrow_right"-->
-            <!--android:tint="@color/colorTextDefault"-->
-            <!--android:layout_marginRight="@dimen/base_padding"/>-->
+        <ImageView
+            android:id="@+id/img_celebrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/colorPrimary"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_present"
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
@@ -94,5 +96,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"/>
+        ads:adUnitId="@string/banner_ad_unit_id" />
 </FrameLayout>

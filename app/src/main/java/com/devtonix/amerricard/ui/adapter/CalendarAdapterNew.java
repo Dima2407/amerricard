@@ -3,12 +3,9 @@ package com.devtonix.amerricard.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +26,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -47,6 +45,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
     private Handler uiHandler = new Handler();
     private SharedHelper sharedHelper;
     private int nearestPosition = -1;
+    private Date currentDate = GregorianCalendar.getInstance().getTime();
 
     public BaseEvent getItem(int position) {
         return baseEvents.get(position);
@@ -77,8 +76,8 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         for (int i = 0; i < baseEvents.size(); i++) {
             if (baseEvents.get(i).getEventDate() != null) {
                 String[] dateStrs = baseEvents.get(i).getEventDate().split("[.]");
-                Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
-                if (date.getTime() > GregorianCalendar.getInstance().getTime().getTime()) {
+                Date date = new Date(currentDate.getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
+                if (date.getTime() > currentDate.getTime()) {
                     nearestPosition = i;
                     break;
                 }
@@ -180,6 +179,24 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
                 .into(holder.icon);
 
         holder.subtext.setText(baseEvent.getEventDate());
+
+        String[] dateStrs = baseEvent.getEventDate().split("[.]");
+        Date date = new Date(GregorianCalendar.getInstance().getTime().getYear(), Integer.valueOf(dateStrs[0]) - 1, Integer.valueOf(dateStrs[1]));
+        if (getMonth(date) == getMonth(currentDate) && getDayOfMonth(date) == getDayOfMonth(currentDate)) {
+            holder.iconPresent.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private int getDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private int getMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
     }
 
 
@@ -208,6 +225,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         TextView emptyIconText;
         View itemContent;
         AdView adView;
+        ImageView iconPresent;
 
         public MainHolder(View itemView, final OnCalendarItemClickListener listener) {
             super(itemView);
@@ -223,6 +241,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
             subtext = (TextView) itemView.findViewById(R.id.card_sub_text);
             icon = (ImageView) itemView.findViewById(R.id.card_icon);
             emptyIconText = (TextView) itemView.findViewById(R.id.text_icon_empty);
+            iconPresent = (ImageView) itemView.findViewById(R.id.img_celebrate);
         }
     }
 }
