@@ -1,6 +1,7 @@
 package com.devtonix.amerricard.ui.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -37,12 +38,13 @@ public class CategoryActivity extends BaseActivity {
     @Inject
     SharedHelper sharedHelper;
 
-    private List<CategoryItem> categoriesSecondLvlBegin = new ArrayList<>();
     private List<CategoryItem> categoriesSecondLvl = new ArrayList<>();
     private CategoryAdapter adapter;
     private int positionForCategory;
     private List<CategoryItem> mainCategories;
     private int categoryId;
+    private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +63,15 @@ public class CategoryActivity extends BaseActivity {
 
         mainCategories = cardRepository.getCardsFromStorage();
 
-     /*   for (CategoryItem categoryItem : mainCategories) {
-            Log.i("getPosition2", "CategoryActivity mainCategories[i] = " + categoryItem.getName().getRu() + " order " + categoryItem.getOrder());
-        }*/
-
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
 
         CategoryItem currentCategory = null;
         if (positionForCategory < 0) {
             SelecteCategoryFragment fragment = new SelecteCategoryFragment();
             findViewById(R.id.single_fragment).setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment).commit();
+            appBarLayout.setVisibility(View.GONE);
+            findViewById(R.id.choise_fragment).setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction().add(R.id.choise_fragment, fragment).commit();
         } else {
             currentCategory = mainCategories.get(positionForCategory);
             Log.i("getPosition2", "CategoryActivity currentCategory = " + currentCategory.getName().getRu());
@@ -79,15 +80,6 @@ public class CategoryActivity extends BaseActivity {
             setTitle(title);
 
             if (currentCategory.getData() != null) {
-      /*      categoriesSecondLvlBegin = currentCategory.getCategoryItems();
-            if (categoriesSecondLvlBegin.size() > 2) {
-                categoriesSecondLvl.add(categoriesSecondLvlBegin.get(categoriesSecondLvlBegin.size() - 2));
-                categoriesSecondLvl.add(categoriesSecondLvlBegin.get(categoriesSecondLvlBegin.size() - 1));
-                categoriesSecondLvl.addAll(categoriesSecondLvlBegin);
-                categoriesSecondLvl.add(categoriesSecondLvlBegin.get(0));
-                categoriesSecondLvl.add(categoriesSecondLvlBegin.get(1));
-            } else
-                categoriesSecondLvl.addAll(categoriesSecondLvlBegin);*/
                 categoriesSecondLvl = currentCategory.getCategoryItems();
             }
 
@@ -116,8 +108,6 @@ public class CategoryActivity extends BaseActivity {
                         }
                     }
                 }
-
-                Log.i("getPosition2", "CategoryActivity categoryId = " + categoryId);
                 Fragment fragment = CategoryFragment.getInstanceForCategoryId(categoryId);
                 getSupportFragmentManager().beginTransaction().replace(R.id.single_fragment, fragment, "category").commit();
             } else if (categoriesSecondLvl.size() > 0) {
@@ -129,35 +119,6 @@ public class CategoryActivity extends BaseActivity {
                 adapter = new CategoryAdapter(this, getSupportFragmentManager(), categoriesSecondLvl, positionForCategory, sharedHelper.getLanguage());
                 pager.setAdapter(adapter);
                 pager.setOffscreenPageLimit(1);
-           /* pager.setCurrentItem(2, false);
-            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    Log.i("getPosition", " onPageScrolled pos = " + position);
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    Log.i("getPosition2", " onPageSelected pos = " + position);
-                    Log.i("getPosition2", " onPageSelected pos = " + categoriesSecondLvl.get(position).getName().getRu());
-                    for (CardItem cardItem : categoriesSecondLvl.get(position).getCardItems()) {
-                        Log.i("getPosition2", "onPageSelected categoriesSecondLvl.get(position) cardItem = " + cardItem.getName());
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                    if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                        int index = pager.getCurrentItem();
-                        Log.i("getPosition", " onPageScrollStateChanged pos = " + index);
-                        if (index == 1)
-                            pager.setCurrentItem(adapter.getCount() - 4, false);
-                        else if (index == adapter.getCount() - 2)
-                            pager.setCurrentItem(2, false);
-                    }
-                }
-            });*/
                 RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) findViewById(R.id.category_tab_layout);
                 recyclerTabLayout.setUpWithViewPager(pager);
 
@@ -176,7 +137,7 @@ public class CategoryActivity extends BaseActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

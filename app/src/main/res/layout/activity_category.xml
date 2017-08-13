@@ -7,6 +7,7 @@
     tools:context="com.devtonix.amerricard.ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -32,6 +33,12 @@
             android:layout_height="match_parent"
             android:layout_marginTop="?actionBarSize"
             android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/choise_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/multiple_fragment"
