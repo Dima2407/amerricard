@@ -9,6 +9,7 @@ import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.response.CardResponseNew;
+import com.devtonix.amerricard.network.response.GetCreditsResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
@@ -66,20 +67,20 @@ public class CardRepository {
         });
     }
 
-    public void sendShareCardRequest(long cardId, final CardShareCallback callback) {
-        Call<SimpleResponse> call = api.shareCard(cardId);
-        call.enqueue(new Callback<SimpleResponse>() {
+    public void sendShareCardRequest(String token, long cardId, final CardShareCallback callback) {
+        Call<GetCreditsResponse> call = api.shareCard(token, cardId);
+        call.enqueue(new Callback<GetCreditsResponse>() {
             @Override
-            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+            public void onResponse(Call<GetCreditsResponse> call, Response<GetCreditsResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess();
+                    callback.onSuccess(response.body().getData());
                 } else {
                     callback.onError();
                 }
             }
 
             @Override
-            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+            public void onFailure(Call<GetCreditsResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
                     callback.onRetrofitError(t.getMessage());
                 } else {

@@ -1,10 +1,17 @@
 package com.devtonix.amerricard.network;
 
+import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
+import com.devtonix.amerricard.network.request.ForgotPasswordRequest;
+import com.devtonix.amerricard.network.request.LoginRequest;
+import com.devtonix.amerricard.network.request.RegistrationRequest;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
+import com.devtonix.amerricard.network.response.GetCreditsResponse;
+import com.devtonix.amerricard.network.response.LoginResponse;
+import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SettingsResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
@@ -39,83 +46,123 @@ public class API {
         this.helper = helper;
     }
 
-    public Call<SimpleResponse> shareCard(long cardId){
-        if(helper.getCurrentServer()){
-            return server1.shareCard(cardId);
-        }else {
-            return server2.shareCard(cardId);
+    public Call<GetCreditsResponse> shareCard(String token, long cardId) {
+        if (helper.getCurrentServer()) {
+            return server1.shareCard(token, cardId);
+        } else {
+            return server2.shareCard(token, cardId);
         }
     }
 
-    public Call<SimpleResponse> addFavoriteCard(long cardId){
-        if(helper.getCurrentServer()){
+    public Call<SimpleResponse> addFavoriteCard(long cardId) {
+        if (helper.getCurrentServer()) {
             return server1.addFavoriteCard(cardId);
-        }else {
+        } else {
             return server2.addFavoriteCard(cardId);
         }
     }
 
-    public Call<SimpleResponse> deleteFavoriteCard(long cardId){
-        if(helper.getCurrentServer()){
+    public Call<SimpleResponse> deleteFavoriteCard(long cardId) {
+        if (helper.getCurrentServer()) {
             return server1.deleteFavoriteCard(cardId);
-        }else {
+        } else {
             return server2.deleteFavoriteCard(cardId);
         }
     }
 
-    public Call<CardResponseNew> getCard(){
-        if(helper.getCurrentServer()){
+    public Call<CardResponseNew> getCard() {
+        if (helper.getCurrentServer()) {
             return server1.getCard();
-        }else {
+        } else {
             return server2.getCard();
         }
     }
 
-    public Call<SimpleResponse> createEvent(CreateEventRequest createEventRequest){
-        if(helper.getCurrentServer()){
+    public Call<SimpleResponse> createEvent(CreateEventRequest createEventRequest) {
+        if (helper.getCurrentServer()) {
             return server1.createEvent(createEventRequest);
-        }else {
+        } else {
             return server2.createEvent(createEventRequest);
         }
     }
 
-    public Call<SimpleResponse> editEvent(EditEventRequest editEventRequest){
-        if(helper.getCurrentServer()){
+    public Call<SimpleResponse> editEvent(EditEventRequest editEventRequest) {
+        if (helper.getCurrentServer()) {
             return server1.editEvent(editEventRequest);
-        }else {
+        } else {
             return server2.editEvent(editEventRequest);
         }
     }
 
-    public Call<SimpleResponse> deleteEvent(long eventId){
-        if(helper.getCurrentServer()){
+    public Call<SimpleResponse> deleteEvent(long eventId) {
+        if (helper.getCurrentServer()) {
             return server1.deleteEvent(eventId);
-        }else {
+        } else {
             return server2.deleteEvent(eventId);
         }
     }
 
-    public Call<EventResponse> getEvents(){
-        if(helper.getCurrentServer()){
+    public Call<EventResponse> getEvents() {
+        if (helper.getCurrentServer()) {
             return server1.getEvents();
-        }else {
+        } else {
             return server2.getEvents();
         }
     }
 
-    public Call<CelebrityResponse> getCelebrities(){
-        if(helper.getCurrentServer()){
+    public Call<CelebrityResponse> getCelebrities() {
+        if (helper.getCurrentServer()) {
             return server1.getCelebrities();
-        }else {
+        } else {
             return server2.getCelebrities();
         }
     }
 
-    public Call<SettingsResponse> getSettings(){
-        if(helper.getCurrentServer()){
+    public Call<SettingsResponse> getSettings() {
+        if (helper.getCurrentServer()) {
             return server1.getSettings();
-        }else {
+        } else {
             return server2.getSettings();
+        }
+    }
+
+    public Call<LoginResponse> login(LoginRequest loginRequest) {
+        if (helper.getCurrentServer()) {
+            return server1.login(loginRequest);
+        } else {
+            return server2.login(loginRequest);
+        }
+    }
+
+    public Call<RegistrationResponse> registration(RegistrationRequest registrationRequest) {
+        if (helper.getCurrentServer()) {
+            return server1.registration(registrationRequest);
+        } else {
+            return server2.registration(registrationRequest);
+        }
+    }
+
+    public Call<SimpleResponse> forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        if (helper.getCurrentServer()) {
+            return server1.forgotPassword(forgotPasswordRequest);
+        } else {
+            return server2.forgotPassword(forgotPasswordRequest);
+        }
+    }
+
+    public Call<GetCreditsResponse> getCredits(String token) {
+        if (helper.getCurrentServer()) {
+            return server1.getCredits(token);
+        } else {
+            return server2.getCredits(token);
+        }
+    }
+
+    public Call<GetCreditsResponse> buyCredits(String token, BuyCreditRequest buyCreditRequest) {
+        if (helper.getCurrentServer()) {
+            return server1.buyCredits(token, buyCreditRequest);
+        } else {
+            return server2.buyCredits(token, buyCreditRequest);
         }
     }
 }

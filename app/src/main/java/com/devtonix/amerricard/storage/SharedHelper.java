@@ -63,6 +63,7 @@ public class SharedHelper{
         String DISPLAY_WIDTH = "display_width";
         String DISPLAY_HIGHT = "display_hight";
         String BIRTHDAY_CATEGORY_ID = "birthday_category_id";
+        String ACCESS_TOKEN = "access_token";
     }
 
     public SharedHelper(Context context) {
@@ -389,6 +390,14 @@ public class SharedHelper{
 
     public int getBithrayCategoryId() {
         return sharedPreferences.getInt(Fields.BIRTHDAY_CATEGORY_ID, 0);
+    }
+
+    public void setAccessToken(String token) {
+        sharedPreferences.edit().putString(Fields.ACCESS_TOKEN, token).apply();
+    }
+
+    public String getAccessToken() {
+        return sharedPreferences.getString(Fields.ACCESS_TOKEN, "");
     }
 }
 

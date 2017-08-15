@@ -38,6 +38,7 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItem;
+import com.devtonix.amerricard.model.Credit;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
@@ -198,7 +199,9 @@ public class DetailActivity extends BaseActivity {
                 progress.setVisibility(View.VISIBLE);
 
                 onShareItem(/*adapter.getImage(viewPager.getCurrentItem())*/cardItem.getGlideImageUrl());
-                cardRepository.sendShareCardRequest(currentCardItem.getId(), new MyCardShareCallback());
+
+                String token = sharedHelper.getAccessToken();
+                cardRepository.sendShareCardRequest(token, currentCardItem.getId(), new MyCardShareCallback());
             }
         });
         viewPager.setCurrentItem(positionForCurrentCard);
@@ -331,18 +334,22 @@ public class DetailActivity extends BaseActivity {
 
     private class MyCardShareCallback implements CardShareCallback {
         @Override
-        public void onSuccess() {
-            Log.d(TAG, "onSuccess: card shared");
+        public void onSuccess(Credit credit) {
+            if (credit != null) {
+                Log.i(TAG, "onSuccess: card shared. credits VIP = " + credit.getData().getVip() + ", PREMIUM = " + credit.getData().getPremium());
+            } else {
+                Log.i(TAG, "onSuccess: card shared. credit = null");
+            }
         }
 
         @Override
         public void onError() {
-            Log.d(TAG, "onError: card not shared");
+            Log.i(TAG, "onError: card not shared");
         }
 
         @Override
         public void onRetrofitError(String message) {
-            Log.d(TAG, "onRetrofitError: error");
+            Log.i(TAG, "onRetrofitError: error");
         }
     }
 

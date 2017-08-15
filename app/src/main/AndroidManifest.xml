@@ -31,7 +31,7 @@
         <activity android:name=".ui.activity.SettingsActivity"/>
         <activity android:name=".ui.activity.CategoryActivity"/>
         <activity android:name=".ui.activity.DetailActivity"/>
-        <activity android:name=".ui.activity.VipAndPremiumActivity"/>
+        <activity android:name=".ui.activity.VipAndPremiumActivity" android:windowSoftInputMode="adjustPan"/>
 
         <receiver android:name=".receivers.HolidaysBroadcastReceiver">
             <intent-filter>

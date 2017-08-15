@@ -39,4 +39,10 @@ public class RepositoryModule {
     public SettingsRepository getSettingsRepository(Context context) {
         return new SettingsRepository(context);
     }
+
+    @Provides
+    @Singleton
+    public UserRepository getUserRepository(Context context) {
+        return new UserRepository(context);
+    }
 }

@@ -9,6 +9,7 @@ import com.devtonix.amerricard.repository.ContactRepository;
 import com.devtonix.amerricard.repository.EventRepository;
 import com.devtonix.amerricard.repository.RepositoryModule;
 import com.devtonix.amerricard.repository.SettingsRepository;
+import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.services.HolidaysNotificationService;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.storage.SharedHelperModule;
@@ -26,6 +27,7 @@ import com.devtonix.amerricard.ui.fragment.CardFragment;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
 import com.devtonix.amerricard.ui.fragment.PremiumFragment;
 import com.devtonix.amerricard.ui.fragment.SelecteCategoryFragment;
+import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
 import com.devtonix.amerricard.ui.fragment.VipFragment;
 
 import javax.inject.Singleton;
@@ -54,8 +56,7 @@ public interface MainComponent {
     void inject(CategoryFragment categoryFragment);
     void inject(CalendarFragment calendarFragment);
     void inject(CardFragment cardFragment);
-    void inject(PremiumFragment premiumFragment);
-    void inject(VipFragment vipFragment);
+    void inject(VipAndPremiumAbstractFragment vipAndPremiumAbstractFragment);
     void inject(SelecteCategoryFragment selecteCategoryFragment);
 
     /**
@@ -70,4 +71,5 @@ public interface MainComponent {
     void inject(ContactRepository contactRepository);
     void inject(NetworkModule module);
     void inject(SettingsRepository settingsRepository);
+    void inject(UserRepository userRepository);
 }

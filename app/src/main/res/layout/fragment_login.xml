@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@android:color/white">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/red_x"
+            android:rotation="45"
+            android:textColor="@color/colorAccent" />
+
+
+        <TextView
+            android:id="@+id/text_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/sign_in"
+            android:textColor="@color/colorAccent"
+            android:textSize="25sp" />
+
+
+        <EditText
+            android:id="@+id/edit_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_login"
+            android:layout_marginTop="10dp"
+            android:hint="@string/email"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_login"
+            android:hint="@string/password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/text_forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/edit_password"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:text="@string/forgot_password" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_forgot_password"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/white"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/btn_registration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/text_forgot_password"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/white"
+            android:text="@string/registration"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

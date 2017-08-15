@@ -77,4 +77,14 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="choise_category">Please, choise category</string>
+    <string name="email">e-mail</string>
+    <string name="password">password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="login">Login</string>
+    <string name="back">Back</string>
+    <string name="sign_in">Sign in</string>
+    <string name="registration">Registration</string>
+    <string name="user_name">name</string>
+    <string name="title_forgot_password">Restore password</string>
+    <string name="restore">Restore</string>
 </resources>
