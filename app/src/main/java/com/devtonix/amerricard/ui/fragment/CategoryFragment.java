@@ -192,7 +192,6 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
 
     @Override
     public void onFavoriteClicked(int position) {
-
         //removed progress bar for now
 
         final CardItem item = cards.get(position);
@@ -205,7 +204,7 @@ public class CategoryFragment extends BaseFragment implements CategoryGridAdapte
             cardRepository.sendAddFavoriteCardRequest(item.getId());
         }
         final List<CardItem> freshFavoritesCards = cardRepository.getFavoriteCardsFromStorage();
-        adapter.setFavorites(freshFavoritesCards);
+        adapter.setFavorites(freshFavoritesCards, position);
     }
 
     @Override

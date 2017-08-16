@@ -226,9 +226,9 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
         }
     }
 
-    public void setFavorites(List<CardItem> favorites) {
+    public void setFavorites(List<CardItem> favorites, int position) {
         this.favorites = favorites;
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 
     public int getReclamPosition() {
