@@ -31,7 +31,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
         pager.setAdapter(adapter);
 
         TabLayout tab = (TabLayout) findViewById(R.id.vip_tab_layout);
-        tab.setTabTextColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorPrimary));
+        tab.setTabTextColors(getResources().getColor(R.color.colorAccent), getResources().getColor(android.R.color.white));
         tab.setSelectedTabIndicatorColor(Color.TRANSPARENT);
         tab.setupWithViewPager(pager);
 
