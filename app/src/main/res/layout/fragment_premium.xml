@@ -1,64 +1,163 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Content available only for Premium users"/>
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_logo"
-        android:tint="@color/opacity_50"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="A Premium account includes:"/>
+    android:scrollbars="none">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
+        <ImageView
+            android:id="@+id/img_vip_logotip"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_premium" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="- All premium cards"/>
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avialable_for_sending"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txt_avialable_for_sending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="0"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/premium_text"
+            android:textSize="20sp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_premium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="- No more Ads!"/>
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 открытка - $1,49"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_premium_1_card"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="65dp"
+                    android:background="@drawable/radio_buttons_image"
+                    android:button="@android:color/transparent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 открытки - $3,99"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_premium_3_cards"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="65dp"
+                    android:background="@drawable/radio_buttons_image"
+                    android:button="@android:color/transparent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 открыток - $5,99"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_premium_5_cards"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="65dp"
+                    android:background="@drawable/radio_buttons_image"
+                    android:button="@android:color/transparent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 открыток - $9,99"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_premium_10_cards"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="54dp"
+                    android:background="@drawable/radio_buttons_image"
+                    android:button="@android:color/transparent"
+                    android:checked="true" />
+
+            </LinearLayout>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_pay_premium"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/stroke_for_button"
+            android:text="@string/pay_button"
+            android:textAllCaps="false" />
+
+        <FrameLayout
+            android:id="@+id/layout_login_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/tvBecomePremium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/stroke_for_button"
-        android:padding="8dp"
-        android:text="BECOME PREMIUM NOW!"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
-
-    <FrameLayout
-        android:id="@+id/layout_login_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-</LinearLayout>
+</ScrollView>

@@ -1,6 +1,7 @@
 package com.devtonix.amerricard.repository;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
@@ -152,5 +153,9 @@ public class UserRepository {
                 }
             }
         });
+    }
+
+    public boolean isAuthorized() {
+        return !TextUtils.isEmpty(sharedHelper.getAccessToken());
     }
 }

@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +30,13 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.billing.IabHelper;
 import com.devtonix.amerricard.billing.IabResult;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.Credit;
+import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
+import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.callback.LoginCallback;
 import com.devtonix.amerricard.ui.callback.RegistrationCallback;
 import com.google.android.gms.common.AccountPicker;
@@ -55,8 +59,9 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     protected final static String RESPONSE_CODE = "RESPONSE_CODE";
     protected final static int REQUEST_CODE_BUY = 1001;
     protected static final int REQUEST_ACCOUNT_PICK_CODE = 99;
+    protected final static String APP_TYPE = "android";
+    protected final static String PURCHASE_TRANSACTION_ID = "12345";
 
-    protected TextView tvBecomeVipOpPremium;
     protected IabHelper iabHelper;
     protected Bundle skuDetails;
     protected Bundle buyIntentBundle;
@@ -109,15 +114,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         getActivity().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         handler = new Handler();
-
-        tvBecomeVipOpPremium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //toPayVip();
-                send();
-            }
-        });
-
     }
 
     protected void showAllProducts() {
@@ -178,6 +174,9 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     }
 
     protected void initPopupWindow(View view) {
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutContainer.setVisibility(View.VISIBLE);
         if(Build.VERSION.SDK_INT >= 21) {
@@ -227,7 +226,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
     }
 
-    protected void send() {
+    protected void send(final int amountOfCredits, final String creditType) {
         if (inflater == null) {
             inflater = (LayoutInflater) getContext().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         }
@@ -245,7 +244,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRepository.login(textEmail.getText().toString(), textPassword.getText().toString(), new LoginCallbackImpl());
+                userRepository.login(textEmail.getText().toString(), textPassword.getText().toString(), new LoginCallbackImpl(amountOfCredits, creditType));
             }
         });
         view.findViewById(R.id.text_forgot_password).setOnClickListener(new View.OnClickListener() {
@@ -310,10 +309,20 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
     private class LoginCallbackImpl implements LoginCallback {
 
+        private int amountOfCredits;
+        private String creditType;
+
+        public LoginCallbackImpl(int amountOfCredits, String creditType) {
+            this.amountOfCredits = amountOfCredits;
+            this.creditType = creditType;
+        }
+
         @Override
         public void onSuccess(String token) {
             Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
             Log.i(TAG, "LoginCallbackImpl onSuccess: token = " + token);
+            BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
+            userRepository.buyCredits(token, request, new GetCreditCallbackImpl());
         }
 
         @Override
@@ -370,4 +379,25 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
     }
 
+    private class GetCreditCallbackImpl implements GetCreditsCallback {
+
+        @Override
+        public void onSuccess(Credit credit) {
+            if (credit != null) {
+                Log.i(TAG, "onSuccess: credit.vip = " + credit.getData().getVip() + ", credit.premium = " + credit.getData().getPremium());
+            } else {
+                Log.i(TAG, "onSuccess: credit == null");
+            }
+        }
+
+        @Override
+        public void onError() {
+            Log.i(TAG, "onError: ");
+        }
+
+        @Override
+        public void onRetrofitError(String message) {
+            Log.i(TAG, "onRetrofitError: message = " + message);
+        }
+    }
 }

@@ -87,4 +87,8 @@
     <string name="user_name">name</string>
     <string name="title_forgot_password">Restore password</string>
     <string name="restore">Restore</string>
+    <string name="avialable_for_sending">Avialable for sending: </string>
+    <string name="vip_premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «VIP» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="pay_button">Pay</string>
 </resources>
