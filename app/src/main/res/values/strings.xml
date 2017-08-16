@@ -87,8 +87,8 @@
     <string name="user_name">name</string>
     <string name="title_forgot_password">Restore password</string>
     <string name="restore">Restore</string>
-    <string name="avialable_for_sending">Avialable for sending: </string>
-    <string name="vip_premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «VIP» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="available_for_sending">Available for sending: </string>
+    <string name="vip_premium_text">The purchase of the package opens the possibility of sending any postcard from the category "VIP" and also disables the display of advertising while there are postcards for sending.</string>
     <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
     <string name="pay_button">Pay</string>
 </resources>

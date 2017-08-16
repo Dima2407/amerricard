@@ -39,4 +39,18 @@
     <string name="are_your_want_to_buy_premium">Эта картинка доступна только для PREMIUM-пользователей. Вы хотите продолжить покупку?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="vip_premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «VIP» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="pay_button">Оплатить</string>
+    <string name="available_for_sending">Доступно к отправке: </string>
+    <string name="restore">Восстановить</string>
+    <string name="title_forgot_password">Восстановление пароля</string>
+    <string name="email">e-mail</string>
+    <string name="password">пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="login">Логин</string>
+    <string name="back">Назад</string>
+    <string name="sign_in">Войти</string>
+    <string name="registration">Регистрация</string>
+    <string name="user_name">имя</string>
 </resources>
