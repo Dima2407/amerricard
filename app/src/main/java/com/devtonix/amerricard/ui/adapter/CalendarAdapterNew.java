@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.BaseEvent;
@@ -150,15 +154,18 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
         holder.emptyIconText.setText(baseEvent.getLetters(currLang));
         holder.emptyIconText.setVisibility(View.GONE);
 
-        DrawableTypeRequest<?> request;
+        RequestBuilder<Drawable> request;
         if (baseEvent instanceof Contact) {
             request = Glide.with(context).load(((Contact) baseEvent).getPhotoUri());
         } else {
             request = Glide.with(context).load(baseEvent.getThumbImageUrl());
         }
-        request.listener(new RequestListener<Object, GlideDrawable>() {
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.transform(new CircleTransform(context));
+        request.apply(requestOptions).
+                listener(new RequestListener<Drawable>() {
             @Override
-            public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 uiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -170,13 +177,10 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
             }
 
             @Override
-            public boolean onResourceReady(GlideDrawable resource, Object model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 return false;
             }
-        })
-                .transform(new CircleTransform(context))
-                .into(holder.icon);
+                }).into(holder.icon);
 
         holder.subtext.setText(baseEvent.getEventDate());
 

@@ -31,9 +31,9 @@ import android.widget.ProgressBar;
 import com.android.vending.billing.IInAppBillingService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
@@ -43,7 +43,6 @@ import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
-import com.devtonix.amerricard.ui.fragment.DetailFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -279,12 +278,13 @@ public class DetailActivity extends BaseActivity {
     public void onShareItem(GlideUrl s) {
 
         //web -> bmp
-        Glide.with(this).load(s).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                new LoadImageTask(resource).execute();
-            }
-        });
+        Glide.with(this).asBitmap().load(s)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        new LoadImageTask(resource).execute();
+                    }
+                });
     }
 
     private class LoadImageTask extends AsyncTask<Void, Void, Uri> {
