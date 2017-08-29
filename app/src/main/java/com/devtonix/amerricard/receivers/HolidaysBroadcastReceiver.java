@@ -53,64 +53,6 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
         final PendingIntent pendingIntent = PendingIntent.getService(context, 1234, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final Calendar currentCalendar = Calendar.getInstance();
 
-//        boolean isShowNeeded = false;
-
-//        final List<EventItem> events = eventRepository.getEventFromStorage();
-//        final String currentDate = TimeUtils.calDateToString(currentCalendar);
-//
-//        for (EventItem item : events) {
-//            if (TextUtils.equals(item.getFormattedDate(), currentDate)) {
-//                Log.d(TAG, "(event) isShowNeeded = true for " + item.getName());
-//                isShowNeeded = true;
-//                break;
-//            }
-//        }
-//
-//        final List<Celebrity> celebrities = celebrityRepository.getCelebritiesFromStorage();
-//        for (Celebrity c : celebrities) {
-//            try {
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getFormattedDate()));
-//
-//                final int day = calendar.get(Calendar.DAY_OF_MONTH);
-//                final int month = calendar.get(Calendar.MONTH);
-//
-//                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
-//                final int currentMonth = currentCalendar.get(Calendar.MONTH);
-//
-//                if (day == currentDay & month == currentMonth) {
-//                    Log.d(TAG, "(celebrity) isShowNeeded = true for " + c.getName());
-//                    isShowNeeded = true;
-//                    break;
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//
-//        final List<Contact> contacts = contactRepository.getContactsFromStorage();
-//        for (Contact c : contacts) {
-//            try {
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(RegexDateUtils.GODLIKE_APPLICATION_DATE_FORMAT.parse(c.getBirthday()));
-//
-//                final int day = calendar.get(Calendar.DAY_OF_MONTH);
-//                final int month = calendar.get(Calendar.MONTH);
-//
-//                final int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
-//                final int currentMonth = currentCalendar.get(Calendar.MONTH);
-//
-//                if (day == currentDay & month == currentMonth) {
-//                    Log.d(TAG, "(contact) isShowNeeded = true for " + c.getName());
-//                    isShowNeeded = true;
-//                    break;
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
         alarmManager.cancel(pendingIntent);
 
         if (isNotificationEnabled) {
