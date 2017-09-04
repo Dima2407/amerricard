@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -34,12 +35,14 @@ import com.devtonix.amerricard.model.Credit;
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.callback.LoginCallback;
 import com.devtonix.amerricard.ui.callback.RegistrationCallback;
 import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.images.ImageManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -302,7 +305,8 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         view.findViewById(R.id.btn_registration).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRepository.registration(editEmailRegistration.getText().toString(), editPassword.getText().toString(), editLogin.getText().toString(), new RegistrationCallbackImpl());
+                userRepository.registration(editEmailRegistration.getText().toString(),
+                        editPassword.getText().toString(), editLogin.getText().toString(), new RegistrationCallbackImpl());
             }
         });
     }
@@ -319,10 +323,19 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
         @Override
         public void onSuccess(String token) {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Login was successful", Toast.LENGTH_LONG).show();
             Log.i(TAG, "LoginCallbackImpl onSuccess: token = " + token);
             BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
             userRepository.buyCredits(token, request, new GetCreditCallbackImpl());
+            if (popupWindow != null) {
+                popupWindow.dismiss();
+            }
+            sharedHelper.setAccessToken(token);
+            getActivity().onBackPressed();
+
+
+
+
         }
 
         @Override
@@ -341,8 +354,14 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     private class RegistrationCallbackImpl implements RegistrationCallback {
         @Override
         public void onSuccess(String token) {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Registration was successful", Toast.LENGTH_LONG).show();
             Log.i(TAG, "RegistrationCallbackImpl onSuccess: token = " + token);
+            if (popupWindow != null) {
+                popupWindow.dismiss();
+            }
+            getActivity().onBackPressed();
+            sharedHelper.setAccessToken(token);
+
         }
 
         @Override
@@ -362,8 +381,13 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
         @Override
         public void onSuccess() {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "New password sent to your email", Toast.LENGTH_LONG).show();
             Log.i(TAG, "ForgotPasswordCallbackImpl onSuccess: ");
+            if (popupWindow != null) {
+                popupWindow.dismiss();
+            }
+            getActivity().onBackPressed();
+
         }
 
         @Override

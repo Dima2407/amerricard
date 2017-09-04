@@ -8,11 +8,17 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.receivers.HolidaysBroadcastReceiver;
+import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.adapter.MainPagerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -96,4 +102,5 @@ public class MainActivity extends DrawerActivity {
             builder.show();
         }
     }
+
 }

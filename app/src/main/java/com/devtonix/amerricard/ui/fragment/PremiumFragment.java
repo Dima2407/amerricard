@@ -121,6 +121,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
                     try {
                         JSONObject jo = new JSONObject(purchaseData);
                         String sku = jo.getString("productId");
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -87,4 +87,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         return new Locale(currLang);
     }
+
+
 }

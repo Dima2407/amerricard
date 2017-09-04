@@ -2,6 +2,7 @@ package com.devtonix.amerricard.repository;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
@@ -46,7 +47,13 @@ public class UserRepository {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().getToken());
+                    callback.onSuccess(response.body().getData().getToken());
+                    sharedHelper.setName(response.body().getData().getName());
+                    sharedHelper.setEmail(response.body().getData().getEmail());
+
+                    Log.d("MyLog", "onResponse: " + response.body().getData().getName());
+                    Log.d("MyLog", "onResponse: " + response.body().getData().getEmail());
+                    Log.d("MyLog", "onResponse: " + response.body().getData().getToken());
                 } else {
                     callback.onError();
                 }

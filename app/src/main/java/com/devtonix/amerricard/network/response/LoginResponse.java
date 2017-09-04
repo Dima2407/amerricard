@@ -5,6 +5,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
 
+    @SerializedName("data")
+    @Expose
+    private DataResponse data;
+
+    public DataResponse getData() {
+        return data;
+    }
+
+    /*@SerializedName("data")
+    @Expose
+    private String[] data;
+
     @SerializedName("authToken")
     @Expose
     private String token;
@@ -15,5 +27,7 @@ public class LoginResponse {
 
     public void setToken(String token) {
         this.token = token;
-    }
+    }*/
+
+
 }

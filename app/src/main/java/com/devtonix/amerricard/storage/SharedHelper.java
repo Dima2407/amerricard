@@ -46,7 +46,6 @@ public class SharedHelper{
         String FIRST_LAUNCH_APPLICATION = "first_launch_application";
         String LOGGED_IN = "loggedIn";
         String USER_ID = "userId";
-        String TOKEN = "token";
         String USER_STATUS = "NORMAL";
         String CARDS = "cards";
         String EVENTS = "events";
@@ -64,6 +63,8 @@ public class SharedHelper{
         String DISPLAY_HIGHT = "display_hight";
         String BIRTHDAY_CATEGORY_ID = "birthday_category_id";
         String ACCESS_TOKEN = "access_token";
+        String NAME = "name";
+        String EMAIL = "email";
     }
 
     public SharedHelper(Context context) {
@@ -394,11 +395,36 @@ public class SharedHelper{
 
     public void setAccessToken(String token) {
         sharedPreferences.edit().putString(Fields.ACCESS_TOKEN, token).apply();
+        Log.d("MyLog", "setAccessToken: ");
     }
 
     public String getAccessToken() {
         return sharedPreferences.getString(Fields.ACCESS_TOKEN, "");
     }
+
+    public void cleanAccessToken() {
+        sharedPreferences.edit().putString(Fields.ACCESS_TOKEN, "").apply();
+        sharedPreferences.edit().putString(Fields.NAME, "").apply();
+        sharedPreferences.edit().putString(Fields.EMAIL, "").apply();
+    }
+
+    public String getName() {
+        return sharedPreferences.getString(Fields.NAME, "");
+    }
+
+    public void setName(String name) {
+        sharedPreferences.edit().putString(Fields.NAME, name).apply();
+    }
+
+    public String getEmail() {
+        return sharedPreferences.getString(Fields.EMAIL, "");
+    }
+
+    public void setEmail(String email) {
+        sharedPreferences.edit().putString(Fields.EMAIL, email).apply();
+    }
+
+
 }
 
 

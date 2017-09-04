@@ -2,18 +2,31 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/view_drawer_header"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <include android:id="@+id/drawer_cards" layout="@layout/view_drawer_item"/>
-        <include android:id="@+id/drawer_calendar" layout="@layout/view_drawer_item"/>
-        <include android:id="@+id/drawer_favorites" layout="@layout/view_drawer_item"/>
+        <include layout="@layout/view_drawer_header" />
+
+        <include
+            android:id="@+id/drawer_cards"
+            layout="@layout/view_drawer_item" />
+
+        <include
+            android:id="@+id/drawer_calendar"
+            layout="@layout/view_drawer_item" />
+
+        <include
+            android:id="@+id/drawer_favorites"
+            layout="@layout/view_drawer_item" />
         <!--<include android:id="@+id/drawer_sent_cards" layout="@layout/view_drawer_item"/>-->
-        <include android:id="@+id/drawer_manage_holidays" layout="@layout/view_drawer_item"/>
+        <include
+            android:id="@+id/drawer_manage_holidays"
+            layout="@layout/view_drawer_item" />
         <!--<include android:id="@+id/drawer_manage_holidays" layout="@layout/view_drawer_item"/>-->
 
         <View
@@ -21,8 +34,23 @@
             android:layout_height="1dp"
             android:background="@color/lightGray" />
 
-        <include android:id="@+id/drawer_vip" layout="@layout/view_drawer_item_without_tint"/>
-        <include android:id="@+id/drawer_premium" layout="@layout/view_drawer_item_without_tint"/>
-        <include android:id="@+id/drawer_settings" layout="@layout/view_drawer_item"/>
+        <include
+            android:id="@+id/drawer_vip"
+            layout="@layout/view_drawer_item_without_tint" />
+
+        <include
+            android:id="@+id/drawer_premium"
+            layout="@layout/view_drawer_item_without_tint" />
+
+        <include
+            android:id="@+id/drawer_settings"
+            layout="@layout/view_drawer_item" />
+
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
     </LinearLayout>
 </ScrollView>

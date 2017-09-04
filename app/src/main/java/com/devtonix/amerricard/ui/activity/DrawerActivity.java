@@ -5,18 +5,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.storage.SharedHelper;
+
+import javax.inject.Inject;
 
 public class DrawerActivity extends BaseActivity implements View.OnClickListener {
 
@@ -28,15 +35,39 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private TextView name;
     private DrawerLayout drawer;
 
+    private LinearLayout regLayout;
+    private Button logoutButton;
+    private ImageView unregLogoImageView;
+    private ImageView isregLogoImageView;
+    private TextView regNameTextView;
+    private TextView regEmailTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         initSidePanel();
+        logInOutButtonInit();
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
+                    sharedHelper.cleanAccessToken();
+                    regLayout.setVisibility(View.INVISIBLE);
+                    unregLogoImageView.setVisibility(View.VISIBLE);
+                    logoutButton.setText("LOGIN");
+                } else {
+                    drawer.closeDrawers();
+                    startActivity(new Intent(DrawerActivity.this, VipAndPremiumActivity.class));
+                }
+            }
+        });
+
     }
 
     protected void init(int layout) {
+
         inflater.inflate(layout, (ViewGroup) findViewById(R.id.drawer_content));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -51,13 +82,38 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         getSupportActionBar().setTitle(R.string.app_name);
     }
 
+    @Override
+    protected void onResume() {
+        Log.d("MyLog", "onResume: " + String.format("(%s)", !(TextUtils.isEmpty(sharedHelper.getAccessToken())))
+                + sharedHelper.getEmail() + " " + sharedHelper.getName());
+        super.onResume();
+        logInOutButtonInit();
+
+        if (!(TextUtils.isEmpty(sharedHelper.getAccessToken()))) {
+            regLayout.setVisibility(View.VISIBLE);
+            Log.d("MyLog", "onResume: visible " + regLayout.getVisibility());
+            unregLogoImageView.setVisibility(View.INVISIBLE);
+            regNameTextView.setText(sharedHelper.getName());
+            regEmailTextView.setText(sharedHelper.getEmail());
+        } else {
+            unregLogoImageView.setVisibility(View.VISIBLE);
+            regLayout.setVisibility(View.INVISIBLE);
+        }
+
+
+    }
+
     protected DrawerLayout getDrawer() {
         return drawer;
     }
 
     private void initSidePanel() {
+        regLayout = (LinearLayout) findViewById(R.id.drawer_registration_layout);
+        unregLogoImageView = (ImageView) findViewById(R.id.un_reg_logo_image_view);
+        isregLogoImageView = (ImageView) findViewById(R.id.is_reg_logo_image_view);
 
-        headerEmail = (TextView) findViewById(R.id.drawer_nav_email);
+        regNameTextView = (TextView) findViewById(R.id.drawer_name_text_view);
+        regEmailTextView = (TextView) findViewById(R.id.drawer_email_text_view);
 
         addItem(R.id.drawer_cards, getString(R.string.category), R.drawable.categories_icon);
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
@@ -114,6 +170,15 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
         drawer.closeDrawers();
+    }
+
+    private void logInOutButtonInit() {
+        logoutButton = (Button) findViewById(R.id.logout_button);
+        if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
+            logoutButton.setText("LOGOUT");
+        } else {
+            logoutButton.setText("LOGIN");
+        }
     }
 
 }
