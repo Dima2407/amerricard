@@ -182,12 +182,12 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutContainer.setVisibility(View.VISIBLE);
-        if(Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= 21) {
             popupWindow.setElevation(5.0f);
         }
         popupWindow.setFocusable(true);
         popupWindow.update();
-        popupWindow.showAtLocation(layoutContainer, Gravity.CENTER,0,0);
+        popupWindow.showAtLocation(layoutContainer, Gravity.CENTER, 0, 0);
     }
 
     protected void toPayStatus(String status) {
@@ -247,7 +247,9 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRepository.login(textEmail.getText().toString(), textPassword.getText().toString(), new LoginCallbackImpl(amountOfCredits, creditType));
+                userRepository.login(textEmail.getText().toString(),
+                        textPassword.getText().toString(), new LoginCallbackImpl(amountOfCredits, creditType));
+
             }
         });
         view.findViewById(R.id.text_forgot_password).setOnClickListener(new View.OnClickListener() {
@@ -322,20 +324,30 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
 
         @Override
-        public void onSuccess(String token) {
-            Toast.makeText(getContext(), "Login was successful", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "LoginCallbackImpl onSuccess: token = " + token);
-            BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
-            userRepository.buyCredits(token, request, new GetCreditCallbackImpl());
-            if (popupWindow != null) {
-                popupWindow.dismiss();
+        public void onSuccess(String token, String status) {
+            switch (status) {
+                case "OK": {
+                    Toast.makeText(getContext(), "Login was successful", Toast.LENGTH_LONG).show();
+                    BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
+                    userRepository.buyCredits(token, request, new GetCreditCallbackImpl());
+                    if (popupWindow != null) {
+                        popupWindow.dismiss();
+                    }
+                    sharedHelper.setAccessToken(token);
+                    break;
+                }
+                case "INVALID_LOGIN_PASSWORD": {
+                    Toast.makeText(getContext(), "Incorrect email or password", Toast.LENGTH_LONG).show();
+                    break;
+                }
+                case "GENERAL_ERROR": {
+                    Toast.makeText(getContext(), "Server is not available", Toast.LENGTH_LONG).show();
+                    break;
+                }
+                default: {
+                    getActivity().onBackPressed();
+                }
             }
-            sharedHelper.setAccessToken(token);
-            getActivity().onBackPressed();
-
-
-
-
         }
 
         @Override

@@ -3,6 +3,7 @@ package com.devtonix.amerricard.repository;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
@@ -16,6 +17,7 @@ import com.devtonix.amerricard.network.response.LoginResponse;
 import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.activity.DrawerActivity;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.callback.LoginCallback;
@@ -47,13 +49,28 @@ public class UserRepository {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().getData().getToken());
-                    sharedHelper.setName(response.body().getData().getName());
-                    sharedHelper.setEmail(response.body().getData().getEmail());
 
-                    Log.d("MyLog", "onResponse: " + response.body().getData().getName());
-                    Log.d("MyLog", "onResponse: " + response.body().getData().getEmail());
-                    Log.d("MyLog", "onResponse: " + response.body().getData().getToken());
+                    switch (response.body().getStatus()) {
+                        case "OK": {
+                            callback.onSuccess(response.body().getData().getToken(),
+                                    response.body().getStatus());
+                            sharedHelper.setName(response.body().getData().getName());
+                            sharedHelper.setEmail(response.body().getData().getEmail());
+                            break;
+                        }
+                        case "INVALID_LOGIN_PASSWORD": {
+                            callback.onSuccess("",
+                                    response.body().getStatus());
+                            break;
+                        }
+                        case "GENERAL_ERROR": {
+                            callback.onSuccess("",
+                                    response.body().getStatus());
+                            break;
+                        }
+                        //loginStatus = response.body().getStatus();
+                    }
+
                 } else {
                     callback.onError();
                 }
@@ -165,4 +182,5 @@ public class UserRepository {
     public boolean isAuthorized() {
         return !TextUtils.isEmpty(sharedHelper.getAccessToken());
     }
+
 }

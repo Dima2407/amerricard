@@ -5,6 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
 
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    @SerializedName("code")
+    @Expose
+    private Integer code;
+
     @SerializedName("data")
     @Expose
     private DataResponse data;
@@ -13,21 +21,11 @@ public class LoginResponse {
         return data;
     }
 
-    /*@SerializedName("data")
-    @Expose
-    private String[] data;
-
-    @SerializedName("authToken")
-    @Expose
-    private String token;
-
-    public String getToken() {
-        return token;
+    public String getStatus() {
+        return status;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }*/
-
-
+    public Integer getCode() {
+        return code;
+    }
 }
