@@ -33,8 +33,8 @@
     <string name="category">Категории</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>
     <string name="use_server">Использовать первый сервер</string>
-    <string name="creat_new_contact">Добавить контакт</string>
-    <string name="regresh">Обновить список</string>
+    <string name="create_new_contact">Добавить контакт</string>
+    <string name="refresh">Обновить список</string>
     <string name="are_your_want_to_buy_vip">Эта картинка доступна только для VIP-пользователей. Вы хотите продолжить покупку?</string>
     <string name="are_your_want_to_buy_premium">Эта картинка доступна только для PREMIUM-пользователей. Вы хотите продолжить покупку?</string>
     <string name="no">Нет</string>
@@ -46,11 +46,23 @@
     <string name="restore">Восстановить</string>
     <string name="title_forgot_password">Восстановление пароля</string>
     <string name="email">e-mail</string>
-    <string name="password">пароль</string>
+    <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="login">Логин</string>
     <string name="back">Назад</string>
     <string name="sign_in">Войти</string>
     <string name="registration">Регистрация</string>
     <string name="user_name">имя</string>
+    <string name="ok_forgot_pass">Новый пароль был отправленный на ваш email</string>
+    <string name="invalid_login_email"> Неверный логин или email</string>
+    <string name="common_server_error">Ошибка сервера</string>
+    <string name="service_unavailable">Сервер временно недоступна</string>
+    <string name="registration_successful">Регистрация прошла успешно</string>
+    <string name="missing_fields">Отсутствует одно или больше из обязательных полей</string>
+    <string name="login_already_exists">Пользователь с данным логином уже существует</string>
+    <string name="email_already_exists">Пользователь с данным email уже существует</string>
+    <string name="invalid_password">Пароль должен содержать не менее 8 символов</string>
+    <string name="invalid_email">Неправильный email</string>
+    <string name="ok_login">Вход был успешным</string>
+    <string name="general_error">Сервер недоступен</string>
 </resources>

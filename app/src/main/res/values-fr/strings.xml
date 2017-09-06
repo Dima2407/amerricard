@@ -33,10 +33,22 @@
     <string name="category">Catégorie</string>
     <string name="exit_message">Voulez-vous vraiment partir?</string>
     <string name="use_server">Utilisez le premier serveur?</string>
-    <string name="creat_new_contact">Créer un nouveau contact</string>
-    <string name="regresh">Rafraîchir la liste</string>
+    <string name="create_new_contact">Créer un nouveau contact</string>
+    <string name="refresh">Rafraîchir la liste</string>
     <string name="are_your_want_to_buy_vip">Cette image n\'est disponible que pour les utilisateurs VIP. Voulez-vous continuer à acheter?</string>
     <string name="are_your_want_to_buy_premium">Cette image n\'est disponible que pour les utilisateurs PREMIUM. Voulez-vous continuer à acheter?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="ok_forgot_pass">Nouveau mot de passe envoyé à votre courrier électronique</string>
+    <string name="invalid_login_email">Email ou mot de passe incorrect</string>
+    <string name="common_server_error">Erreur du serveur</string>
+    <string name="service_unavailable">Le service est temporairement indisponible</string>
+    <string name="registration_successful">L\'enregistrement fut un succès</string>
+    <string name="missing_fields">Avoir manqué un ou plusieurs des champs requis</string>
+    <string name="login_already_exists">L\'utilisateur avec cette connexion existe déjà</string>
+    <string name="email_already_exists">Utilisateur avec ce courriel existe déjà</string>
+    <string name="invalid_password">Le mot de passe doit contenir au moins 8 caractères</string>
+    <string name="invalid_email">Mauvaise adresse mail</string>
+    <string name="ok_login">La connexion a été réussie</string>
+    <string name="general_error">Le serveur n\'est pas disponible</string>
 </resources>

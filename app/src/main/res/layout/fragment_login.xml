@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/text_login"
             android:layout_marginTop="10dp"
-            android:hint="@string/email"
+            android:hint="@string/login"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress" />
 

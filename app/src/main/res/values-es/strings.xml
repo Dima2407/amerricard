@@ -33,10 +33,22 @@
     <string name="category">Categoría</string>
     <string name="exit_message">¿De verdad quieres irte?</string>
     <string name="use_server">¿Utilizar el primer servidor?</string>
-    <string name="creat_new_contact">Crear nuevo contacto</string>
-    <string name="regresh">Actualizar lista</string>
+    <string name="create_new_contact">Crear nuevo contacto</string>
+    <string name="refresh">Actualizar lista</string>
     <string name="are_your_want_to_buy_vip">Esta imagen está disponible solo para usuarios VIP. ¿Desea continuar con la compra?</string>
     <string name="are_your_want_to_buy_premium">Esta imagen solo está disponible para usuarios de PREMIUM. ¿Desea continuar con la compra?</string>
     <string name="no">No</string>
     <string name="yes">Sí</string>
+    <string name="ok_forgot_pass">Nueva contraseña enviada a tu correo electrónico</string>
+    <string name="invalid_login_email">Correo o contraseña incorrectos</string>
+    <string name="common_server_error">Error del Servidor</string>
+    <string name="service_unavailable">El servicio está temporalmente no disponible</string>
+    <string name="registration_successful">El registro fue exitoso</string>
+    <string name="missing_fields">Falta uno o más de los campos obligatorios</string>
+    <string name="login_already_exists">El usuario con este inicio de sesión ya existe</string>
+    <string name="email_already_exists">El usuario con este correo electrónico ya existe</string>
+    <string name="invalid_password">La contraseña debe contener al menos 8 caracteres</string>
+    <string name="invalid_email">Email incorrecto</string>
+    <string name="ok_login">El inicio de sesión ha sido satisfactorio</string>
+    <string name="general_error">El servidor no esta disponible</string>
 </resources>

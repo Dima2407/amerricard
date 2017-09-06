@@ -14,11 +14,15 @@ public class RegistrationRequest {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
-    public RegistrationRequest(String login, String password, String email) {
+    public RegistrationRequest(String login, String password, String email, String name) {
         this.login = login;
         this.password = password;
         this.email = email;
+        this.name = name;
     }
 
     public String getLogin() {
@@ -43,5 +47,13 @@ public class RegistrationRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -25,7 +25,10 @@ import com.devtonix.amerricard.ui.fragment.BaseFragment;
 import com.devtonix.amerricard.ui.fragment.CalendarFragment;
 import com.devtonix.amerricard.ui.fragment.CardFragment;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.ui.fragment.ForgetPasswordFragment;
+import com.devtonix.amerricard.ui.fragment.LoginFragment;
 import com.devtonix.amerricard.ui.fragment.PremiumFragment;
+import com.devtonix.amerricard.ui.fragment.RegistrationFragment;
 import com.devtonix.amerricard.ui.fragment.SelecteCategoryFragment;
 import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
 import com.devtonix.amerricard.ui.fragment.VipFragment;
@@ -57,6 +60,12 @@ public interface MainComponent {
     void inject(CalendarFragment calendarFragment);
     void inject(CardFragment cardFragment);
     void inject(VipAndPremiumAbstractFragment vipAndPremiumAbstractFragment);
+
+    void inject(LoginFragment vipAndPremiumAbstractFragment);
+
+    void inject(ForgetPasswordFragment vipAndPremiumAbstractFragment);
+
+    void inject(RegistrationFragment vipAndPremiumAbstractFragment);
     void inject(SelecteCategoryFragment selecteCategoryFragment);
 
     /**

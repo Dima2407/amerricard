@@ -1,11 +1,8 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,18 +13,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
-import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
+import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
 
 import javax.inject.Inject;
 
 public class DrawerActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int AUTH_REQUEST_CODE = 10;
+
     private LayoutInflater inflater;
+
+    public static final String TAG = VipAndPremiumAbstractFragment.class.getSimpleName();
 
     private TextView headerTitle;
     private TextView headerEmail;
@@ -41,6 +46,9 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private ImageView isregLogoImageView;
     private TextView regNameTextView;
     private TextView regEmailTextView;
+
+    protected final static String PURCHASE_TRANSACTION_ID = "12345";
+    protected final static String APP_TYPE = "android";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                     logoutButton.setText("LOGIN");
                 } else {
                     drawer.closeDrawers();
-                    startActivity(new Intent(DrawerActivity.this, VipAndPremiumActivity.class));
+                    AuthActivity.login(DrawerActivity.this, AUTH_REQUEST_CODE);
                 }
             }
         });
@@ -181,4 +189,11 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTH_REQUEST_CODE) {
+            logInOutButtonInit();
+        }
+    }
 }

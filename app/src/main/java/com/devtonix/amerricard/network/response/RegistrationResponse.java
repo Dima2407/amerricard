@@ -5,15 +5,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class RegistrationResponse {
 
-    @SerializedName("authToken")
+    @SerializedName("data")
     @Expose
-    private String token;
+    private DataResponse data;
 
-    public String getToken() {
-        return token;
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    @SerializedName("code")
+    @Expose
+    private Integer code;
+
+    public DataResponse getData() {
+        return data;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getStatus() {
+        return status;
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }
+
+

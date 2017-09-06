@@ -37,6 +37,7 @@ public class UserRepository {
     SharedHelper sharedHelper;
 
     private Context context;
+    private static final String OK_STATUS = "OK";
 
     public UserRepository(Context context) {
         ACApplication.getMainComponent().inject(this);
@@ -50,25 +51,13 @@ public class UserRepository {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
 
-                    switch (response.body().getStatus()) {
-                        case "OK": {
-                            callback.onSuccess(response.body().getData().getToken(),
-                                    response.body().getStatus());
-                            sharedHelper.setName(response.body().getData().getName());
-                            sharedHelper.setEmail(response.body().getData().getEmail());
-                            break;
-                        }
-                        case "INVALID_LOGIN_PASSWORD": {
-                            callback.onSuccess("",
-                                    response.body().getStatus());
-                            break;
-                        }
-                        case "GENERAL_ERROR": {
-                            callback.onSuccess("",
-                                    response.body().getStatus());
-                            break;
-                        }
-                        //loginStatus = response.body().getStatus();
+                    if (OK_STATUS.equals(response.body().getStatus())) {
+                        callback.onSuccess(response.body().getData().getToken(),
+                                response.body().getStatus());
+                        sharedHelper.setName(response.body().getData().getName());
+                        sharedHelper.setEmail(response.body().getData().getEmail());
+                    } else {
+                        callback.onSuccess("", response.body().getStatus());
                     }
 
                 } else {
@@ -87,13 +76,21 @@ public class UserRepository {
         });
     }
 
-    public void registration(String email, String password, String name, final RegistrationCallback callback) {
-        Call<RegistrationResponse> call = api.registration(new RegistrationRequest(name, password, email));
+    public void registration(String email, String password, String login, String name, final RegistrationCallback callback) {
+        Call<RegistrationResponse> call = api.registration(new RegistrationRequest(login, password, email, name));
         call.enqueue(new Callback<RegistrationResponse>() {
             @Override
             public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().getToken());
+                    if (OK_STATUS.equals(response.body().getStatus())) {
+                        callback.onSuccess(response.body().getData().getToken(),
+                                response.body().getStatus());
+                        sharedHelper.setName(response.body().getData().getName());
+                        sharedHelper.setEmail(response.body().getData().getEmail());
+                    } else {
+                        callback.onSuccess("", response.body().getStatus());
+                    }
+
                 } else {
                     callback.onError();
                 }
@@ -116,7 +113,7 @@ public class UserRepository {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess();
+                    callback.onSuccess(response.body().getStatus());
                 } else {
                     callback.onError();
                 }

@@ -76,7 +76,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:background="@android:color/white"
-                android:text="@string/regresh"
+                android:text="@string/refresh"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -108,7 +108,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:background="@android:color/white"
-                android:text="@string/creat_new_contact"
+                android:text="@string/create_new_contact"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

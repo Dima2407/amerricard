@@ -70,13 +70,13 @@
     <string name="share_via">Share</string>
     <string name="exit_message">Do you really want to leave?</string>
     <string name="use_server">Use first server?</string>
-    <string name="creat_new_contact">Create new contact</string>
-    <string name="regresh">Refresh list</string>
+    <string name="create_new_contact">Create new contact</string>
+    <string name="refresh">Refresh list</string>
     <string name="are_your_want_to_buy_vip">This picture is only available for VIP users. Do you want to continue purchase?</string>
     <string name="are_your_want_to_buy_premium">This picture is only available for PREMIUM users. Do you want to continue purchase?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
-    <string name="choise_category">Please, choise category</string>
+    <string name="choice_category">Please, choose category</string>
     <string name="email">e-mail</string>
     <string name="password">password</string>
     <string name="forgot_password">Forgot password?</string>
@@ -91,4 +91,16 @@
     <string name="vip_premium_text">The purchase of the package opens the possibility of sending any postcard from the category "VIP" and also disables the display of advertising while there are postcards for sending.</string>
     <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
     <string name="pay_button">Pay</string>
+    <string name="ok_forgot_pass">New password sent to your email</string>
+    <string name="invalid_login_email">Incorrect email or password</string>
+    <string name="common_server_error">Common server error</string>
+    <string name="service_unavailable">Service is temporarily unavailable</string>
+    <string name="registration_successful">Registration was successful</string>
+    <string name="missing_fields">Missing one or more of the required fields</string>
+    <string name="login_already_exists">User with this login already exists</string>
+    <string name="email_already_exists">User with this email already exists</string>
+    <string name="invalid_password">Password must contain at least 8 characters</string>
+    <string name="invalid_email">Wrong email</string>
+    <string name="ok_login">Login was successful</string>
+    <string name="general_error">Server is not available</string>
 </resources>

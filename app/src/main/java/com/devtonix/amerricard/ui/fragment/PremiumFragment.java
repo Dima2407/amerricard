@@ -128,9 +128,9 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
                 }
                 break;
 
-            case REQUEST_ACCOUNT_PICK_CODE:
+            case REQUEST_AUTH_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    editEmailRegistration.setText(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+                    send(amountOfCredits, CREDIT_TYPE_PREMIUM);
                 }
                 break;
         }

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,10 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -34,15 +32,9 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.Credit;
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.repository.UserRepository;
-import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.activity.DetailActivity;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
-import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
+import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
-import com.devtonix.amerricard.ui.callback.LoginCallback;
-import com.devtonix.amerricard.ui.callback.RegistrationCallback;
-import com.google.android.gms.common.AccountPicker;
-import com.google.android.gms.common.images.ImageManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +45,7 @@ import javax.inject.Inject;
 
 public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
+    protected static final int REQUEST_AUTH_CODE = 10;
     @Inject
     UserRepository userRepository;
 
@@ -61,7 +54,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     protected final static String PREMIUM = "premium_test";
     protected final static String RESPONSE_CODE = "RESPONSE_CODE";
     protected final static int REQUEST_CODE_BUY = 1001;
-    protected static final int REQUEST_ACCOUNT_PICK_CODE = 99;
     protected final static String APP_TYPE = "android";
     protected final static String PURCHASE_TRANSACTION_ID = "12345";
 
@@ -230,188 +222,13 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     }
 
     protected void send(final int amountOfCredits, final String creditType) {
-        if (inflater == null) {
-            inflater = (LayoutInflater) getContext().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        }
-        View view = inflater.inflate(R.layout.fragment_login, null);
-        final EditText textEmail = (EditText) view.findViewById(R.id.edit_login);
-        final EditText textPassword = (EditText) view.findViewById(R.id.edit_password);
-        Button buttonBack = (Button) view.findViewById(R.id.btn_back);
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-        Button buttonLogin = (Button) view.findViewById(R.id.btn_login);
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userRepository.login(textEmail.getText().toString(),
-                        textPassword.getText().toString(), new LoginCallbackImpl(amountOfCredits, creditType));
 
-            }
-        });
-        view.findViewById(R.id.text_forgot_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                View view = inflater.inflate(R.layout.fragment_forgot_password, null);
-                forgotPassword(view);
-            }
-        });
-        view.findViewById(R.id.btn_registration).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                View view = inflater.inflate(R.layout.fragment_registration, null);
-                registration(view);
-            }
-        });
-        initPopupWindow(view);
-
-    }
-
-    private void forgotPassword(View view) {
-        initPopupWindow(view);
-        final EditText editLogin = (EditText) view.findViewById(R.id.edit_name_forgot_password);
-        final EditText editEmail = (EditText) view.findViewById(R.id.edit_email_forgot_password);
-        view.findViewById(R.id.btn_back_forgot_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-        view.findViewById(R.id.btn_forgot_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userRepository.forgotPassword(editLogin.getText().toString(), editEmail.getText().toString(), new ForgotPasswordCallbackImpl());
-            }
-        });
-    }
-
-    private void registration(View view) {
-        initPopupWindow(view);
-        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google", "com.google.android.legacyimap"},
-                false, null, null, null, null);
-        startActivityForResult(intent, REQUEST_ACCOUNT_PICK_CODE);
-        final EditText editLogin = (EditText) view.findViewById(R.id.edit_name_registration);
-        editEmailRegistration = (EditText) view.findViewById(R.id.edit_email_registration);
-        final EditText editPassword = (EditText) view.findViewById(R.id.edit_password_registration);
-        view.findViewById(R.id.btn_back_registration).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-        view.findViewById(R.id.btn_registration).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userRepository.registration(editEmailRegistration.getText().toString(),
-                        editPassword.getText().toString(), editLogin.getText().toString(), new RegistrationCallbackImpl());
-            }
-        });
-    }
-
-    private class LoginCallbackImpl implements LoginCallback {
-
-        private int amountOfCredits;
-        private String creditType;
-
-        public LoginCallbackImpl(int amountOfCredits, String creditType) {
-            this.amountOfCredits = amountOfCredits;
-            this.creditType = creditType;
-        }
-
-        @Override
-        public void onSuccess(String token, String status) {
-            switch (status) {
-                case "OK": {
-                    Toast.makeText(getContext(), "Login was successful", Toast.LENGTH_LONG).show();
-                    BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
-                    userRepository.buyCredits(token, request, new GetCreditCallbackImpl());
-                    if (popupWindow != null) {
-                        popupWindow.dismiss();
-                    }
-                    sharedHelper.setAccessToken(token);
-                    break;
-                }
-                case "INVALID_LOGIN_PASSWORD": {
-                    Toast.makeText(getContext(), "Incorrect email or password", Toast.LENGTH_LONG).show();
-                    break;
-                }
-                case "GENERAL_ERROR": {
-                    Toast.makeText(getContext(), "Server is not available", Toast.LENGTH_LONG).show();
-                    break;
-                }
-                default: {
-                    getActivity().onBackPressed();
-                }
-            }
-        }
-
-        @Override
-        public void onError() {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "LoginCallbackImpl onError: ");
-        }
-
-        @Override
-        public void onRetrofitError(String message) {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "LoginCallbackImpl onRetrofitError: message = " + message);
-        }
-    }
-
-    private class RegistrationCallbackImpl implements RegistrationCallback {
-        @Override
-        public void onSuccess(String token) {
-            Toast.makeText(getContext(), "Registration was successful", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "RegistrationCallbackImpl onSuccess: token = " + token);
-            if (popupWindow != null) {
-                popupWindow.dismiss();
-            }
-            getActivity().onBackPressed();
-            sharedHelper.setAccessToken(token);
-
-        }
-
-        @Override
-        public void onError() {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "RegistrationCallbackImpl onError: ");
-        }
-
-        @Override
-        public void onRetrofitError(String message) {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "RegistrationCallbackImpl onRetrofitError: message = " + message);
-        }
-    }
-
-    private class ForgotPasswordCallbackImpl implements ForgotPasswordCallback {
-
-        @Override
-        public void onSuccess() {
-            Toast.makeText(getContext(), "New password sent to your email", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "ForgotPasswordCallbackImpl onSuccess: ");
-            if (popupWindow != null) {
-                popupWindow.dismiss();
-            }
-            getActivity().onBackPressed();
-
-        }
-
-        @Override
-        public void onError() {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "ForgotPasswordCallbackImpl onError: ");
-        }
-
-        @Override
-        public void onRetrofitError(String message) {
-            Toast.makeText(getContext(), "Service is temporarily unavailable", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "ForgotPasswordCallbackImpl onRetrofitError: message = " + message);
+        String accessToken = sharedHelper.getAccessToken();
+        if (!TextUtils.isEmpty(accessToken)) {
+            BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
+            userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl());
+        } else {
+            AuthActivity.login(getActivity(), REQUEST_AUTH_CODE);
         }
     }
 

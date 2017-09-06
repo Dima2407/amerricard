@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/choise_category"
+            android:text="@string/choice_category"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />

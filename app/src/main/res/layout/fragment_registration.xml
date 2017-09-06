@@ -29,13 +29,22 @@
             android:textSize="25sp" />
 
         <EditText
-            android:id="@+id/edit_name_registration"
+            android:id="@+id/edit_login_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_registration_title"
             android:layout_marginTop="10dp"
-            android:hint="@string/user_name"
+            android:hint="@string/login"
             android:imeOptions="actionDone" />
+
+        <EditText
+            android:id="@+id/edit_name_registration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_login_registration"
+            android:hint="@string/name"
+            android:imeOptions="actionDone" />
+
 
         <EditText
             android:id="@+id/edit_email_registration"

@@ -33,10 +33,22 @@
     <string name="category">Категорії</string>
     <string name="exit_message">Ви дійсно бажаєте вийти?</string>
     <string name="use_server">Використовувати перший сервер?</string>
-    <string name="creat_new_contact">Добавити контакт</string>
-    <string name="regresh">Оновити список</string>
+    <string name="create_new_contact">Добавити контакт</string>
+    <string name="refresh">Оновити список</string>
     <string name="are_your_want_to_buy_vip">Ця картинка доступна лише для VIP користувачів. Ви бажаєте продовжити купівлю?</string>
     <string name="are_your_want_to_buy_premium">Ця картинка доступна лише для PREMIUM користувачів. Ви бажаєте продовжити купівлю?</string>
     <string name="no">Ні</string>
     <string name="yes">Так</string>
+    <string name="ok_forgot_pass">Новий пароль надіслано на ваш email</string>
+    <string name="invalid_login_email">Невірний email або пароль</string>
+    <string name="common_server_error">Помилка серверу</string>
+    <string name="service_unavailable">Служба тимчасово недоступна</string>
+    <string name="registration_successful">Реєстрація була успішною</string>
+    <string name="missing_fields">Відсутній один або декілька обов\'язкових полів</string>
+    <string name="login_already_exists">Користувач із цим логіном вже існує</string>
+    <string name="email_already_exists">Користувач із цим електронним листом вже існує</string>
+    <string name="invalid_password">Пароль повинен містити принаймні 8 символів</string>
+    <string name="invalid_email">Невірний email</string>
+    <string name="ok_login">Вхід був успішним</string>
+    <string name="general_error">Сервер недоступний</string>
 </resources>
