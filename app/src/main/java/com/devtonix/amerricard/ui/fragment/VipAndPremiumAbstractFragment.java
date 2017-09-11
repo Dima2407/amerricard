@@ -183,12 +183,12 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         popupWindow.showAtLocation(layoutContainer, Gravity.CENTER, 0, 0);
     }
 
-    protected void toPayStatus(String status) {
+    protected void payFromGoogle(int count, String type) {
 
-        showAllProducts();
+        String productId = String.format("%s_%d", type, count);
 
         try {
-            buyIntentBundle = mService.getBuyIntent(3, getContext().getPackageName(), status, "subs", VipAndPremiumActivity.base64EncodedPublicKey);
+            buyIntentBundle = mService.getBuyIntent(3, getContext().getPackageName(), productId, "inapp", VipAndPremiumActivity.base64EncodedPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -222,11 +222,16 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
     }
 
-    protected void send(final int amountOfCredits, final String creditType, Runnable complete) {
+    protected void send(int amountOfCredits, String creditType, String productId, String orderId, String purchaseToken, Runnable complete) {
 
         String accessToken = sharedHelper.getAccessToken();
         if (!TextUtils.isEmpty(accessToken)) {
-            BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
+            BuyCreditRequest request = new BuyCreditRequest();
+            request.setCreditType(creditType);
+            request.setCredits(amountOfCredits);
+            request.setProductId(productId);
+            request.setPurchaseTransactionId(orderId);
+            request.setPurchaseToken(purchaseToken);
             userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl(complete));
         } else {
             AuthActivity.login(getActivity(), REQUEST_AUTH_CODE);

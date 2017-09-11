@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payPremium();
+                payPremium(null, null, null);
             }
         });
 
@@ -112,13 +113,17 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         });
     }
 
-    private void payPremium() {
-        send(amountOfCredits, CREDIT_TYPE_PREMIUM, new Runnable() {
-            @Override
-            public void run() {
-                coinsTextView.setText(String.valueOf(sharedHelper.getValuePremiumCoins()));
-            }
-        });
+    private void payPremium(String productId, String orderId, String purchaseToken) {
+        if (TextUtils.isEmpty(productId)) {
+            payFromGoogle(amountOfCredits, CREDIT_TYPE_PREMIUM);
+        } else {
+            send(amountOfCredits, CREDIT_TYPE_PREMIUM, productId, orderId, purchaseToken, new Runnable() {
+                @Override
+                public void run() {
+                    coinsTextView.setText(String.valueOf(sharedHelper.getValuePremiumCoins()));
+                }
+            });
+        }
     }
 
     @Override
@@ -128,12 +133,14 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
             case REQUEST_CODE_BUY:
                 int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
                 String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-                String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
 
-                if (resultCode == Activity.RESULT_OK) {
+                if (responseCode == Activity.RESULT_OK) {
                     try {
                         JSONObject jo = new JSONObject(purchaseData);
-                        String sku = jo.getString("productId");
+                        String productId = jo.optString("productId");
+                        String orderId = jo.optString("orderId");
+                        String purchaseToken = jo.optString("purchaseToken");
+                        payPremium(productId, orderId, purchaseToken);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -143,7 +150,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
 
             case REQUEST_AUTH_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    payPremium();
+                    payPremium(null, null, null);
                 }
                 break;
         }

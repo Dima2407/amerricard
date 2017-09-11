@@ -10,6 +10,12 @@ public class BuyCreditRequest {
     @SerializedName("credit")
     @Expose
     private int credits;
+    @SerializedName("productId")
+    @Expose
+    private String productId;
+    @SerializedName("purchaseToken")
+    @Expose
+    private String purchaseToken;
     @SerializedName("purchaseTransactionId")
     @Expose
     private String purchaseTransactionId;
@@ -17,42 +23,27 @@ public class BuyCreditRequest {
     @Expose
     private String appType;
 
-    public BuyCreditRequest(String creditType, int credits, String purchaseTransactionId, String appType) {
-        this.creditType = creditType;
-        this.credits = credits;
-        this.purchaseTransactionId = purchaseTransactionId;
-        this.appType = appType;
-    }
-
-    public String getCreditType() {
-        return creditType;
+    public BuyCreditRequest() {
+        this.appType = "android";
     }
 
     public void setCreditType(String creditType) {
         this.creditType = creditType;
     }
 
-    public int getCredits() {
-        return credits;
-    }
-
     public void setCredits(int credits) {
         this.credits = credits;
     }
 
-    public String getPurchaseTransactionId() {
-        return purchaseTransactionId;
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public void setPurchaseToken(String purchaseToken) {
+        this.purchaseToken = purchaseToken;
     }
 
     public void setPurchaseTransactionId(String purchaseTransactionId) {
         this.purchaseTransactionId = purchaseTransactionId;
-    }
-
-    public String getAppType() {
-        return appType;
-    }
-
-    public void setAppType(String appType) {
-        this.appType = appType;
     }
 }
