@@ -51,4 +51,28 @@
     <string name="invalid_email">Mauvaise adresse mail</string>
     <string name="ok_login">La connexion a été réussie</string>
     <string name="general_error">Le serveur n\'est pas disponible</string>
+    <string name="log_in">S\'identifier</string>
+    <string name="log_out">Connectez - Out</string>
+    <string name="login">Login</string>
+    <string name="password">Mot de passe</string>
+    <string name="forgot_password">Mot de passe oublié?</string>
+    <string name="registration">Enregistrement</string>
+    <string name="sign_in">Se connecter</string>
+    <string name="available_for_sending">Disponible pour l\'envoi: </string>
+    <string name="vip_premium_text">L\'achat du paquet ouvre la possibilité d\'envoyer une carte postale de la catégorie «VIP» et désactive l\'affichage de la publicité alors qu\'il existe des cartes postales pour l\'envoi.</string>
+    <string name="premium_text">L\'achat du colis ouvre la possibilité d\'envoyer une carte postale de la catégorie "PREMIUM" et désactive l\'affichage de la publicité alors qu\'il existe des cartes postales pour l\'envoi.</string>
+    <string name="postcard_1_prem">1 carte postale - $1,49</string>
+    <string name="postcard_3_prem">3 cartes postales - $3,99</string>
+    <string name="postcard_5_prem">5 cartes - $5,99</string>
+    <string name="postcard_10_prem">10 cartes - $9,99</string>
+
+    <string name="postcard_1_vip">1 carte postale - $2,99</string>
+    <string name="postcard_3_vip">3 cartes postales - $7,99</string>
+    <string name="postcard_5_vip">5 cartes - $11,99</string>
+    <string name="postcard_10_vip">10 cartes - $20,99</string>
+
+    <string name="pay_button">Payer</string>
+    <string name="restore">Restaurer</string>
+
+    <string name="login_too_long.">"La connexion est trop longue."</string>
 </resources>

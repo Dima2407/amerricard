@@ -78,19 +78,10 @@
     <string name="yes">Yes</string>
     <string name="choice_category">Please, choose category</string>
     <string name="email">e-mail</string>
-    <string name="password">password</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="login">Login</string>
     <string name="back">Back</string>
-    <string name="sign_in">Sign in</string>
-    <string name="registration">Registration</string>
+
     <string name="user_name">name</string>
     <string name="title_forgot_password">Restore password</string>
-    <string name="restore">Restore</string>
-    <string name="available_for_sending">Available for sending: </string>
-    <string name="vip_premium_text">The purchase of the package opens the possibility of sending any postcard from the category "VIP" and also disables the display of advertising while there are postcards for sending.</string>
-    <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
-    <string name="pay_button">Pay</string>
     <string name="ok_forgot_pass">New password sent to your email</string>
     <string name="invalid_login_email">Incorrect email or password</string>
     <string name="common_server_error">Common server error</string>
@@ -103,4 +94,29 @@
     <string name="invalid_email">Wrong email</string>
     <string name="ok_login">Login was successful</string>
     <string name="general_error">Server is not available</string>
+    <string name="log_out">Logout</string>
+    <string name="log_in">Login</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="registration">Registration</string>
+    <string name="sign_in">Sign in</string>
+    <string name="available_for_sending">Available for sending: </string>
+    <string name="vip_premium_text">The purchase of the package opens the possibility of sending any postcard from the category \"VIP\" and also disables the display of advertising while there are postcards for sending.</string>
+    <string name="premium_text">The purchase of the package opens the possibility of sending any postcard from the category \"PREMIUM\" and also disables the display of advertising while there are postcards for sending.</string>
+
+    <string name="postcard_1_prem">1 postcard - $1,49</string>
+    <string name="postcard_3_prem">3 postcards - $3,99</string>
+    <string name="postcard_5_prem">5 postcards - $5.99</string>
+    <string name="postcard_10_prem">10 cards - $9.99</string>
+
+    <string name="postcard_1_vip">1 postcard - $2,99</string>
+    <string name="postcard_3_vip">3 postcards - $7,99</string>
+    <string name="postcard_5_vip">5 postcards - $11.99</string>
+    <string name="postcard_10_vip">10 cards - $20.99</string>
+
+    <string name="pay_button">Pay</string>
+    <string name="restore">Restore</string>
+
+    <string name="login_too_long.">"Login is too long."</string>
 </resources>

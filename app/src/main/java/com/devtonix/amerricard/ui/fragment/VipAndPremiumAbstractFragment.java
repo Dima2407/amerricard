@@ -18,19 +18,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.billing.IabHelper;
 import com.devtonix.amerricard.billing.IabResult;
 import com.devtonix.amerricard.core.ACApplication;
-import com.devtonix.amerricard.model.Credit;
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.ui.activity.VipAndPremiumActivity;
 import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
@@ -56,6 +55,8 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     protected final static int REQUEST_CODE_BUY = 1001;
     protected final static String APP_TYPE = "android";
     protected final static String PURCHASE_TRANSACTION_ID = "12345";
+
+    private TextView valueCoinsTextView;
 
     protected IabHelper iabHelper;
     protected Bundle skuDetails;
@@ -227,6 +228,8 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         if (!TextUtils.isEmpty(accessToken)) {
             BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
             userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl());
+
+
         } else {
             AuthActivity.login(getActivity(), REQUEST_AUTH_CODE);
         }
@@ -235,11 +238,16 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     private class GetCreditCallbackImpl implements GetCreditsCallback {
 
         @Override
-        public void onSuccess(Credit credit) {
-            if (credit != null) {
-                Log.i(TAG, "onSuccess: credit.vip = " + credit.getData().getVip() + ", credit.premium = " + credit.getData().getPremium());
-            } else {
-                Log.i(TAG, "onSuccess: credit == null");
+        public void onSuccess(CreditsResponse creditsResponse) {
+            if ("OK".equals(creditsResponse.getStatus())) {
+                if (creditsResponse != null) {
+                    sharedHelper.setValuePremiumCoins(creditsResponse.getData().getCredit().getPremium());
+                    sharedHelper.setValueVipCoins(creditsResponse.getData().getCredit().getVip());
+                    Log.d(TAG, "onSuccess: " + creditsResponse.getData().getCredit().getVip());
+                    Log.i(TAG, "onSuccess: dataCreditResponse.vip = " + creditsResponse.getData().getCredit().getVip() + ", dataCreditResponse.premium = " + creditsResponse.getData().getCredit().getPremium());
+                } else {
+                    Log.i(TAG, "onSuccess: dataCreditResponse == null");
+                }
             }
         }
 
@@ -252,5 +260,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         public void onRetrofitError(String message) {
             Log.i(TAG, "onRetrofitError: message = " + message);
         }
+
     }
+
 }

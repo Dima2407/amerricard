@@ -2,77 +2,120 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="2dp"
         android:background="@android:color/white">
 
-        <Button
+        <ImageView
+            android:id="@+id/sing_in_logo_image_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/bigger_padding"
+            android:src="@drawable/ic_logo" />
+
+        <!--<Button
             android:id="@+id/btn_back_registration"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/red_x"
             android:rotation="45"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent" />-->
 
-        <TextView
+        <!--<TextView
             android:id="@+id/text_registration_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/registration"
             android:textColor="@color/colorAccent"
-            android:textSize="25sp" />
+            android:textSize="25sp" />-->
 
-        <EditText
-            android:id="@+id/edit_login_registration"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edit_login_registration_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_registration_title"
-            android:layout_marginTop="10dp"
-            android:hint="@string/login"
-            android:imeOptions="actionDone" />
+            android:layout_below="@id/sing_in_logo_image_view"
+            android:layout_marginTop="@dimen/bigger_padding">
 
-        <EditText
-            android:id="@+id/edit_name_registration"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edit_login_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bigger_padding"
+                android:hint="@string/login"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:maxLength="30" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edit_name_registration_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_login_registration"
-            android:hint="@string/name"
-            android:imeOptions="actionDone" />
+            android:layout_below="@id/edit_login_registration_wrapper">
 
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edit_name_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName"
+                android:maxLength="30" />
 
-        <EditText
-            android:id="@+id/edit_email_registration"
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edit_email_registration_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_name_registration"
-            android:hint="@string/email"
-            android:imeOptions="actionDone"
-            android:inputType="textEmailAddress" />
+            android:layout_below="@id/edit_name_registration_wrapper">
 
-        <EditText
-            android:id="@+id/edit_password_registration"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edit_email_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:maxLength="60" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edit_password_registration_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_email_registration"
-            android:hint="@string/password"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:layout_below="@id/edit_email_registration_wrapper"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorRed">
+
+            <EditText
+                android:id="@+id/edit_password_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/btn_registration"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_password_registration"
+            android:layout_below="@id/edit_password_registration_wrapper"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/white"
+            android:layout_marginTop="@dimen/big_padding"
+            android:background="@drawable/custom_button"
             android:text="@string/registration"
             android:textAllCaps="false"
             android:textColor="@color/colorAccent" />

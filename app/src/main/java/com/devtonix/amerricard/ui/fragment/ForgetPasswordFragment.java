@@ -48,12 +48,12 @@ public class ForgetPasswordFragment extends BaseFragment {
         final EditText editLogin = (EditText) view.findViewById(R.id.edit_name_forgot_password);
         final EditText editEmail = (EditText) view.findViewById(R.id.edit_email_forgot_password);
         forgotPassButton = (Button) view.findViewById(R.id.btn_forgot_password);
-        view.findViewById(R.id.btn_back_forgot_password).setOnClickListener(new View.OnClickListener() {
+        /*view.findViewById(R.id.btn_back_forgot_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getOwnerActivity().cancel();
             }
-        });
+        });*/
         forgotPassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

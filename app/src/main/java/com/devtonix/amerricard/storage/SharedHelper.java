@@ -65,6 +65,12 @@ public class SharedHelper{
         String ACCESS_TOKEN = "access_token";
         String NAME = "name";
         String EMAIL = "email";
+        /*private int valueVipCoin;
+        private int valuePremiumCoin;*/
+
+        String VALUE_VIP_COINS = "value_vip_coin";
+        String VALUE_PREMIUM_COINS = "value_premium_coin";
+
     }
 
     public SharedHelper(Context context) {
@@ -94,6 +100,22 @@ public class SharedHelper{
                 Log.w(TAG, "saveCards: ", e);
             }
         }
+    }
+
+    public void setValueVipCoins(int vipCoins) {
+        sharedPreferences.edit().putInt(Fields.VALUE_VIP_COINS, vipCoins).apply();
+    }
+
+    public void setValuePremiumCoins(int premiumCoins) {
+        sharedPreferences.edit().putInt(Fields.VALUE_PREMIUM_COINS, premiumCoins).apply();
+    }
+
+    public int getValuePremiumCoins() {
+        return sharedPreferences.getInt(Fields.VALUE_PREMIUM_COINS, 0);
+    }
+
+    public int getValueVipCoins() {
+        return sharedPreferences.getInt(Fields.VALUE_VIP_COINS, 0);
     }
 
     public void saveCards(List<CategoryItem> items) {
@@ -253,13 +275,13 @@ public class SharedHelper{
     }
 
     public void addContactForHide(Contact contact) {
-        List<Contact> contacts = getContacsForHide();
+        List<Contact> contacts = getContactsForHide();
         contacts.add(contact);
         saveContacsForHide(contacts);
     }
 
     public void removeContactFromHidden(Contact contact) {
-        List<Contact> contacts = getContacsForHide();
+        List<Contact> contacts = getContactsForHide();
         for (Contact c : contacts) {
             if (c.equals(contact)) {
                 contacts.remove(contact);
@@ -269,7 +291,7 @@ public class SharedHelper{
         saveContacsForHide(contacts);
     }
 
-    public List<Contact> getContacsForHide() {
+    public List<Contact> getContactsForHide() {
         ListContact contacts = new Gson().fromJson(sharedPreferences.getString(Fields.CONTACS_FOR_HIDE, ""), ListContact.class);
         return contacts == null ? new ArrayList<Contact>() : contacts.getListContacs();
     }

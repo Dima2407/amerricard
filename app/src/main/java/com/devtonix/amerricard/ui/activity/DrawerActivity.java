@@ -21,12 +21,19 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.network.response.CreditsResponse;
+import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
+import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
 
 import javax.inject.Inject;
 
 public class DrawerActivity extends BaseActivity implements View.OnClickListener {
+
+    @Inject
+    UserRepository userRepository;
 
     private static final int AUTH_REQUEST_CODE = 10;
 
@@ -47,6 +54,8 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private TextView regNameTextView;
     private TextView regEmailTextView;
 
+    private String logInOut;
+
     protected final static String PURCHASE_TRANSACTION_ID = "12345";
     protected final static String APP_TYPE = "android";
 
@@ -54,23 +63,10 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
+        ACApplication.getMainComponent().inject(this);
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        initSidePanel();
         logInOutButtonInit();
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
-                    sharedHelper.cleanAccessToken();
-                    regLayout.setVisibility(View.INVISIBLE);
-                    unregLogoImageView.setVisibility(View.VISIBLE);
-                    logoutButton.setText("LOGIN");
-                } else {
-                    drawer.closeDrawers();
-                    AuthActivity.login(DrawerActivity.this, AUTH_REQUEST_CODE);
-                }
-            }
-        });
+        initSidePanel();
 
     }
 
@@ -103,6 +99,24 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
             unregLogoImageView.setVisibility(View.INVISIBLE);
             regNameTextView.setText(sharedHelper.getName());
             regEmailTextView.setText(sharedHelper.getEmail());
+
+            userRepository.getCredits(sharedHelper.getAccessToken(), new GetCreditsCallback() {
+                @Override
+                public void onSuccess(CreditsResponse creditsResponse) {
+
+                }
+
+                @Override
+                public void onError() {
+
+                }
+
+                @Override
+                public void onRetrofitError(String message) {
+
+                }
+            });
+
         } else {
             unregLogoImageView.setVisibility(View.VISIBLE);
             regLayout.setVisibility(View.INVISIBLE);
@@ -127,16 +141,33 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
         addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
         addItem(R.id.drawer_manage_holidays, getString(R.string.manage_birthdays), R.drawable.ic_edit);
-        addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip);
-        addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium);
+        /*userRepository.getCredits(sharedHelper.getAccessToken(), new GetCreditsCallback() {
+        });*/
+        if (!(sharedHelper.getAccessToken() != null)) {
+            addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip, userRepository.getValueVipCoin());
+            addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium, userRepository.getValuePremiumCoin());
+        } else {
+            addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip);
+            addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium);
+        }
         addItem(R.id.drawer_settings, getString(R.string.settings), R.drawable.ic_settings);
-    }
 
+    }
 
     private void addItem(int view, String title, int image) {
         ViewGroup vg = (ViewGroup) findViewById(view);
         ((TextView) vg.findViewById(R.id.view_drawer_item_text)).setText(title);
         ((ImageView) vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
+        vg.setOnClickListener(this);
+    }
+
+    private void addItem(int view, String title, int image, int coinValue) {
+        ViewGroup vg = (ViewGroup) findViewById(view);
+
+        ((TextView) vg.findViewById(R.id.view_drawer_item_text)).setText(title);
+        ((ImageView) vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
+        ((TextView) vg.findViewById(R.id.coin_value_text_view)).setText(coinValue);
+
         vg.setOnClickListener(this);
     }
 
@@ -151,41 +182,60 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
                 Intent cardIntent = new Intent(this, MainActivity.class);
                 cardIntent.putExtra("position", 0);
                 startActivity(cardIntent);
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_calendar:
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("position", 1);
                 startActivity(intent);
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_favorites:
                 startActivity(new Intent(this, FavoriteActivity.class));
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_manage_holidays:
                 startActivity(new Intent(this, ManageActivity.class));
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_vip:
                 Intent vipIntent = new Intent(this, VipAndPremiumActivity.class);
                 vipIntent.putExtra(VipAndPremiumActivity.TAB_POSITION, 0);
                 startActivity(vipIntent);
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_premium:
                 Intent premIntent = new Intent(this, VipAndPremiumActivity.class);
                 premIntent.putExtra(VipAndPremiumActivity.TAB_POSITION, 1);
                 startActivity(premIntent);
+                drawer.closeDrawers();
                 break;
             case R.id.drawer_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                drawer.closeDrawers();
                 break;
+            case R.id.logout_button: {
+                onClickLogInOutButton();
+                break;
+            }
+
         }
-        drawer.closeDrawers();
+        //drawer.closeDrawers();
     }
 
     private void logInOutButtonInit() {
-        logoutButton = (Button) findViewById(R.id.logout_button);
+      /*  logoutButton = (Button) findViewById(R.id.logout_button);
         if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
-            logoutButton.setText("LOGOUT");
+            logoutButton.setText(R.string.log_out);
         } else {
-            logoutButton.setText("LOGIN");
+            logoutButton.setText(R.string.login);
+        }
+        */
+        addItem(R.id.logout_button, logInOut, R.drawable.login);
+        if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
+            logInOut = getString(R.string.log_out);
+        } else {
+            logInOut = getString(R.string.log_in);
         }
     }
 
@@ -194,6 +244,20 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTH_REQUEST_CODE) {
             logInOutButtonInit();
+        }
+    }
+
+    private void onClickLogInOutButton() {
+        if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
+            sharedHelper.cleanAccessToken();
+            regLayout.setVisibility(View.INVISIBLE);
+            unregLogoImageView.setVisibility(View.VISIBLE);
+            logInOut = getString(R.string.log_in);
+            addItem(R.id.logout_button, logInOut, R.drawable.login);
+        } else {
+            drawer.closeDrawers();
+            AuthActivity.login(DrawerActivity.this, AUTH_REQUEST_CODE);
+
         }
     }
 }

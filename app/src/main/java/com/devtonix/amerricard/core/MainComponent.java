@@ -17,6 +17,7 @@ import com.devtonix.amerricard.ui.activity.BaseActivity;
 import com.devtonix.amerricard.ui.activity.CategoryActivity;
 import com.devtonix.amerricard.ui.activity.CreateBirthdayActivity;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
+import com.devtonix.amerricard.ui.activity.DrawerActivity;
 import com.devtonix.amerricard.ui.activity.FavoriteActivity;
 import com.devtonix.amerricard.ui.activity.MainActivity;
 import com.devtonix.amerricard.ui.activity.ManageActivity;
@@ -51,6 +52,8 @@ public interface MainComponent {
     void inject(SettingsActivity settingsActivity);
     void inject(CreateBirthdayActivity createBirthdayActivity);
     void inject(ManageActivity manageActivity);
+
+    void inject(DrawerActivity drawerActivity);
 
     /**
      * Fragment

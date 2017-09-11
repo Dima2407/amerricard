@@ -1,10 +1,8 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
@@ -44,7 +42,7 @@ public class ManageActivity extends DrawerActivity {
         adapter.updateContacts(contacts);
 
         for (Contact contact : contacts) {
-            if (sharedHelper.getContacsForHide().contains(contact)) {
+            if (sharedHelper.getContactsForHide().contains(contact)) {
                 contact.setCancelled(true);
             }
         }

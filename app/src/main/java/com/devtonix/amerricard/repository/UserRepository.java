@@ -2,8 +2,6 @@ package com.devtonix.amerricard.repository;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
@@ -12,12 +10,11 @@ import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.network.request.ForgotPasswordRequest;
 import com.devtonix.amerricard.network.request.LoginRequest;
 import com.devtonix.amerricard.network.request.RegistrationRequest;
-import com.devtonix.amerricard.network.response.GetCreditsResponse;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.network.response.LoginResponse;
 import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
-import com.devtonix.amerricard.ui.activity.DrawerActivity;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.callback.LoginCallback;
@@ -39,6 +36,9 @@ public class UserRepository {
     private Context context;
     private static final String OK_STATUS = "OK";
 
+    private int valueVipCoin;
+    private int valuePremiumCoin;
+
     public UserRepository(Context context) {
         ACApplication.getMainComponent().inject(this);
         this.context = context;
@@ -56,6 +56,7 @@ public class UserRepository {
                                 response.body().getStatus());
                         sharedHelper.setName(response.body().getData().getName());
                         sharedHelper.setEmail(response.body().getData().getEmail());
+
                     } else {
                         callback.onSuccess("", response.body().getStatus());
                     }
@@ -131,19 +132,23 @@ public class UserRepository {
     }
 
     public void getCredits(String token, final GetCreditsCallback callback) {
-        Call<GetCreditsResponse> call = api.getCredits(token);
-        call.enqueue(new Callback<GetCreditsResponse>() {
+        Call<CreditsResponse> call = api.getCredits(token);
+        call.enqueue(new Callback<CreditsResponse>() {
             @Override
-            public void onResponse(Call<GetCreditsResponse> call, Response<GetCreditsResponse> response) {
+            public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().getData());
+                    if (OK_STATUS.equals(response.body().getStatus())) {
+                        callback.onSuccess(response.body());
+
+                    }
+
                 } else {
                     callback.onError();
                 }
             }
 
             @Override
-            public void onFailure(Call<GetCreditsResponse> call, Throwable t) {
+            public void onFailure(Call<CreditsResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
                     callback.onRetrofitError(t.getMessage());
                 } else {
@@ -154,19 +159,21 @@ public class UserRepository {
     }
 
     public void buyCredits(String token, BuyCreditRequest buyCreditRequest, final GetCreditsCallback callback) {
-        Call<GetCreditsResponse> call = api.buyCredits(token, buyCreditRequest);
-        call.enqueue(new Callback<GetCreditsResponse>() {
+        Call<CreditsResponse> call = api.buyCredits(token, buyCreditRequest);
+        call.enqueue(new Callback<CreditsResponse>() {
             @Override
-            public void onResponse(Call<GetCreditsResponse> call, Response<GetCreditsResponse> response) {
+            public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().getData());
+                    if (OK_STATUS.equals(response.body().getStatus())) {
+                        callback.onSuccess(response.body());
+                    }
                 } else {
                     callback.onError();
                 }
             }
 
             @Override
-            public void onFailure(Call<GetCreditsResponse> call, Throwable t) {
+            public void onFailure(Call<CreditsResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
                     callback.onRetrofitError(t.getMessage());
                 } else {
@@ -174,6 +181,14 @@ public class UserRepository {
                 }
             }
         });
+    }
+
+    public int getValueVipCoin() {
+        return valueVipCoin;
+    }
+
+    public int getValuePremiumCoin() {
+        return valuePremiumCoin;
     }
 
     public boolean isAuthorized() {

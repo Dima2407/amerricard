@@ -538,7 +538,7 @@ public class IabHelper {
         if (resultCode == Activity.RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
             logDebug("Successful resultcode from purchase activity.");
             logDebug("Purchase data: " + purchaseData);
-            logDebug("Data signature: " + dataSignature);
+            logDebug("Credit signature: " + dataSignature);
             logDebug("Extras: " + data.getExtras());
             logDebug("Expected item type: " + mPurchasingItemType);
 

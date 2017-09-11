@@ -9,7 +9,7 @@ import com.devtonix.amerricard.network.request.RegistrationRequest;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
-import com.devtonix.amerricard.network.response.GetCreditsResponse;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.network.response.LoginResponse;
 import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SettingsResponse;
@@ -46,7 +46,7 @@ public class API {
         this.helper = helper;
     }
 
-    public Call<GetCreditsResponse> shareCard(String token, long cardId) {
+    public Call<CreditsResponse> shareCard(String token, long cardId) {
         if (helper.getCurrentServer()) {
             return server1.shareCard(token, cardId);
         } else {
@@ -150,7 +150,7 @@ public class API {
         }
     }
 
-    public Call<GetCreditsResponse> getCredits(String token) {
+    public Call<CreditsResponse> getCredits(String token) {
         if (helper.getCurrentServer()) {
             return server1.getCredits(token);
         } else {
@@ -158,7 +158,7 @@ public class API {
         }
     }
 
-    public Call<GetCreditsResponse> buyCredits(String token, BuyCreditRequest buyCreditRequest) {
+    public Call<CreditsResponse> buyCredits(String token, BuyCreditRequest buyCreditRequest) {
         if (helper.getCurrentServer()) {
             return server1.buyCredits(token, buyCreditRequest);
         } else {

@@ -51,4 +51,28 @@
     <string name="invalid_email">Email incorrecto</string>
     <string name="ok_login">El inicio de sesión ha sido satisfactorio</string>
     <string name="general_error">El servidor no esta disponible</string>
+    <string name="log_in">Iniciar sesión</string>
+    <string name="log_out">Cerrar sesión</string>
+    <string name="login">Login</string>
+    <string name="password">Contraseña</string>
+    <string name="forgot_password">Se te olvidó tu contraseña?</string>
+    <string name="registration">Registro</string>
+    <string name="sign_in">Registrarse</string>
+    <string name="available_for_sending">Disponible para enviar: </string>
+    <string name="vip_premium_text">La compra del paquete abre la posibilidad de enviar cualquier postal de la categoría "VIP" y también deshabilita la exhibición de publicidad mientras hay postales para enviar.</string>
+    <string name="premium_text">La compra del paquete abre la posibilidad de enviar cualquier postal de la categoría "PREMIUM" y también deshabilita la exhibición de publicidad mientras hay postales para enviar.</string>
+    <string name="postcard_1_prem">1 postal - $1,49</string>
+    <string name="postcard_3_prem">3 postales - $3,99</string>
+    <string name="postcard_5_prem">5 postales - $5,99</string>
+    <string name="postcard_10_prem">10 postales - $9,99</string>
+
+    <string name="postcard_1_vip">1 postal - $2,99</string>
+    <string name="postcard_3_vip">3 postales - $7,99</string>
+    <string name="postcard_5_vip">5 postales - $11,99</string>
+    <string name="postcard_10_vip">10 postales - $20,99</string>
+
+    <string name="pay_button">Paga</string>
+    <string name="restore">Restaurar</string>
+
+    <string name="login_too_long.">"El inicio de sesión es demasiado largo."</string>
 </resources>

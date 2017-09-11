@@ -1,9 +1,9 @@
 package com.devtonix.amerricard.ui.callback;
 
-import com.devtonix.amerricard.model.Credit;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 
 public interface GetCreditsCallback {
-    void onSuccess(Credit credit);
+    void onSuccess(CreditsResponse creditsResponse);
     void onError();
     void onRetrofitError(String message);
 }

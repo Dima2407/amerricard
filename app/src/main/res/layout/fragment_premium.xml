@@ -30,7 +30,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/txt_available_for_sending"
+                android:id="@+id/txt_available_for_sending_prem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -54,16 +54,18 @@
             android:layout_marginTop="20dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1 открытка - $1,49"
-                    android:textSize="20sp" />
+                    android:text="@string/postcard_1_prem"
+                    android:textSize="20sp"
+                    android:layout_weight="1" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_premium_1_card"
@@ -76,7 +78,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -84,21 +86,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3 открытки - $3,99"
-                    android:textSize="20sp" />
+                    android:text="@string/postcard_3_prem"
+                    android:textSize="20sp"
+                    android:layout_weight="1" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_premium_3_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="65dp"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -106,21 +108,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 открыток - $5,99"
-                    android:textSize="20sp" />
+                    android:text="@string/postcard_5_prem"
+                    android:textSize="20sp"
+                    android:layout_weight="1" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_premium_5_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="65dp"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -128,14 +130,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10 открыток - $9,99"
-                    android:textSize="20sp" />
+                    android:text="@string/postcard_10_prem"
+                    android:textSize="20sp"
+                    android:layout_weight="1" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_premium_10_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="54dp"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent"
                     android:checked="true" />

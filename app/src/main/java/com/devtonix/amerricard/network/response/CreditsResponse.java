@@ -1,10 +1,11 @@
 package com.devtonix.amerricard.network.response;
 
-import com.devtonix.amerricard.model.Credit;
+import com.devtonix.amerricard.model.DataCreditResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GetCreditsResponse {
+public class
+CreditsResponse {
     @SerializedName("status")
     @Expose
     private String status;
@@ -13,29 +14,17 @@ public class GetCreditsResponse {
     private Integer code;
     @SerializedName("data")
     @Expose
-    private Credit data;
+    private DataCreditResponse data;
 
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Integer getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public Credit getData() {
+    public DataCreditResponse getData() {
         return data;
-    }
-
-    public void setData(Credit data) {
-        this.data = data;
     }
 }

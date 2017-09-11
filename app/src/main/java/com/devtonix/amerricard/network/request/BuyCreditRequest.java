@@ -10,17 +10,17 @@ public class BuyCreditRequest {
     @SerializedName("credit")
     @Expose
     private int credits;
-    @SerializedName("purchaseTrasactionId")
+    @SerializedName("purchaseTransactionId")
     @Expose
-    private String purchaseTrasactionId;
+    private String purchaseTransactionId;
     @SerializedName("appType")
     @Expose
     private String appType;
 
-    public BuyCreditRequest(String creditType, int credits, String purchaseTrasactionId, String appType) {
+    public BuyCreditRequest(String creditType, int credits, String purchaseTransactionId, String appType) {
         this.creditType = creditType;
         this.credits = credits;
-        this.purchaseTrasactionId = purchaseTrasactionId;
+        this.purchaseTransactionId = purchaseTransactionId;
         this.appType = appType;
     }
 
@@ -40,12 +40,12 @@ public class BuyCreditRequest {
         this.credits = credits;
     }
 
-    public String getPurchaseTrasactionId() {
-        return purchaseTrasactionId;
+    public String getPurchaseTransactionId() {
+        return purchaseTransactionId;
     }
 
-    public void setPurchaseTrasactionId(String purchaseTrasactionId) {
-        this.purchaseTrasactionId = purchaseTrasactionId;
+    public void setPurchaseTransactionId(String purchaseTransactionId) {
+        this.purchaseTransactionId = purchaseTransactionId;
     }
 
     public String getAppType() {

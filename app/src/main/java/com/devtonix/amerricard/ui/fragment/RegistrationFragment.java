@@ -30,6 +30,9 @@ public class RegistrationFragment extends BaseFragment {
     UserRepository userRepository;
 
     private EditText editEmail;
+    private EditText editLogin;
+    private EditText editPassword;
+    private EditText editName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,16 +50,16 @@ public class RegistrationFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final EditText editLogin = (EditText) view.findViewById(R.id.edit_login_registration);
+        editLogin = (EditText) view.findViewById(R.id.edit_login_registration);
         editEmail = (EditText) view.findViewById(R.id.edit_email_registration);
-        final EditText editPassword = (EditText) view.findViewById(R.id.edit_password_registration);
-        final EditText editName = (EditText) view.findViewById(R.id.edit_name_registration);
-        view.findViewById(R.id.btn_back_registration).setOnClickListener(new View.OnClickListener() {
+        editPassword = (EditText) view.findViewById(R.id.edit_password_registration);
+        editName = (EditText) view.findViewById(R.id.edit_name_registration);
+        /*view.findViewById(R.id.btn_back_registration).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getOwnerActivity().cancel();
             }
-        });
+        });*/
         view.findViewById(R.id.btn_registration).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

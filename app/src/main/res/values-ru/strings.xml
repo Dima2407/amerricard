@@ -39,24 +39,14 @@
     <string name="are_your_want_to_buy_premium">Эта картинка доступна только для PREMIUM-пользователей. Вы хотите продолжить покупку?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
-    <string name="vip_premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «VIP» а также отключает показ рекламы  пока есть открытки для отправки.</string>
-    <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
-    <string name="pay_button">Оплатить</string>
-    <string name="available_for_sending">Доступно к отправке: </string>
-    <string name="restore">Восстановить</string>
     <string name="title_forgot_password">Восстановление пароля</string>
     <string name="email">e-mail</string>
-    <string name="password">Пароль</string>
-    <string name="forgot_password">Забыли пароль?</string>
-    <string name="login">Логин</string>
     <string name="back">Назад</string>
-    <string name="sign_in">Войти</string>
-    <string name="registration">Регистрация</string>
     <string name="user_name">имя</string>
-    <string name="ok_forgot_pass">Новый пароль был отправленный на ваш email</string>
+    <string name="ok_forgot_pass">Новый пароль был отправлен на ваш email</string>
     <string name="invalid_login_email"> Неверный логин или email</string>
     <string name="common_server_error">Ошибка сервера</string>
-    <string name="service_unavailable">Сервер временно недоступна</string>
+    <string name="service_unavailable">Сервер временно недоступен</string>
     <string name="registration_successful">Регистрация прошла успешно</string>
     <string name="missing_fields">Отсутствует одно или больше из обязательных полей</string>
     <string name="login_already_exists">Пользователь с данным логином уже существует</string>
@@ -65,4 +55,28 @@
     <string name="invalid_email">Неправильный email</string>
     <string name="ok_login">Вход был успешным</string>
     <string name="general_error">Сервер недоступен</string>
+    <string name="log_out">Выйти</string>
+    <string name="log_in">Войти</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="registration">Регистрация</string>
+    <string name="sign_in">Войти</string>
+    <string name="available_for_sending">Доступно к отправке: </string>
+    <string name="vip_premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «VIP» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="premium_text">Приобретение пакета открывает  возможность отправки любой  открытки из разряда «PREMIUM» а также отключает показ рекламы  пока есть открытки для отправки.</string>
+    <string name="postcard_1_prem">1 открытка - $1,49</string>
+    <string name="postcard_3_prem">3 открытки - $3,99</string>
+    <string name="postcard_5_prem">5 открыток - $5,99</string>
+    <string name="postcard_10_prem">10 открыток - $9,99</string>
+
+    <string name="postcard_1_vip">1 открытка - $2,99</string>
+    <string name="postcard_3_vip">3 открытки - $7,99</string>
+    <string name="postcard_5_vip">5 открыток - $11,99</string>
+    <string name="postcard_10_vip">10 открыток - $20,99</string>
+
+    <string name="pay_button">Оплатить</string>
+    <string name="restore">Восстановить</string>
+
+    <string name="login_too_long.">"Логин слишком длинный."</string>
 </resources>

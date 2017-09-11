@@ -9,12 +9,13 @@ import com.devtonix.amerricard.model.CategoryItem;
 import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.response.CardResponseNew;
-import com.devtonix.amerricard.network.response.GetCreditsResponse;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -68,10 +69,10 @@ public class CardRepository {
     }
 
     public void sendShareCardRequest(String token, long cardId, final CardShareCallback callback) {
-        Call<GetCreditsResponse> call = api.shareCard(token, cardId);
-        call.enqueue(new Callback<GetCreditsResponse>() {
+        Call<CreditsResponse> call = api.shareCard(token, cardId);
+        call.enqueue(new Callback<CreditsResponse>() {
             @Override
-            public void onResponse(Call<GetCreditsResponse> call, Response<GetCreditsResponse> response) {
+            public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body().getData());
                 } else {
@@ -80,7 +81,7 @@ public class CardRepository {
             }
 
             @Override
-            public void onFailure(Call<GetCreditsResponse> call, Throwable t) {
+            public void onFailure(Call<CreditsResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
                     callback.onRetrofitError(t.getMessage());
                 } else {
@@ -92,11 +93,15 @@ public class CardRepository {
 
     public void getCards(final CardGetCallback callback) {
         Call<CardResponseNew> call = api.getCard();
+
+        Log.d("MyCatLog", "getCards: ");
+
         call.enqueue(new Callback<CardResponseNew>() {
             @Override
             public void onResponse(Call<CardResponseNew> call, Response<CardResponseNew> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     final List<CategoryItem> categories = response.body().getCategories();
+                    Log.d("MyCatLog", "onResponse: " + Arrays.toString(categories.toArray()));
 
                     Collections.sort(categories, new Comparator<CategoryItem>() {
                         @Override

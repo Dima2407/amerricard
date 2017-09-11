@@ -71,12 +71,16 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
 
         //if this is a first time when app launch, I want to get cards from network
         //after that I load cards from storage (shared prefs)
+
+        Log.d("MyCatLog", "isFirstLaunchApplication: " + sharedHelper.isFirstLaunchApplication());
+
         if (sharedHelper.isFirstLaunchApplication()) {
 
             cardRepository.getCards(new MyCardGetCallback());
-
+            Log.d("MyCatLog", "onViewCreated: -");
             sharedHelper.setFirstLaunchApplication(false);
         } else {
+            Log.d("MyCatLog", "onViewCreated: +");
             final List<CategoryItem> mainCategories = cardRepository.getCardsFromStorage();
             updateData(mainCategories);
             Collections.sort(mainCategories, new Comparator<CategoryItem>() {

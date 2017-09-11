@@ -107,7 +107,7 @@ public class HolidaysNotificationService extends Service {
 
                 Log.d(TAG, "onCreate: contact = " + c.getName() + " day=" + day + " month=" + month);
 
-                if (day == currentDay & month == currentMonth && !sharedHelper.getContacsForHide().contains(c)) {
+                if (day == currentDay & month == currentMonth && !sharedHelper.getContactsForHide().contains(c)) {
                     contactsForDisplay.add(c);
                     Log.d(TAG, "onCreate: contactsForDisplay.add(" + c.getName() + ") ");
                 }

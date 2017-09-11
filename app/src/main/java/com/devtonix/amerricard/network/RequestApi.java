@@ -10,7 +10,7 @@ import com.devtonix.amerricard.network.request.RegistrationRequest;
 import com.devtonix.amerricard.network.response.CardResponseNew;
 import com.devtonix.amerricard.network.response.CelebrityResponse;
 import com.devtonix.amerricard.network.response.EventResponse;
-import com.devtonix.amerricard.network.response.GetCreditsResponse;
+import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.network.response.LoginResponse;
 import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SettingsResponse;
@@ -32,7 +32,7 @@ public interface RequestApi {
      * */
 
     @POST("card/{cardId}/share")
-    Call<GetCreditsResponse> shareCard(@Header("X-AMCA-APP-USER-TOKEN") String token, @Path("cardId") long cardId);
+    Call<CreditsResponse> shareCard(@Header("X-AMCA-APP-USER-TOKEN") String token, @Path("cardId") long cardId);
 
     @POST("card/{cardId}/favorite")
     Call<SimpleResponse> addFavoriteCard(@Path("cardId") long cardId);
@@ -87,9 +87,9 @@ public interface RequestApi {
     Call<SimpleResponse> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
 
     @GET("appuser/credit")
-    Call<GetCreditsResponse> getCredits(@Header("X-AMCA-APP-USER-TOKEN") String token);
+    Call<CreditsResponse> getCredits(@Header("X-AMCA-APP-USER-TOKEN") String token);
 
     @POST("appuser/credit")
-    Call<GetCreditsResponse> buyCredits(@Header("X-AMCA-APP-USER-TOKEN") String token, @Body BuyCreditRequest buyCreditRequest);
+    Call<CreditsResponse> buyCredits(@Header("X-AMCA-APP-USER-TOKEN") String token, @Body BuyCreditRequest buyCreditRequest);
 
 }

@@ -3,6 +3,8 @@ package com.devtonix.amerricard.network.request;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import retrofit2.http.POST;
+
 public class RegistrationRequest {
 
     @SerializedName("login")

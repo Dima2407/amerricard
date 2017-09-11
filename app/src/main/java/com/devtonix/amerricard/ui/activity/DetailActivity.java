@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,7 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,13 +30,12 @@ import com.android.vending.billing.IInAppBillingService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItem;
-import com.devtonix.amerricard.model.Credit;
+import com.devtonix.amerricard.model.DataCreditResponse;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
@@ -50,7 +47,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -334,11 +330,11 @@ public class DetailActivity extends BaseActivity {
 
     private class MyCardShareCallback implements CardShareCallback {
         @Override
-        public void onSuccess(Credit credit) {
-            if (credit != null) {
-                Log.i(TAG, "onSuccess: card shared. credits VIP = " + credit.getData().getVip() + ", PREMIUM = " + credit.getData().getPremium());
+        public void onSuccess(DataCreditResponse dataCreditResponse) {
+            if (dataCreditResponse != null) {
+                Log.i(TAG, "onSuccess: card shared. credits VIP = " + dataCreditResponse.getCredit().getVip() + ", PREMIUM = " + dataCreditResponse.getCredit().getPremium());
             } else {
-                Log.i(TAG, "onSuccess: card shared. credit = null");
+                Log.i(TAG, "onSuccess: card shared. dataCreditResponse = null");
             }
         }
 

@@ -3,21 +3,17 @@ package com.devtonix.amerricard.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Credit {
+public class DataCreditResponse {
 
     @SerializedName("credit")
     @Expose
-    private Data data;
+    private Credit credit;
 
-    public Data getData() {
-        return data;
+    public Credit getCredit() {
+        return credit;
     }
 
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public class Data {
+    public class Credit {
 
         @SerializedName("vip")
         @Expose
@@ -30,16 +26,8 @@ public class Credit {
             return vip;
         }
 
-        public void setVip(int vip) {
-            this.vip = vip;
-        }
-
         public int getPremium() {
             return premium;
-        }
-
-        public void setPremium(int premium) {
-            this.premium = premium;
         }
     }
 }

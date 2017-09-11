@@ -1,10 +1,10 @@
 package com.devtonix.amerricard.ui.fragment;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +30,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
     private Button btnPay;
     private int amountOfCredits = 10;
 
+
     public static CategoryFragment getInstance(String url) {
         CategoryFragment categoryFragment = new CategoryFragment();
         Bundle b = new Bundle();
@@ -45,14 +46,20 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final TextView textView = (TextView) view.findViewById(R.id.txt_available_for_sending_vip);
 
         btnPay = (Button) view.findViewById(R.id.btn_pay_vip);
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send(amountOfCredits, CREDIT_TYPE_VIP);
+                Log.d(TAG, "onClick: " + sharedHelper.getValueVipCoins());
+
+                textView.setText(String.valueOf(sharedHelper.getValueVipCoins()));
+
             }
         });
 
@@ -60,6 +67,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
         radioButton_3 = (RadioButton) view.findViewById(R.id.radio_btn_vip_3_cards);
         radioButton_5 = (RadioButton) view.findViewById(R.id.radio_btn_vip_5_cards);
         radioButton_10 = (RadioButton) view.findViewById(R.id.radio_btn_vip_10_cards);
+
 
         radioButton_1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -105,6 +113,8 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
                 }
             }
         });
+
+
     }
 
     @Override

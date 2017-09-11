@@ -1,14 +1,21 @@
 package com.devtonix.amerricard.ui.fragment;
 
+import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devtonix.amerricard.R;
@@ -25,6 +32,11 @@ public class LoginFragment extends BaseFragment {
     @Inject
     UserRepository userRepository;
 
+    private EditText textLogin;
+    private EditText textPassword;
+    private TextInputLayout textPasswordWrapper;
+    private TextInputLayout textLoginWrapper;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,21 +47,55 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final EditText textLogin = (EditText) view.findViewById(R.id.edit_login);
-        final EditText textPassword = (EditText) view.findViewById(R.id.edit_password);
-        Button buttonBack = (Button) view.findViewById(R.id.btn_back);
+        textLogin = (EditText) view.findViewById(R.id.edit_login);
+        textPassword = (EditText) view.findViewById(R.id.edit_password);
+        textLoginWrapper = (TextInputLayout) view.findViewById(R.id.edit_login_wrapper);
+        textPasswordWrapper = (TextInputLayout) view.findViewById(R.id.edit_password_wrapper);
+
+        textLogin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 30) {
+                    textLoginWrapper.setError("Login is too long.");
+                } else {
+                    textLoginWrapper.setError("");
+                }
+            }
+        });
+
+        textPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    doLogin();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+        /*Button buttonBack = (Button) view.findViewById(R.id.btn_back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getOwnerActivity().cancel();
             }
-        });
+        });*/
         Button buttonLogin = (Button) view.findViewById(R.id.btn_login);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRepository.login(textLogin.getText().toString(),
-                        textPassword.getText().toString(), new LoginCallbackImpl());
+                doLogin();
             }
         });
         view.findViewById(R.id.text_forgot_password).setOnClickListener(new View.OnClickListener() {
@@ -64,6 +110,19 @@ public class LoginFragment extends BaseFragment {
                 getOwnerActivity().registration();
             }
         });
+
+    }
+
+    private void doLogin() {
+        if (textLogin.getText().length() > 25) {
+            textLoginWrapper.setError("Username is too long.");
+        } else {
+            textLoginWrapper.setError("");
+        }
+
+        userRepository.login(textLogin.getText().toString(),
+                textPassword.getText().toString(), new LoginCallbackImpl());
+
 
     }
 
@@ -90,6 +149,7 @@ public class LoginFragment extends BaseFragment {
                     Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_LONG).show();
                     getOwnerActivity().close();
                     sharedHelper.setAccessToken(token);
+
                     break;
                 }
                 case "INVALID_LOGIN_PASSWORD": {
