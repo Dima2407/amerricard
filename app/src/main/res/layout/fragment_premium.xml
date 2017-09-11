@@ -49,7 +49,7 @@
 
         <RadioGroup
             android:id="@+id/radio_group_premium"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
@@ -71,7 +71,7 @@
                     android:id="@+id/radio_btn_premium_1_card"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="65dp"
+                    android:layout_gravity="right"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent" />
 
@@ -94,6 +94,7 @@
                     android:id="@+id/radio_btn_premium_3_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="right"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent" />
 
@@ -116,6 +117,7 @@
                     android:id="@+id/radio_btn_premium_5_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="right"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent" />
 
@@ -138,6 +140,7 @@
                     android:id="@+id/radio_btn_premium_10_cards"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="right"
                     android:background="@drawable/radio_buttons_image"
                     android:button="@android:color/transparent"
                     android:checked="true" />
