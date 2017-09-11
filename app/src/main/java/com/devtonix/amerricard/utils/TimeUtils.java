@@ -43,4 +43,10 @@ public class TimeUtils {
         return oneInstance.get(Calendar.MONTH) == secondInstance.get(Calendar.MONTH)
                 && oneInstance.get(Calendar.DAY_OF_MONTH) == secondInstance.get(Calendar.DAY_OF_MONTH);
     }
+
+    public static boolean isAfter(Date currentDate, Date eventDate) {
+        oneInstance.setTime(currentDate);
+        secondInstance.setTime(eventDate);
+        return oneInstance.get(Calendar.DAY_OF_YEAR) < secondInstance.get(Calendar.DAY_OF_YEAR);
+    }
 }

@@ -194,10 +194,6 @@ public class CalendarFragment extends BaseFragment {
         linearFabRefresh.setVisibility(View.GONE);
     }
 
-    private void setPosition() {
-        recyclerView.scrollToPosition(calendarAdapterNew.getNearestDatePosition());
-    }
-
     private void fill() {
 
         baseEvents.clear();
@@ -256,7 +252,8 @@ public class CalendarFragment extends BaseFragment {
             calendarAdapterNew.updateAdapter(baseEvents);
             amountOfUpdate = 0;
         }
-        setPosition();
+
+        recyclerView.scrollToPosition(calendarAdapterNew.getNearestDatePosition());
     }
 
     @Override

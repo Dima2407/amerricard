@@ -89,7 +89,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
             if (baseEvents.get(i).getEventDate() != null) {
                 try {
                     Date eventDate = dateFormat.parse(baseEvents.get(i).getEventDate());
-                    if (eventDate.getTime() > currentDate.getTime()) {
+                    if (TimeUtils.isAfter(currentDate, eventDate)) {
                         nearestPosition = i;
                         break;
                     }
