@@ -27,6 +27,7 @@ import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
+import com.devtonix.amerricard.ui.view.DrawerItemView;
 
 import javax.inject.Inject;
 
@@ -48,7 +49,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private DrawerLayout drawer;
 
     private LinearLayout regLayout;
-    private Button logoutButton;
+    private DrawerItemView logoutButton;
     private ImageView unregLogoImageView;
     private ImageView isregLogoImageView;
     private TextView regNameTextView;
@@ -58,6 +59,8 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
 
     protected final static String PURCHASE_TRANSACTION_ID = "12345";
     protected final static String APP_TYPE = "android";
+    private DrawerItemView vipButton;
+    private DrawerItemView premiumButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,9 +68,7 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_drawer);
         ACApplication.getMainComponent().inject(this);
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        logInOutButtonInit();
         initSidePanel();
-
     }
 
     protected void init(int layout) {
@@ -78,6 +79,13 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                initValueCoinsVipPrem();
+            }
+        });
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -100,23 +108,6 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
             regNameTextView.setText(sharedHelper.getName());
             regEmailTextView.setText(sharedHelper.getEmail());
 
-            userRepository.getCredits(sharedHelper.getAccessToken(), new GetCreditsCallback() {
-                @Override
-                public void onSuccess(CreditsResponse creditsResponse) {
-
-                }
-
-                @Override
-                public void onError() {
-
-                }
-
-                @Override
-                public void onRetrofitError(String message) {
-
-                }
-            });
-
         } else {
             unregLogoImageView.setVisibility(View.VISIBLE);
             regLayout.setVisibility(View.INVISIBLE);
@@ -137,38 +128,18 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
         regNameTextView = (TextView) findViewById(R.id.drawer_name_text_view);
         regEmailTextView = (TextView) findViewById(R.id.drawer_email_text_view);
 
-        addItem(R.id.drawer_cards, getString(R.string.category), R.drawable.categories_icon);
-        addItem(R.id.drawer_calendar, getString(R.string.calendar), R.drawable.ic_calendar);
-        addItem(R.id.drawer_favorites, getString(R.string.favorite_cards), R.drawable.ic_favorite_full);
-        addItem(R.id.drawer_manage_holidays, getString(R.string.manage_birthdays), R.drawable.ic_edit);
-        /*userRepository.getCredits(sharedHelper.getAccessToken(), new GetCreditsCallback() {
-        });*/
-        if (!(sharedHelper.getAccessToken() != null)) {
-            addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip, userRepository.getValueVipCoin());
-            addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium, userRepository.getValuePremiumCoin());
-        } else {
-            addItem(R.id.drawer_vip, getString(R.string.become_vip_title), R.drawable.ic_vip);
-            addItem(R.id.drawer_premium, getString(R.string.premium), R.drawable.ic_premium);
-        }
-        addItem(R.id.drawer_settings, getString(R.string.settings), R.drawable.ic_settings);
+        findViewById(R.id.drawer_cards).setOnClickListener(this);
+        findViewById(R.id.drawer_calendar).setOnClickListener(this);
+        findViewById(R.id.drawer_favorites).setOnClickListener(this);
+        findViewById(R.id.drawer_manage_holidays).setOnClickListener(this);
+        findViewById(R.id.drawer_settings).setOnClickListener(this);
+        logoutButton = (DrawerItemView) findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(this);
 
-    }
-
-    private void addItem(int view, String title, int image) {
-        ViewGroup vg = (ViewGroup) findViewById(view);
-        ((TextView) vg.findViewById(R.id.view_drawer_item_text)).setText(title);
-        ((ImageView) vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
-        vg.setOnClickListener(this);
-    }
-
-    private void addItem(int view, String title, int image, int coinValue) {
-        ViewGroup vg = (ViewGroup) findViewById(view);
-
-        ((TextView) vg.findViewById(R.id.view_drawer_item_text)).setText(title);
-        ((ImageView) vg.findViewById(R.id.view_drawer_item_icon)).setImageResource(image);
-        ((TextView) vg.findViewById(R.id.coin_value_text_view)).setText(coinValue);
-
-        vg.setOnClickListener(this);
+        vipButton = (DrawerItemView) findViewById(R.id.drawer_vip);
+        vipButton.setOnClickListener(this);
+        premiumButton = (DrawerItemView) findViewById(R.id.drawer_premium);
+        premiumButton.setOnClickListener(this);
     }
 
     protected void setTitle(String title) {
@@ -224,18 +195,14 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void logInOutButtonInit() {
-      /*  logoutButton = (Button) findViewById(R.id.logout_button);
         if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
-            logoutButton.setText(R.string.log_out);
+            logoutButton.setTitleText(getString(R.string.log_out));
+            premiumButton.setInfoText("" + sharedHelper.getValuePremiumCoins());
+            vipButton.setInfoText("" + sharedHelper.getValueVipCoins());
         } else {
-            logoutButton.setText(R.string.login);
-        }
-        */
-        addItem(R.id.logout_button, logInOut, R.drawable.login);
-        if (!TextUtils.isEmpty(sharedHelper.getAccessToken())) {
-            logInOut = getString(R.string.log_out);
-        } else {
-            logInOut = getString(R.string.log_in);
+            logoutButton.setTitleText(getString(R.string.log_in));
+            premiumButton.setInfoText(null);
+            vipButton.setInfoText(null);
         }
     }
 
@@ -252,12 +219,37 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
             sharedHelper.cleanAccessToken();
             regLayout.setVisibility(View.INVISIBLE);
             unregLogoImageView.setVisibility(View.VISIBLE);
-            logInOut = getString(R.string.log_in);
-            addItem(R.id.logout_button, logInOut, R.drawable.login);
         } else {
             drawer.closeDrawers();
             AuthActivity.login(DrawerActivity.this, AUTH_REQUEST_CODE);
 
         }
+        logInOutButtonInit();
+    }
+
+    private void initValueCoinsVipPrem() {
+
+        userRepository.getCredits(sharedHelper.getAccessToken(), new GetCreditsCallback() {
+            @Override
+            public void onSuccess(CreditsResponse creditsResponse) {
+                if (creditsResponse.isSuccess()) {
+                    sharedHelper.setValueVipCoins(creditsResponse.getVipCoins());
+                    sharedHelper.setValuePremiumCoins(creditsResponse.getPremiumCoins());
+                    logInOutButtonInit();
+                }
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+
+            @Override
+            public void onRetrofitError(String message) {
+
+            }
+        });
+
     }
 }

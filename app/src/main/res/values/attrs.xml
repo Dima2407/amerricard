@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DrawerItemView">
+        <attr name="item_title" format="string" />
+        <attr name="item_icon" format="reference" />
+        <attr name="item_info" format="string" />
+        <attr name="item_tint" format="color" />
+    </declare-styleable>
+</resources>

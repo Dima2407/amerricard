@@ -241,10 +241,9 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         public void onSuccess(CreditsResponse creditsResponse) {
             if ("OK".equals(creditsResponse.getStatus())) {
                 if (creditsResponse != null) {
-                    sharedHelper.setValuePremiumCoins(creditsResponse.getData().getCredit().getPremium());
-                    sharedHelper.setValueVipCoins(creditsResponse.getData().getCredit().getVip());
-                    Log.d(TAG, "onSuccess: " + creditsResponse.getData().getCredit().getVip());
-                    Log.i(TAG, "onSuccess: dataCreditResponse.vip = " + creditsResponse.getData().getCredit().getVip() + ", dataCreditResponse.premium = " + creditsResponse.getData().getCredit().getPremium());
+                    Log.i(TAG, "onSuccess: dataCreditResponse.vip = " +
+                            creditsResponse.getData().getCredit().getVip() +
+                            ", dataCreditResponse.premium = " + creditsResponse.getData().getCredit().getPremium());
                 } else {
                     Log.i(TAG, "onSuccess: dataCreditResponse == null");
                 }

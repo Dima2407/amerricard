@@ -27,4 +27,16 @@ CreditsResponse {
     public DataCreditResponse getData() {
         return data;
     }
+
+    public int getVipCoins() {
+        return getData().getCredit().getVip();
+    }
+
+    public int getPremiumCoins() {
+        return getData().getCredit().getPremium();
+    }
+
+    public boolean isSuccess() {
+        return "OK".equalsIgnoreCase(status);
+    }
 }

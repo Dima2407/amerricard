@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -12,48 +13,73 @@
 
         <include layout="@layout/view_drawer_header" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_cards"
-            layout="@layout/view_drawer_item" />
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/categories_icon"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/category" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_calendar"
-            layout="@layout/view_drawer_item" />
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_calendar"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/calendar" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_favorites"
-            layout="@layout/view_drawer_item" />
-        <!--<include android:id="@+id/drawer_sent_cards" layout="@layout/view_drawer_item"/>-->
-        <include
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_favorite_full"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/favorite_cards" />
+
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_manage_holidays"
-            layout="@layout/view_drawer_item" />
-        <!--<include android:id="@+id/drawer_manage_holidays" layout="@layout/view_drawer_item"/>-->
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_edit"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/manage_birthdays" />
+
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/lightGray" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_vip"
-            layout="@layout/view_drawer_item_without_tint" />
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_vip"
+            custom:item_title="@string/become_vip_title" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_premium"
-            layout="@layout/view_drawer_item_without_tint" />
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_premium"
+            custom:item_title="@string/premium" />
 
-        <include
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/drawer_settings"
-            layout="@layout/view_drawer_item" />
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/ic_settings"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/settings" />
 
-        <include
-            android:id="@+id/logout_button"
-            layout="@layout/view_drawer_item" />
-
-        <!--<Button
+        <com.devtonix.amerricard.ui.view.DrawerItemView
             android:id="@+id/logout_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />-->
+            android:layout_height="49dp"
+            custom:item_icon="@drawable/login"
+            custom:item_tint="@color/colorIconsActive"
+            custom:item_title="@string/log_in" />
 
 
     </LinearLayout>

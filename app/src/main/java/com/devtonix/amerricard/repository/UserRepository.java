@@ -1,7 +1,6 @@
 package com.devtonix.amerricard.repository;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
@@ -33,15 +32,10 @@ public class UserRepository {
     @Inject
     SharedHelper sharedHelper;
 
-    private Context context;
     private static final String OK_STATUS = "OK";
-
-    private int valueVipCoin;
-    private int valuePremiumCoin;
 
     public UserRepository(Context context) {
         ACApplication.getMainComponent().inject(this);
-        this.context = context;
     }
 
     public void login(String email, String password, final LoginCallback callback) {
@@ -182,17 +176,4 @@ public class UserRepository {
             }
         });
     }
-
-    public int getValueVipCoin() {
-        return valueVipCoin;
-    }
-
-    public int getValuePremiumCoin() {
-        return valuePremiumCoin;
-    }
-
-    public boolean isAuthorized() {
-        return !TextUtils.isEmpty(sharedHelper.getAccessToken());
-    }
-
 }
