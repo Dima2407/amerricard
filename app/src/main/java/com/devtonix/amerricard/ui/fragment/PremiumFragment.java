@@ -30,6 +30,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
     private RadioButton radioButton_10;
     private Button btnPay;
     private int amountOfCredits = 10;
+    private TextView coinsTextView;
 
     public static CategoryFragment getInstance(String url) {
         CategoryFragment categoryFragment = new CategoryFragment();
@@ -46,14 +47,17 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        coinsTextView = (TextView) view.findViewById(R.id.txt_available_for_sending_prem);
+        coinsTextView.setText(String.valueOf(sharedHelper.getValuePremiumCoins()));
 
         btnPay = (Button) view.findViewById(R.id.btn_pay_premium);
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                send(amountOfCredits, CREDIT_TYPE_PREMIUM);
+                payPremium();
             }
         });
 
@@ -108,6 +112,15 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         });
     }
 
+    private void payPremium() {
+        send(amountOfCredits, CREDIT_TYPE_PREMIUM, new Runnable() {
+            @Override
+            public void run() {
+                coinsTextView.setText(String.valueOf(sharedHelper.getValuePremiumCoins()));
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -130,7 +143,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
 
             case REQUEST_AUTH_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    send(amountOfCredits, CREDIT_TYPE_PREMIUM);
+                    payPremium();
                 }
                 break;
         }
