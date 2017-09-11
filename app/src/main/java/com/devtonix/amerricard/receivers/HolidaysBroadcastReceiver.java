@@ -84,7 +84,6 @@ public class HolidaysBroadcastReceiver extends BroadcastReceiver {
     private void setNotificationAlarm(PendingIntent pendingIntent, AlarmManager alarmManager, long intendedTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(intendedTime);
-        Log.e(TAG, "Setting intended time to " + TimeUtils.calDateToString(calendar));
         alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 intendedTime,

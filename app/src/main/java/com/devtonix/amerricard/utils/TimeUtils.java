@@ -1,13 +1,16 @@
 package com.devtonix.amerricard.utils;
 
-import android.text.format.DateFormat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TimeUtils {
 
     private static final String REGEX_DOT_SYMBOL = "\\.";
     private static final String REGEX_COLON_SYMBOL = ":";
+
+    private static final Calendar oneInstance = Calendar.getInstance();
+    private static final Calendar secondInstance = Calendar.getInstance();
 
     public static int getHour(String time) {
         String[] s = time.split(REGEX_COLON_SYMBOL);
@@ -34,7 +37,10 @@ public class TimeUtils {
         return Integer.parseInt(s[2]);
     }
 
-    public static String calDateToString(Calendar calendar) {
-        return DateFormat.format(RegexDateUtils.GODLIKE_DATE_FORMAT, calendar).toString();
+    public static boolean isSameDay( Date first, Date second){
+        oneInstance.setTime(first);
+        secondInstance.setTime(second);
+        return oneInstance.get(Calendar.MONTH) == secondInstance.get(Calendar.MONTH)
+                && oneInstance.get(Calendar.DAY_OF_MONTH) == secondInstance.get(Calendar.DAY_OF_MONTH);
     }
 }

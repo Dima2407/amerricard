@@ -12,8 +12,10 @@ public class RegexDateUtils {
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT_ONE = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT_TWO = new SimpleDateFormat("MMM dd, yyyy");
 
-    public static final SimpleDateFormat GODLIKE_APPLICATION_DATE_FORMAT = new SimpleDateFormat("MM.dd.yyyy");
     public static final String GODLIKE_DATE_FORMAT = "MM.dd.yyyy";
+
+    public static final SimpleDateFormat GODLIKE_APPLICATION_DATE_FORMAT = new SimpleDateFormat(GODLIKE_DATE_FORMAT);
+
 
     public static long verifyDateFormat(String date) {
         final Matcher firstMatcher = Pattern.compile(REGEX_PATTERN_FIRST).matcher(date);
