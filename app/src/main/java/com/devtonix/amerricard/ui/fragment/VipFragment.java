@@ -17,6 +17,7 @@ import com.devtonix.amerricard.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class VipFragment extends VipAndPremiumAbstractFragment {
 
@@ -29,6 +30,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
     private RadioButton radioButton_10;
     private Button btnPay;
     private int amountOfCredits = 10;
+    private TextView coinsTextView;
 
 
     public static CategoryFragment getInstance(String url) {
@@ -49,17 +51,14 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final TextView textView = (TextView) view.findViewById(R.id.txt_available_for_sending_vip);
+        coinsTextView = (TextView) view.findViewById(R.id.txt_available_for_sending_vip);
+        coinsTextView.setText(String.valueOf(sharedHelper.getValueVipCoins()));
 
         btnPay = (Button) view.findViewById(R.id.btn_pay_vip);
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                send(amountOfCredits, CREDIT_TYPE_VIP);
-                Log.d(TAG, "onClick: " + sharedHelper.getValueVipCoins());
-
-                textView.setText(String.valueOf(sharedHelper.getValueVipCoins()));
-
+                payVip();
             }
         });
 
@@ -138,10 +137,19 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
 
             case REQUEST_AUTH_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    send(amountOfCredits, CREDIT_TYPE_VIP);
+                    payVip();
                 }
                 break;
         }
+    }
+
+    private void payVip() {
+        send(amountOfCredits, CREDIT_TYPE_VIP, new Runnable() {
+            @Override
+            public void run() {
+                coinsTextView.setText(String.valueOf(sharedHelper.getValueVipCoins()));
+            }
+        });
     }
 
 }

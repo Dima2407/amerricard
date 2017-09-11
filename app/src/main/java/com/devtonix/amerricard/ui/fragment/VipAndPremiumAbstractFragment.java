@@ -222,14 +222,12 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
     }
 
-    protected void send(final int amountOfCredits, final String creditType) {
+    protected void send(final int amountOfCredits, final String creditType, Runnable complete) {
 
         String accessToken = sharedHelper.getAccessToken();
         if (!TextUtils.isEmpty(accessToken)) {
             BuyCreditRequest request = new BuyCreditRequest(creditType, amountOfCredits, PURCHASE_TRANSACTION_ID, APP_TYPE);
-            userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl());
-
-
+            userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl(complete));
         } else {
             AuthActivity.login(getActivity(), REQUEST_AUTH_CODE);
         }
@@ -237,16 +235,22 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
     private class GetCreditCallbackImpl implements GetCreditsCallback {
 
+        private Runnable complete;
+
+        public GetCreditCallbackImpl(Runnable complete) {
+
+            this.complete = complete;
+        }
+
         @Override
         public void onSuccess(CreditsResponse creditsResponse) {
-            if ("OK".equals(creditsResponse.getStatus())) {
-                if (creditsResponse != null) {
-                    Log.i(TAG, "onSuccess: dataCreditResponse.vip = " +
-                            creditsResponse.getData().getCredit().getVip() +
-                            ", dataCreditResponse.premium = " + creditsResponse.getData().getCredit().getPremium());
-                } else {
-                    Log.i(TAG, "onSuccess: dataCreditResponse == null");
+            if (creditsResponse != null && creditsResponse.isSuccess()) {
+                sharedHelper.setValuePremiumCoins(creditsResponse.getPremiumCoins());
+                sharedHelper.setValueVipCoins(creditsResponse.getVipCoins());
+                if (complete != null) {
+                    complete.run();
                 }
+
             }
         }
 
