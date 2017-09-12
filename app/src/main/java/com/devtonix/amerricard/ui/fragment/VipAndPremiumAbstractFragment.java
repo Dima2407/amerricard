@@ -48,10 +48,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     protected final static String APP_TYPE = "android";
     protected final static String PURCHASE_TRANSACTION_ID = "12345";
 
-    private TextView valueCoinsTextView;
-
-    protected IabHelper iabHelper;
-    protected Bundle skuDetails;
     protected Bundle buyIntentBundle;
     protected FrameLayout layoutContainer;
     protected IInAppBillingService mService;
@@ -80,18 +76,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         layoutContainer = (FrameLayout) view.findViewById(R.id.layout_login_container);
-
-        iabHelper = new IabHelper(getActivity(), VipAndPremiumActivity.base64EncodedPublicKey);
-
-        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                }
-                Log.d(TAG, "In-app Billing setting up success: " + result);
-            }
-        });
-
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         getActivity().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
@@ -106,33 +90,22 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         try {
             buyIntentBundle = mService.getBuyIntent(3, getContext().getPackageName(), productId, "inapp", VipAndPremiumActivity.base64EncodedPublicKey);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "payFromGoogle: ", e);
             return;
         }
 
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
         try {
             getActivity().startIntentSenderForResult(pendingIntent.getIntentSender(),
-                    REQUEST_CODE_BUY, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
-                    Integer.valueOf(0));
+                    REQUEST_CODE_BUY, new Intent(), 0, 0, 0);
         } catch (IntentSender.SendIntentException e) {
-            e.printStackTrace();
+            Log.e(TAG, "payFromGoogle: ",  e);
         }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        if (iabHelper != null) {
-            try {
-                iabHelper.dispose();
-            } catch (IabHelper.IabAsyncInProgressException e) {
-                e.printStackTrace();
-            }
-        }
-        iabHelper = null;
-
+    public void onDestroyView() {
+        super.onDestroyView();
         if (mService != null) {
             getActivity().unbindService(mServiceConn);
         }
@@ -169,12 +142,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-                break;
-
-            case REQUEST_AUTH_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    pay(null, null, null);
                 }
                 break;
         }

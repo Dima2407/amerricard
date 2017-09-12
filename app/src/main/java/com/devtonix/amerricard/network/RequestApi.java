@@ -34,6 +34,10 @@ public interface RequestApi {
     @POST("card/{cardId}/share")
     Call<CreditsResponse> shareCard(@Header("X-AMCA-APP-USER-TOKEN") String token, @Path("cardId") long cardId);
 
+
+    @POST("card/{cardId}/share")
+    Call<CreditsResponse> shareCard(@Path("cardId") long cardId);
+
     @POST("card/{cardId}/favorite")
     Call<SimpleResponse> addFavoriteCard(@Path("cardId") long cardId);
 

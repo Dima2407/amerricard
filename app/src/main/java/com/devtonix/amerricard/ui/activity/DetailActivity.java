@@ -1,19 +1,12 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.os.PersistableBundle;
-import android.os.RemoteException;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -27,9 +20,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import com.android.vending.billing.IInAppBillingService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.StringLoader;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.devtonix.amerricard.R;
@@ -109,19 +102,16 @@ public class DetailActivity extends BaseActivity {
         mainCategories = cardRepository.getCardsFromStorage();
 
         final List<CardItem> cards = new ArrayList<>();
-        final CardItem currentCardItem;
         int positionForCurrentCard;
 
         if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_FAVORITE_CARDS)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_FAVORITE_CARD, 0);
             List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
             cards.addAll(list);
-            currentCardItem = cards.get(positionForCurrentCard);
         } else if (TextUtils.equals(getIntent().getAction(), ACTION_SHOW_CARD_FROM_EVENT_SCREEN)) {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CARD_FROM_EVENT_SCREEN, 0);
             List<CardItem> list = getIntent().getParcelableArrayListExtra(PARCELABLE_CARDS);
             cards.addAll(list);
-            currentCardItem = cards.get(positionForCurrentCard);
         } else {
             positionForCurrentCard = getIntent().getIntExtra(POSITION_FOR_CURRENT_CARD, 0);
             final int positionForCategory = getIntent().getIntExtra(POSITION_FOR_CATEGORY, 0);
@@ -133,15 +123,12 @@ public class DetailActivity extends BaseActivity {
             if (positionForCategory == CategoryFragment.POSITION_NOT_SET) {
                 //this are not categories with cards, there are cards only
                 cards.addAll(mainCategories.get(positionForCard).getCardItems());
-                currentCardItem = mainCategories.get(positionForCard).getCardItems().get(positionForCurrentCard);
             } else {
                 //this are categories with cards
                 if (mainCategories.get(positionForCategory).getCategoryItems().size() > 0) {
                     cards.addAll(mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems());
-                    currentCardItem = mainCategories.get(positionForCategory).getCategoryItems().get(positionForCard).getCardItems().get(positionForCurrentCard);
                 } else {
                     cards.addAll(mainCategories.get(positionForCategory).getCardItems());
-                    currentCardItem = mainCategories.get(positionForCategory).getCardItems().get(positionForCurrentCard);
                 }
             }
         }
@@ -181,11 +168,11 @@ public class DetailActivity extends BaseActivity {
                             cardRepository.sendShareCardRequest(token, cardItem.getId(),
                                     new MyCardShareCallback(cardItem.getGlideImageUrl()));
                         } else {
-                            showBuyDialog(getString(R.string.not_enough_to_buy_vip));
+                            showBuyDialog(getString(R.string.not_enough_to_buy_vip), VipAndPremiumActivity.SHOW_VIP_ACTION);
                         }
 
                     } else {
-                        showBuyDialog(getString(R.string.are_your_want_to_buy_vip));
+                        showBuyDialog(getString(R.string.are_your_want_to_buy_vip), VipAndPremiumActivity.SHOW_VIP_ACTION);
                     }
                 } else if (cardItem.isPremium()) {
                     if (sharedHelper.isPremium()) {
@@ -193,10 +180,10 @@ public class DetailActivity extends BaseActivity {
                             cardRepository.sendShareCardRequest(token, cardItem.getId(),
                                     new MyCardShareCallback(cardItem.getGlideImageUrl()));
                         } else {
-                            showBuyDialog(getString(R.string.not_enough_to_buy_premium));
+                            showBuyDialog(getString(R.string.not_enough_to_buy_premium), VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
                         }
                     } else {
-                        showBuyDialog(getString(R.string.are_your_want_to_buy_premium));
+                        showBuyDialog(getString(R.string.are_your_want_to_buy_premium), VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
                     }
                 }
             }
@@ -228,9 +215,9 @@ public class DetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    private void loadVipScreen() {
+    private void loadBuyScreen(String action) {
         Intent intent = new Intent(DetailActivity.this, VipAndPremiumActivity.class);
-        intent.setAction(VipAndPremiumActivity.SHOW_VIP_ACTION);
+        intent.setAction(action);
         startActivity(intent);
     }
 
@@ -369,7 +356,7 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
-    private void showBuyDialog(String message) {
+    private void showBuyDialog(String message, final String action) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle(R.string.app_name)
                 .setMessage(message)
@@ -378,7 +365,7 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        loadVipScreen();
+                        loadBuyScreen(action);
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

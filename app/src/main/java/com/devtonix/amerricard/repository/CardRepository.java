@@ -15,6 +15,7 @@ import com.devtonix.amerricard.storage.SharedHelper;
 import com.devtonix.amerricard.ui.callback.CardGetCallback;
 import com.devtonix.amerricard.ui.callback.CardShareCallback;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,6 +77,11 @@ public class CardRepository {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body().getData());
                 } else {
+                    try {
+                        Log.d(TAG, "onResponse: "+ response.errorBody().string());
+                    } catch (IOException e) {
+                        Log.e(TAG, "onResponse: ", e);
+                    }
                     callback.onError();
                 }
             }

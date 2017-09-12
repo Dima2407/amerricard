@@ -1,5 +1,7 @@
 package com.devtonix.amerricard.network;
 
+import android.text.TextUtils;
+
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
@@ -48,8 +50,14 @@ public class API {
 
     public Call<CreditsResponse> shareCard(String token, long cardId) {
         if (helper.getCurrentServer()) {
+            if(TextUtils.isEmpty(token)){
+                return server1.shareCard(cardId);
+            }
             return server1.shareCard(token, cardId);
         } else {
+            if(TextUtils.isEmpty(token)){
+                return server2.shareCard(cardId);
+            }
             return server2.shareCard(token, cardId);
         }
     }
