@@ -17,9 +17,6 @@ import com.devtonix.amerricard.storage.SharedHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_PREMIUM;
-import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_VIP;
-
 public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapter.MainHolder> {
 
     private List<CardItem> items = new ArrayList<>();
@@ -72,10 +69,10 @@ public class FavoriteCardAdapter extends RecyclerView.Adapter<FavoriteCardAdapte
         holder.favoriteButton.setVisibility(View.GONE);
         holder.favoriteButtonFull.setVisibility(View.VISIBLE);
 
-        if (TextUtils.equals(item.getCardType(), TYPE_VIP)) {
+        if (item.isVip()) {
             holder.ivVip.setVisibility(View.VISIBLE);
             holder.ivPremium.setVisibility(View.GONE);
-        } else if (TextUtils.equals(item.getCardType(), TYPE_PREMIUM)) {
+        } else if (item.isPremium()) {
             holder.ivVip.setVisibility(View.GONE);
             holder.ivPremium.setVisibility(View.VISIBLE);
         } else {

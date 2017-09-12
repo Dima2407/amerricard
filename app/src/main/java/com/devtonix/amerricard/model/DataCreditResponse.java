@@ -13,6 +13,14 @@ public class DataCreditResponse {
         return credit;
     }
 
+    public int getVipCoins(){
+        return getCredit().getVip();
+    }
+
+    public int getPremiumCoins(){
+        return getCredit().getPremium();
+    }
+
     public class Credit {
 
         @SerializedName("vip")

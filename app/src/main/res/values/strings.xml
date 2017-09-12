@@ -73,7 +73,9 @@
     <string name="create_new_contact">Create new contact</string>
     <string name="refresh">Refresh list</string>
     <string name="are_your_want_to_buy_vip">This picture is only available for VIP users. Do you want to continue purchase?</string>
+    <string name="not_enough_to_buy_vip">You haven\'t enough VIP coins to but this picture . Do you want to continue purchase?</string>
     <string name="are_your_want_to_buy_premium">This picture is only available for PREMIUM users. Do you want to continue purchase?</string>
+    <string name="not_enough_to_buy_premium">You haven\'t enough PREMIUM coins to but this picture . Do you want to continue purchase?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="choice_category">Please, choose category</string>

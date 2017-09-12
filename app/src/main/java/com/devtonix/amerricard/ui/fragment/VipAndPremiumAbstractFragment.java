@@ -1,26 +1,20 @@
 package com.devtonix.amerricard.ui.fragment;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -37,8 +31,6 @@ import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -64,8 +56,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     protected FrameLayout layoutContainer;
     protected IInAppBillingService mService;
     protected Handler handler;
-    protected Thread thread1;
-    protected Thread thread2;
     protected ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -77,9 +67,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
             mService = IInAppBillingService.Stub.asInterface(service);
         }
     };
-    protected PopupWindow popupWindow;
-    protected EditText editEmailRegistration;
-    private LayoutInflater inflater;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,77 +97,6 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         getActivity().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         handler = new Handler();
-    }
-
-    protected void showAllProducts() {
-
-        ArrayList<String> skuList = new ArrayList<>();
-        skuList.add(PREMIUM);
-        skuList.add(VIP);
-        final Bundle querySkus = new Bundle();
-        querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
-
-        thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    skuDetails = mService.getSkuDetails(3, getContext().getPackageName(), "subs", querySkus);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    thread1.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                int response = skuDetails.getInt("RESPONSE_CODE");
-                if (response == 0) {
-                    ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
-
-                    for (String thisResponse : responseList) {
-                        JSONObject object = null;
-                        String sku = null;
-                        String price = null;
-                        try {
-                            object = new JSONObject(thisResponse);
-                            sku = object.getString("productId");
-                            price = object.getString("price");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d(TAG, "price = " + price);
-                        Log.d(TAG, "sku = " + sku);
-
-                    }
-                }
-
-            }
-        });
-
-        handler.post(thread1);
-        handler.post(thread2);
-    }
-
-    protected void initPopupWindow(View view) {
-        if (popupWindow != null) {
-            popupWindow.dismiss();
-        }
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutContainer.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= 21) {
-            popupWindow.setElevation(5.0f);
-        }
-        popupWindow.setFocusable(true);
-        popupWindow.update();
-        popupWindow.showAtLocation(layoutContainer, Gravity.CENTER, 0, 0);
     }
 
     protected void payFromGoogle(int count, String type) {
@@ -222,19 +138,62 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
     }
 
-    protected void send(int amountOfCredits, String creditType, String productId, String orderId, String purchaseToken, Runnable complete) {
+    private void send(String productId, String orderId, String purchaseToken, Runnable complete) {
 
         String accessToken = sharedHelper.getAccessToken();
-        if (!TextUtils.isEmpty(accessToken)) {
-            BuyCreditRequest request = new BuyCreditRequest();
-            request.setCreditType(creditType);
-            request.setCredits(amountOfCredits);
-            request.setProductId(productId);
-            request.setPurchaseTransactionId(orderId);
-            request.setPurchaseToken(purchaseToken);
-            userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl(complete));
-        } else {
+        BuyCreditRequest request = new BuyCreditRequest();
+        request.setCreditType(getCreditsType());
+        request.setCredits(getAmountOfCredits());
+        request.setProductId(productId);
+        request.setPurchaseTransactionId(orderId);
+        request.setPurchaseToken(purchaseToken);
+        userRepository.buyCredits(accessToken, request, new GetCreditCallbackImpl(complete));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            case REQUEST_CODE_BUY:
+                int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+                String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+                if (responseCode == Activity.RESULT_OK) {
+                    try {
+                        JSONObject jo = new JSONObject(purchaseData);
+                        String productId = jo.optString("productId");
+                        String orderId = jo.optString("orderId");
+                        String purchaseToken = jo.optString("purchaseToken");
+                        pay(productId, orderId, purchaseToken);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+
+            case REQUEST_AUTH_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    pay(null, null, null);
+                }
+                break;
+        }
+    }
+
+    protected final void pay(String productId, String orderId, String purchaseToken) {
+        if(TextUtils.isEmpty(sharedHelper.getAccessToken())){
             AuthActivity.login(getActivity(), REQUEST_AUTH_CODE);
+            return;
+        }
+        if (TextUtils.isEmpty(productId)) {
+            payFromGoogle(getAmountOfCredits(), getCreditsType());
+        } else {
+            send(productId, orderId, purchaseToken, new Runnable() {
+                @Override
+                public void run() {
+                    onCoinsUpdated(sharedHelper.getValueVipCoins(), sharedHelper.getValuePremiumCoins());
+                }
+            });
         }
     }
 
@@ -271,4 +230,9 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
     }
 
+    protected abstract int getAmountOfCredits();
+
+    protected abstract String getCreditsType();
+
+    protected abstract void onCoinsUpdated(int vipCoinsCount, int premiumCoinsCount);
 }

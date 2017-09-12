@@ -3,6 +3,7 @@ package com.devtonix.amerricard.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.bumptech.glide.load.model.GlideUrl;
 import com.devtonix.amerricard.utils.AmazonUtils.GetS3Object;
@@ -24,6 +25,9 @@ public class CardItem implements Parcelable {
         }
     };
     public static final CardItem EMPTY = new CardItem();
+
+    private static final String TYPE_VIP = "VIP";
+    private static final String TYPE_PREMIUM = "PREMIUM";
 
     @SerializedName("type")
     @Expose
@@ -155,6 +159,14 @@ public class CardItem implements Parcelable {
         return cardType;
     }
 
+    public boolean isVip(){
+        return TextUtils.equals(getCardType(), TYPE_VIP);
+    }
+
+    public boolean isPremium(){
+        return TextUtils.equals(getCardType(), TYPE_PREMIUM);
+    }
+
     public void setCardType(String cardType) {
         this.cardType = cardType;
     }
@@ -220,5 +232,9 @@ public class CardItem implements Parcelable {
             }
             return GetS3Object.fromS3toUrl(readyThumbnail.imageUrl);
         }
+    }
+
+    public boolean isFree() {
+        return !(isPremium() || isVip());
     }
 }

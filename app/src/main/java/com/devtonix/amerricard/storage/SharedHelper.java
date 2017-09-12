@@ -381,6 +381,10 @@ public class SharedHelper{
                 sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
     }
 
+    public boolean isPremium() {
+        return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
+    }
+
     public boolean isVip() {
         return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_VIP);
     }

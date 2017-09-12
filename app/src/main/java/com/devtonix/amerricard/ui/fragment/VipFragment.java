@@ -1,7 +1,5 @@
 package com.devtonix.amerricard.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -15,8 +13,6 @@ import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class VipFragment extends VipAndPremiumAbstractFragment {
 
@@ -57,7 +53,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payVip(null, null, null);
+                pay(null, null, null);
 
             }
         });
@@ -117,46 +113,17 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-
-            case REQUEST_CODE_BUY:
-                int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-                String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-
-                if (responseCode == Activity.RESULT_OK) {
-                    try {
-                        JSONObject jo = new JSONObject(purchaseData);
-                        String productId = jo.optString("productId");
-                        String orderId = jo.optString("orderId");
-                        String purchaseToken = jo.optString("purchaseToken");
-                        payVip(productId, orderId, purchaseToken);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-
-            case REQUEST_AUTH_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    payVip(null, null, null);
-                }
-                break;
-        }
+    protected int getAmountOfCredits() {
+        return amountOfCredits;
     }
 
-    private void payVip(String productId, String orderId, String purchaseToken) {
-        if (TextUtils.isEmpty(productId)) {
-            payFromGoogle(amountOfCredits, CREDIT_TYPE_VIP);
-        } else {
-            send(amountOfCredits, CREDIT_TYPE_VIP, productId, orderId, purchaseToken, new Runnable() {
-                @Override
-                public void run() {
-                    coinsTextView.setText(String.valueOf(sharedHelper.getValueVipCoins()));
-                }
-            });
-        }
+    @Override
+    protected String getCreditsType() {
+        return CREDIT_TYPE_VIP;
     }
 
+    @Override
+    protected void onCoinsUpdated(int vipCoinsCount, int premiumCoinsCount) {
+        coinsTextView.setText(String.valueOf(vipCoinsCount));
+    }
 }

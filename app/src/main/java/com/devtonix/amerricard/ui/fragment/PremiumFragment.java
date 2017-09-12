@@ -58,7 +58,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payPremium(null, null, null);
+                pay(null, null, null);
             }
         });
 
@@ -113,48 +113,19 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         });
     }
 
-    private void payPremium(String productId, String orderId, String purchaseToken) {
-        if (TextUtils.isEmpty(productId)) {
-            payFromGoogle(amountOfCredits, CREDIT_TYPE_PREMIUM);
-        } else {
-            send(amountOfCredits, CREDIT_TYPE_PREMIUM, productId, orderId, purchaseToken, new Runnable() {
-                @Override
-                public void run() {
-                    coinsTextView.setText(String.valueOf(sharedHelper.getValuePremiumCoins()));
-                }
-            });
-        }
+    @Override
+    protected int getAmountOfCredits() {
+        return amountOfCredits;
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-
-            case REQUEST_CODE_BUY:
-                int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-                String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-
-                if (responseCode == Activity.RESULT_OK) {
-                    try {
-                        JSONObject jo = new JSONObject(purchaseData);
-                        String productId = jo.optString("productId");
-                        String orderId = jo.optString("orderId");
-                        String purchaseToken = jo.optString("purchaseToken");
-                        payPremium(productId, orderId, purchaseToken);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-
-            case REQUEST_AUTH_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    payPremium(null, null, null);
-                }
-                break;
-        }
+    protected String getCreditsType() {
+        return CREDIT_TYPE_PREMIUM;
     }
 
+    @Override
+    protected void onCoinsUpdated(int vipCoinsCount, int premiumCoinsCount) {
+        coinsTextView.setText(String.valueOf(premiumCoinsCount));
+    }
 }
 

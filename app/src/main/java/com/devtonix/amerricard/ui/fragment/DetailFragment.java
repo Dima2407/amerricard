@@ -15,8 +15,6 @@ import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
 
-import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_PREMIUM;
-import static com.devtonix.amerricard.ui.activity.DetailActivity.TYPE_VIP;
 
 public class DetailFragment extends BaseFragment {
 
@@ -117,8 +115,8 @@ public class DetailFragment extends BaseFragment {
 
     private static void setBundle(Bundle b, CardItem item) {
         b.putParcelable("card", item);
-        b.putBoolean("isVip", TextUtils.equals(item.getCardType(), TYPE_VIP));
-        b.putBoolean("isPremium", TextUtils.equals(item.getCardType(), TYPE_PREMIUM));
+        b.putBoolean("isVip", item.isVip());
+        b.putBoolean("isPremium", item.isPremium());
     }
 
     @Override
