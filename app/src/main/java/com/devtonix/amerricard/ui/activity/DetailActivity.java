@@ -141,6 +141,7 @@ public class DetailActivity extends BaseActivity {
         }
 
         adapter = new DetailPagerAdapter(this, getSupportFragmentManager(), cards);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) getResources().getDimension(R.dimen.base_padding));
 
@@ -272,6 +273,10 @@ public class DetailActivity extends BaseActivity {
                         new LoadImageTask(resource).execute();
                     }
                 });
+    }
+
+    public CardItem getItemAt(int currentItemIndex) {
+        return adapter.getDataItemAt(currentItemIndex);
     }
 
     private class LoadImageTask extends AsyncTask<Void, Void, Uri> {

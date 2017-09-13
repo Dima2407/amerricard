@@ -3,14 +3,13 @@ package com.devtonix.amerricard.ui.fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.ui.activity.DetailActivity;
@@ -22,10 +21,10 @@ public class DetailFragment extends BaseFragment {
     private ImageView ivVip;
     private ImageView ivPremium;
 
-    public static DetailFragment getInstance(CardItem item) {
+    public static DetailFragment getInstance(int position) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle b = new Bundle();
-        setBundle(b, item);
+        setBundle(b, position);
         detailFragment.setArguments(b);
         return detailFragment;
     }
@@ -52,16 +51,21 @@ public class DetailFragment extends BaseFragment {
         ((DetailActivity) getActivity()).changeMode();
     }
 
+
+    private int getCurrentItemIndex(){
+        return getArguments().getInt("card");
+    }
+
     private CardItem getCurrentItem() {
-        return getArguments().getParcelable("card");
+        return ((DetailActivity) getActivity()).getItemAt(getCurrentItemIndex());
     }
 
     private boolean isVip() {
-        return getArguments().getBoolean("isVip");
+        return getCurrentItem().isVip();
     }
 
     private boolean isPremium() {
-        return getArguments().getBoolean("isPremium");
+        return getCurrentItem().isPremium();
     }
 
     @Override
@@ -71,9 +75,11 @@ public class DetailFragment extends BaseFragment {
         int screenOrientation = getResources().getConfiguration().orientation;
         final int screenWidth = screenOrientation == Configuration.ORIENTATION_PORTRAIT ? sharedHelper.getDisplayWidth() : sharedHelper.getDisplayHight();
 
-
-        Glide.with(getActivity())
-                .load(getCurrentItem().getThumbImageUrl(screenWidth)).into(image);
+        RequestOptions options = RequestOptions.skipMemoryCacheOf(true);
+        Glide.with(this)
+                .load(getCurrentItem().getThumbImageUrl(screenWidth))
+                .apply( options)
+                .into(image);
     }
 
     @Override
@@ -113,15 +119,13 @@ public class DetailFragment extends BaseFragment {
         }
     }
 
-    private static void setBundle(Bundle b, CardItem item) {
-        b.putParcelable("card", item);
-        b.putBoolean("isVip", item.isVip());
-        b.putBoolean("isPremium", item.isPremium());
+    private static void setBundle(Bundle b, int index) {
+        b.putInt("card", index);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        setBundle(outState, getCurrentItem());
+        setBundle(outState, getCurrentItemIndex());
     }
 }

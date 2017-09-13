@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.devtonix.amerricard.R;
@@ -33,7 +31,12 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.getInstance(items.get(position));
+        return DetailFragment.getInstance(position);
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
     }
 
     @Override
@@ -41,4 +44,7 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
         return context.getString(R.string.cards);
     }
 
+    public CardItem getDataItemAt(int currentItemIndex) {
+        return items.get(currentItemIndex);
+    }
 }
