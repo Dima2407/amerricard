@@ -138,14 +138,14 @@ public class SharedHelper{
                     categoryItemList = new ArrayList<>(categoryItem.data);
                     return categoryItemList;
                 }
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 Log.w(TAG, "getCards: ", e);
             } finally {
                 try {
                     if (fr != null) {
                         fr.close();
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Log.w(TAG, "getCards: ", e);
                 }
             }
