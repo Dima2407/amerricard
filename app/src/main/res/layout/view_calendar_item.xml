@@ -9,7 +9,19 @@
         android:layout_width="match_parent"
         android:layout_height="72dp">
 
+        <ImageView
+            android:id="@+id/img_celebrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_present"
+            android:tint="@color/colorRed"
+            android:visibility="gone" />
+
         <LinearLayout
+            android:layout_toLeftOf="@id/img_celebrate"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:gravity="center_vertical"
@@ -54,7 +66,7 @@
                     android:layout_marginLeft="@dimen/base_padding"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:text="Birthdays"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/text_size_big" />
@@ -70,17 +82,6 @@
 
             </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/img_celebrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/colorPrimary"
-            android:layout_margin="5dp"
-            android:src="@drawable/icon_present"
-            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
