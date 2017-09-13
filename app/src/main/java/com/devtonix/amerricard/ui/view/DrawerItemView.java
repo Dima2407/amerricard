@@ -43,14 +43,21 @@ public class DrawerItemView extends LinearLayout {
             typedArray.recycle();
         }
 
-        ImageView iconView = (ImageView) findViewById(R.id.view_drawer_item_icon);
+        ImageView iconView = (ImageView) findViewById(R.id.view_drawer_item_icon_no_tint);
+        ImageView iconViewTint = (ImageView)findViewById(R.id.view_drawer_item_icon);
         titleView = (TextView) findViewById(R.id.view_drawer_item_text);
         infoView = (TextView) findViewById(R.id.coin_value_text_view);
 
-        if (color != -1 && Build.VERSION.SDK_INT >= 21) {
-            iconView.setImageTintList(ColorStateList.valueOf(color));
+        if (color != -1) {
+            iconViewTint.setVisibility(VISIBLE);
+            iconView.setVisibility(GONE);
+            iconViewTint.setImageDrawable(icon);
+        }else {
+            iconView.setVisibility(VISIBLE);
+            iconViewTint.setVisibility(GONE);
+            iconView.setImageDrawable(icon);
         }
-        iconView.setImageDrawable(icon);
+
         titleView.setText(titleText);
 
         setInfoText(infoText);
