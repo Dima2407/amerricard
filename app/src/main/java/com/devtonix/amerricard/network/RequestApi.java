@@ -31,11 +31,11 @@ public interface RequestApi {
      * Sharing and retrieving cards
      * */
 
-    @POST("card/{cardId}/share")
+    @POST("appuser/card/{cardId}/share")
     Call<CreditsResponse> shareCard(@Header("X-AMCA-APP-USER-TOKEN") String token, @Path("cardId") long cardId);
 
 
-    @POST("card/{cardId}/share")
+    @POST("appuser/card/{cardId}/share")
     Call<CreditsResponse> shareCard(@Path("cardId") long cardId);
 
     @POST("card/{cardId}/favorite")

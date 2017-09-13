@@ -372,21 +372,16 @@ public class SharedHelper{
         return sharedPreferences.getBoolean(Fields.FIRST_LAUNCH_APPLICATION, true);
     }
 
-    public void setUserStatus(String status) {
-        sharedPreferences.edit().putString(Fields.USER_STATUS, status).apply();
-    }
-
     public boolean isVipOrPremium() {
-        return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_VIP) ||
-                sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
+        return isPremium() || isVip();
     }
 
     public boolean isPremium() {
-        return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_PREMIUM);
+        return getValuePremiumCoins() > 0;
     }
 
     public boolean isVip() {
-        return sharedPreferences.getString(Fields.USER_STATUS, USER_STATUS_NORMAL).equals(USER_STATUS_VIP);
+        return getValueVipCoins() > 0;
     }
 
     public boolean getCurrentServer() {
