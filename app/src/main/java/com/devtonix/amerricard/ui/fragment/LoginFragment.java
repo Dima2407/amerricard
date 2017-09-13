@@ -139,7 +139,6 @@ public class LoginFragment extends BaseFragment {
         public void onSuccess(String token, String status) {
             switch (status) {
                 case "OK": {
-                    Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_LONG).show();
                     getOwnerActivity().close();
                     sharedHelper.setAccessToken(token);
 

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
@@ -95,10 +96,14 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
         }
 
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+        if (pendingIntent == null) {
+            Toast.makeText(getActivity(), R.string.service_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
         try {
             getActivity().startIntentSenderForResult(pendingIntent.getIntentSender(),
                     REQUEST_CODE_BUY, new Intent(), 0, 0, 0);
-        } catch (IntentSender.SendIntentException e) {
+        } catch (Exception e) {
             Log.e(TAG, "payFromGoogle: ",  e);
         }
     }
