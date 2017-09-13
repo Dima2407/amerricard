@@ -84,13 +84,6 @@ public class LoginFragment extends BaseFragment {
                 return false;
             }
         });
-        /*Button buttonBack = (Button) view.findViewById(R.id.btn_back);
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOwnerActivity().cancel();
-            }
-        });*/
         Button buttonLogin = (Button) view.findViewById(R.id.btn_login);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override

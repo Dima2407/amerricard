@@ -30,6 +30,7 @@ public class AuthActivity extends BaseActivity implements AuthDelegate {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment, tag)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -42,6 +43,8 @@ public class AuthActivity extends BaseActivity implements AuthDelegate {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment, tag)
+                .addToBackStack(null
+                )
                 .commit();
     }
 

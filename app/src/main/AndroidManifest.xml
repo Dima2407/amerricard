@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.auth.AuthActivity" />
+        <activity android:name=".ui.activity.auth.AuthActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.FavoriteActivity" />
         <activity android:name=".ui.activity.SentCardsActivity" />

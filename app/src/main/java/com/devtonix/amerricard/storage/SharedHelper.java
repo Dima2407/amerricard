@@ -427,6 +427,8 @@ public class SharedHelper{
         sharedPreferences.edit().putString(Fields.ACCESS_TOKEN, "").apply();
         sharedPreferences.edit().putString(Fields.NAME, "").apply();
         sharedPreferences.edit().putString(Fields.EMAIL, "").apply();
+        sharedPreferences.edit().putInt(Fields.VALUE_VIP_COINS, 0).apply();
+        sharedPreferences.edit().putInt(Fields.VALUE_PREMIUM_COINS, 0).apply();
     }
 
     public String getName() {
