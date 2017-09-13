@@ -45,7 +45,6 @@
             custom:item_tint="@color/colorIconsActive"
             custom:item_title="@string/manage_birthdays" />
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

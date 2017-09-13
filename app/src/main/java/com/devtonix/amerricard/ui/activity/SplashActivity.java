@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
 
-        introImageView.setGif(R.raw.intro, new GifView.OnGifFinishedListener() {
+        introImageView.setGif(R.raw.intro_2, new GifView.OnGifFinishedListener() {
             @Override
             public void onFinished() {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
