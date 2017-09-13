@@ -199,7 +199,7 @@ public class CalendarAdapterNew extends RecyclerView.Adapter<CalendarAdapterNew.
             Date eventDate = dateFormat.parse(baseEvent.getEventDate());
             if(TimeUtils.isSameDay(eventDate, currentDate)){
                 holder.iconPresent.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.iconPresent.setVisibility(View.GONE);
             }
         } catch (ParseException e) {
