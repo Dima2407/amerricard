@@ -41,7 +41,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
     @Inject
     UserRepository userRepository;
 
-    public static final String TAG = VipAndPremiumAbstractFragment.class.getSimpleName();
+    private static final String TAG = VipAndPremiumAbstractFragment.class.getSimpleName();
     protected final static String VIP = "vip_test";
     protected final static String PREMIUM = "premium_test";
     protected final static String RESPONSE_CODE = "RESPONSE_CODE";
@@ -130,6 +130,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "onActivityResult: (" + requestCode + ", " + (resultCode == Activity.RESULT_OK) + ") - " + data);
         switch (requestCode) {
 
             case REQUEST_CODE_BUY:
