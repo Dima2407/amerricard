@@ -1,11 +1,7 @@
 package com.devtonix.amerricard.ui.fragment;
 
-import android.accounts.AccountManager;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +11,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class PremiumFragment extends VipAndPremiumAbstractFragment {
 
@@ -58,7 +51,7 @@ public class PremiumFragment extends VipAndPremiumAbstractFragment {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pay(null, null, null);
+                buy();
             }
         });
 

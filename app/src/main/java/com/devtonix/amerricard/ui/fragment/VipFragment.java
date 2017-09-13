@@ -2,7 +2,6 @@ package com.devtonix.amerricard.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pay(null, null, null);
+                buy();
 
             }
         });

@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.ui.fragment.PremiumFragment;
+import com.devtonix.amerricard.ui.fragment.VipAndPremiumAbstractFragment;
 import com.devtonix.amerricard.ui.fragment.VipFragment;
 
 public class VipPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private SparseArray<Fragment> vipFragments = new SparseArray<Fragment>();
 
+    private VipAndPremiumAbstractFragment vipFragment;
+    private VipAndPremiumAbstractFragment premiumFragment;
     public VipPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
@@ -28,11 +30,7 @@ public class VipPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new VipFragment();
-        } else {
-            return new PremiumFragment();
-        }
+        return getActiveFragment(position);
     }
 
     @Override
@@ -44,11 +42,18 @@ public class VipPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        vipFragments.put(position, fragment);
-        return fragment;
+    public VipAndPremiumAbstractFragment getActiveFragment(int position){
+        if (position == 0) {
+            if(vipFragment == null){
+                vipFragment = new VipFragment();
+            }
+            return vipFragment;
+        } else {
+            if(premiumFragment == null){
+                premiumFragment = new PremiumFragment();
+            }
+            return premiumFragment;
+        }
     }
 }
 

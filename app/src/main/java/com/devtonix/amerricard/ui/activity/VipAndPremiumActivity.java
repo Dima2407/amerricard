@@ -1,17 +1,27 @@
 package com.devtonix.amerricard.ui.activity;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
 
 import com.devtonix.amerricard.ui.adapter.VipPagerAdapter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class VipAndPremiumActivity extends DrawerActivity {
 
@@ -23,19 +33,35 @@ public class VipAndPremiumActivity extends DrawerActivity {
     public static final String SHOW_VIP_ACTION = "action_vip";
     public static final String SHOW_PREMIUM_ACTION = "action_premium";
 
-    private LayoutInflater inflater;
+    protected final static int REQUEST_CODE_BUY = 1001;
 
+    protected ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
+
+    protected IInAppBillingService mService;
+
+    private VipPagerAdapter adapter;
+    private ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(R.layout.activity_vip_and_premium);
-        //setContentView(R.layout.activity_vip_and_premium);
 
         setTitle(getString(R.string.become_vip_title));
 
-        ViewPager pager = (ViewPager) findViewById(R.id.vip_view_pager);
-        VipPagerAdapter adapter = new VipPagerAdapter(this, getSupportFragmentManager());
+        pager = (ViewPager) findViewById(R.id.vip_view_pager);
+        adapter = new VipPagerAdapter(this, getSupportFragmentManager());
         pager.setAdapter(adapter);
 
         TabLayout tab = (TabLayout) findViewById(R.id.vip_tab_layout);
@@ -47,7 +73,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
         final int tabPosition = getIntent().getIntExtra(TAB_POSITION, 0);
         pager.setCurrentItem(tabPosition);
 
-        if (getIntent().getAction() != null){
+        if (getIntent().getAction() != null) {
             switch (getIntent().getAction()) {
                 case SHOW_VIP_ACTION:
                     pager.setCurrentItem(0);
@@ -57,11 +83,73 @@ public class VipAndPremiumActivity extends DrawerActivity {
                     break;
             }
         }
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "onActivityResult: (" + requestCode + ", " + (resultCode == RESULT_OK) + ") - " + data);
-        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_BUY:
+                int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+                String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+                if (responseCode == Activity.RESULT_OK) {
+                    try {
+                        JSONObject jo = new JSONObject(purchaseData);
+                        String productId = jo.optString("productId");
+                        String orderId = jo.optString("orderId");
+                        String purchaseToken = jo.optString("purchaseToken");
+                        payFromServer(productId, orderId, purchaseToken);
+
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onActivityResult: ", e);
+                    }
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    private void payFromServer(String productId, String orderId, String purchaseToken) {
+        adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+    }
+
+
+    public void payFromGoogle(int count, String type) {
+
+        String productId = String.format("%s_%d", type, count);
+
+        Bundle buyIntentBundle;
+        try {
+            buyIntentBundle = mService.getBuyIntent(3, getPackageName(), productId, "inapp", VipAndPremiumActivity.base64EncodedPublicKey);
+        } catch (Exception e) {
+            Log.e(TAG, "payFromGoogle: ", e);
+            return;
+        }
+
+        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+        if (pendingIntent == null) {
+            Toast.makeText(this, R.string.service_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            startIntentSenderForResult(pendingIntent.getIntentSender(),
+                    REQUEST_CODE_BUY, new Intent(), 0, 0, 0);
+        } catch (Exception e) {
+            Log.e(TAG, "payFromGoogle: ", e);
+        }
     }
 }
