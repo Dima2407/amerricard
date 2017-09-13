@@ -10,7 +10,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
         android:layout_marginTop="24dp"
-        android:src="@drawable/ic_placeholder2"/>
+        android:src="@drawable/ic_placeholder"/>
 
 
     <LinearLayout

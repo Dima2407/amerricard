@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#CF0A14</color>
     <color name="colorAccent">#F84E50</color>
 
+    <color name="splash_color">#B22234</color>
     <color name="divider">#e9e9e9</color>
     <color name="lightGray">#e9e9e9</color>
     <color name="categoryGray">#e7e7e7</color>

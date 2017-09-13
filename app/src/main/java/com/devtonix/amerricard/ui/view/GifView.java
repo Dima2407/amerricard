@@ -2,11 +2,8 @@ package com.devtonix.amerricard.ui.view;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Movie;
-import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
 import android.util.AttributeSet;
@@ -49,20 +46,17 @@ public class GifView extends View {
 
         int relativeTime = (int) (System.currentTimeMillis() - startTime);
 
-        if (relativeTime > gif.duration()) {
-            relativeTime = gif.duration();
-
-            if (onGifFinishedListener != null) {
-                onGifFinishedListener.onFinished();
-            }
-
-            return;
-        }
-
         gif.setTime(relativeTime);
         gif.draw(canvas, 0, 0);
 
-        invalidate();
+        if (relativeTime >= gif.duration()) {
+            if (onGifFinishedListener != null) {
+                onGifFinishedListener.onFinished();
+            }
+        } else {
+            invalidate();
+        }
+
     }
 
     public interface OnGifFinishedListener {
