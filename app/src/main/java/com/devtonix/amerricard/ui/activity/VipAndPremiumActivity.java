@@ -134,7 +134,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
 
         Bundle buyIntentBundle;
         try {
-            buyIntentBundle = mService.getBuyIntent(3, getPackageName(), productId, "inapp", VipAndPremiumActivity.base64EncodedPublicKey);
+            buyIntentBundle = mService.getBuyIntent(3, getPackageName(), productId, "inapp", base64EncodedPublicKey);
         } catch (Exception e) {
             Log.e(TAG, "payFromGoogle: ", e);
             return;
@@ -142,7 +142,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
 
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
         if (pendingIntent == null) {
-            Toast.makeText(this, R.string.service_unavailable, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.google_service_unavailable, Toast.LENGTH_SHORT).show();
             return;
         }
         try {
