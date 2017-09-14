@@ -1,6 +1,7 @@
 
 package com.devtonix.amerricard.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -65,6 +66,8 @@ public class CardItem implements Parcelable {
     @Expose
     @SerializedName("thumbnails")
     private Thumbnail[] thumbnails;
+
+    private Uri cachedUri;
 
     public CardItem(CardResponseItem cardResponseItem) {
         type = cardResponseItem.type;
@@ -236,5 +239,14 @@ public class CardItem implements Parcelable {
 
     public boolean isFree() {
         return !(isPremium() || isVip());
+    }
+
+
+    public Uri getCachedUri() {
+        return cachedUri;
+    }
+
+    public void setCachedUri(Uri cachedUri) {
+        this.cachedUri = cachedUri;
     }
 }

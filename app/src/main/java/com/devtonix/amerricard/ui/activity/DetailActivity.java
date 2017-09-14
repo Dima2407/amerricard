@@ -2,13 +2,9 @@ package com.devtonix.amerricard.ui.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -20,27 +16,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.StringLoader;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.model.CardItem;
 import com.devtonix.amerricard.model.CategoryItem;
-import com.devtonix.amerricard.model.DataCreditResponse;
 import com.devtonix.amerricard.repository.CardRepository;
 import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
 import com.devtonix.amerricard.ui.adapter.DetailPagerAdapter;
-import com.devtonix.amerricard.ui.callback.CardShareCallback;
 import com.devtonix.amerricard.ui.fragment.CategoryFragment;
+import com.devtonix.amerricard.utils.SharingUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,9 +51,6 @@ public class DetailActivity extends BaseActivity {
     private final static String VIP = "vip_test";
     private final static String PREMIUM = "premium_test";
 
-    private static final String WEB_CITE = " amerricards.com";
-    private static final int REQUEST_CODE_SHARE = 2002;
-
     private static final int REQUEST_AUTH_CODE = 1001;
     private boolean isFullScreen = false;
     private ViewGroup container;
@@ -77,6 +61,14 @@ public class DetailActivity extends BaseActivity {
     private InterstitialAd interstitialAd;
     private List<CategoryItem> mainCategories;
     private CardItem item;
+    private Runnable sharingCompleted = new Runnable() {
+        @Override
+        public void run() {
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,8 +145,7 @@ public class DetailActivity extends BaseActivity {
                 String token = sharedHelper.getAccessToken();
 
                 if (cardItem.isFree()) {
-                    cardRepository.sendShareCardRequest(token, cardItem.getId(),
-                            new MyCardShareCallback(cardItem.getGlideImageUrl()));
+                    shareCard(cardItem);
                     return;
                 }
 
@@ -166,8 +157,7 @@ public class DetailActivity extends BaseActivity {
                 if (cardItem.isVip()) {
                     if (sharedHelper.isVip()) {
                         if (sharedHelper.getValueVipCoins() > 0) {
-                            cardRepository.sendShareCardRequest(token, cardItem.getId(),
-                                    new MyCardShareCallback(cardItem.getGlideImageUrl()));
+                            shareCard(cardItem);
                         } else {
                             showBuyDialog(getString(R.string.not_enough_to_buy_vip), VipAndPremiumActivity.SHOW_VIP_ACTION);
                         }
@@ -178,8 +168,7 @@ public class DetailActivity extends BaseActivity {
                 } else if (cardItem.isPremium()) {
                     if (sharedHelper.isPremium()) {
                         if (sharedHelper.getValuePremiumCoins() > 0) {
-                            cardRepository.sendShareCardRequest(token, cardItem.getId(),
-                                    new MyCardShareCallback(cardItem.getGlideImageUrl()));
+                            shareCard(cardItem);
                         } else {
                             showBuyDialog(getString(R.string.not_enough_to_buy_premium), VipAndPremiumActivity.SHOW_PREMIUM_ACTION);
                         }
@@ -198,6 +187,16 @@ public class DetailActivity extends BaseActivity {
 
         setMode();
 
+    }
+
+    private void shareCard(final CardItem cardItem) {
+        SharingUtils.cache(this, progress, cardItem, new Runnable() {
+            @Override
+            public void run() {
+                SharingUtils.share(DetailActivity.this, cardRepository, sharedHelper, cardItem,
+                        sharingCompleted);
+            }
+        });
     }
 
 
@@ -254,111 +253,11 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SHARE) {
-            if (interstitialAd.isLoaded()) {
-                interstitialAd.show();
-            }
-        }else if(requestCode == REQUEST_AUTH_CODE){
-
-        }
-    }
-
-    public void onShareItem(GlideUrl s) {
-
-        //web -> bmp
-        Glide.with(this).asBitmap().load(s)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        new LoadImageTask(resource).execute();
-                    }
-                });
+        SharingUtils.processActivityResult(requestCode, resultCode, data);
     }
 
     public CardItem getItemAt(int currentItemIndex) {
         return adapter.getDataItemAt(currentItemIndex);
-    }
-
-    private class LoadImageTask extends AsyncTask<Void, Void, Uri> {
-        private Bitmap bmp;
-
-        public LoadImageTask(Bitmap bmp) {
-            this.bmp = bmp;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progress.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Uri doInBackground(Void... voids) {
-            return FileProvider.getUriForFile(DetailActivity.this, "com.devtonix.amerricard.fileprovider", getFile(bmp));
-        }
-
-        @Override
-        protected void onPostExecute(Uri bmpUri) {
-            super.onPostExecute(bmpUri);
-            if (bmpUri != null) {
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.created_with) + WEB_CITE);
-                shareIntent.setType("image/*");
-
-                startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_via)), REQUEST_CODE_SHARE);
-            }
-            progress.setVisibility(View.GONE);
-        }
-    }
-
-    // bmp -> file
-    private File getFile(Bitmap bmp) {
-
-        File file = new File(getCacheDir(), "share_image_" + System.currentTimeMillis() + ".jpeg");
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return file;
-    }
-
-
-    private class MyCardShareCallback implements CardShareCallback {
-        private GlideUrl glideImageUrl;
-
-        public MyCardShareCallback(GlideUrl glideImageUrl) {
-
-            this.glideImageUrl = glideImageUrl;
-        }
-
-        @Override
-        public void onSuccess(DataCreditResponse dataCreditResponse) {
-            if (dataCreditResponse != null) {
-                sharedHelper.setValueVipCoins(dataCreditResponse.getVipCoins());
-                sharedHelper.setValuePremiumCoins(dataCreditResponse.getPremiumCoins());
-                Log.i(TAG, "onSuccess: card shared. credits VIP = " + dataCreditResponse.getCredit().getVip() + ", PREMIUM = " + dataCreditResponse.getCredit().getPremium());
-            } else {
-                Log.i(TAG, "onSuccess: card shared. dataCreditResponse = null");
-            }
-            onShareItem(glideImageUrl);
-        }
-
-        @Override
-        public void onError() {
-            Log.i(TAG, "onError: card not shared");
-        }
-
-        @Override
-        public void onRetrofitError(String message) {
-            Log.i(TAG, "onRetrofitError: error");
-        }
     }
 
     private void showBuyDialog(String message, final String action) {
@@ -391,6 +290,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SharingUtils.clear();
     }
 
     @Override
