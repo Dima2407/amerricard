@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -126,8 +128,28 @@ public class VipAndPremiumActivity extends DrawerActivity {
         }
     }
 
-    private void payFromServer(String productId, String orderId, String purchaseToken) {
-        adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+    private void payFromServer(final String productId, final String orderId, final String purchaseToken) {
+        new AsyncTask<String, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(String... params) {
+                try {
+                    return mService.consumePurchase(3, getPackageName(), params[0]);
+                } catch (RemoteException e) {
+                    Log.e(TAG, "doInBackground: ", e);
+                    return BillingUtils.BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                if (integer == BillingUtils.BILLING_RESPONSE_RESULT_OK) {
+                    adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+                } else {
+                    Toast.makeText(VipAndPremiumActivity.this, BillingUtils.getError(integer), Toast.LENGTH_LONG).show();
+                }
+                super.onPostExecute(integer);
+            }
+        }.execute(purchaseToken);
     }
 
 
