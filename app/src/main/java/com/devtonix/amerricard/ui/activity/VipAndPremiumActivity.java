@@ -19,9 +19,12 @@ import com.android.vending.billing.IInAppBillingService;
 import com.devtonix.amerricard.R;
 
 import com.devtonix.amerricard.ui.adapter.VipPagerAdapter;
+import com.devtonix.amerricard.utils.BillingUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.devtonix.amerricard.billing.IabHelper.BILLING_RESPONSE_RESULT_OK;
 
 public class VipAndPremiumActivity extends DrawerActivity {
 
@@ -139,17 +142,23 @@ public class VipAndPremiumActivity extends DrawerActivity {
             Log.e(TAG, "payFromGoogle: ", e);
             return;
         }
+        int responseCode = buyIntentBundle.getInt("RESPONSE_CODE");
 
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        if (pendingIntent == null) {
-            Toast.makeText(this, R.string.google_service_unavailable, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        try {
-            startIntentSenderForResult(pendingIntent.getIntentSender(),
-                    REQUEST_CODE_BUY, new Intent(), 0, 0, 0);
-        } catch (Exception e) {
-            Log.e(TAG, "payFromGoogle: ", e);
+        if(responseCode == BillingUtils.BILLING_RESPONSE_RESULT_OK) {
+
+            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+            if (pendingIntent == null) {
+                Toast.makeText(this, R.string.google_service_unavailable, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                startIntentSenderForResult(pendingIntent.getIntentSender(),
+                        REQUEST_CODE_BUY, new Intent(), 0, 0, 0);
+            } catch (Exception e) {
+                Log.e(TAG, "payFromGoogle: ", e);
+            }
+        }else {
+            Toast.makeText(this, BillingUtils.getError(responseCode), Toast.LENGTH_LONG).show();
         }
     }
 }
