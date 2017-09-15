@@ -103,6 +103,11 @@ public class SharingUtils {
             if(pair != null){
                 pair.second.run();
             }
+        }else {
+            Pair<CardItem, Runnable> pair = sharingTasks.get(requestCode);
+            if(pair != null){
+                pair.second.run();
+            }
         }
     }
 
