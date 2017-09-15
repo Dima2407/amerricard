@@ -1,6 +1,5 @@
 package com.devtonix.amerricard.ui.activity;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -48,6 +47,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IInAppBillingService.Stub.asInterface(service);
+            releaseAlreadyBought();
         }
     };
 
@@ -114,7 +114,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
                         String productId = jo.optString("productId");
                         String orderId = jo.optString("orderId");
                         String purchaseToken = jo.optString("purchaseToken");
-                        payFromServer(productId, orderId, purchaseToken);
+                        payFromServer(productId, orderId, purchaseToken, true);
 
                     } catch (JSONException e) {
                         Log.e(TAG, "onActivityResult: ", e);
@@ -127,7 +127,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
         }
     }
 
-    private void payFromServer(final String productId, final String orderId, final String purchaseToken) {
+    private void payFromServer(final String productId, final String orderId, final String purchaseToken, final boolean submit) {
         new AsyncTask<String, Void, Integer>() {
             @Override
             protected Integer doInBackground(String... params) {
@@ -141,7 +141,9 @@ public class VipAndPremiumActivity extends DrawerActivity {
 
             @Override
             protected void onPostExecute(Integer integer) {
-                adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+                if(submit) {
+                    adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+                }
                 if (integer != BillingUtils.BILLING_RESPONSE_RESULT_OK) {
                     Toast.makeText(VipAndPremiumActivity.this, BillingUtils.getError(integer), Toast.LENGTH_LONG).show();
                 }
@@ -183,40 +185,35 @@ public class VipAndPremiumActivity extends DrawerActivity {
     }
 
     @Deprecated
-    private boolean releaseAlreadyBought() {
+    private void releaseAlreadyBought() {
+        Bundle purchases;
         try {
-            Bundle purchases = mService.getPurchases(3, getPackageName(), "inapp", null);
+            purchases = mService.getPurchases(3, getPackageName(), "inapp", null);
+        } catch (RemoteException e) {
+            Log.e(TAG, "releaseAlreadyBought: ", e);
+            return;
+        }
 
-            int response = purchases.getInt("RESPONSE_CODE");
-            if (response == 0) {
-                ArrayList<String> ownedSkus =
-                        purchases.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-                ArrayList<String>  purchaseDataList =
-                        purchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-                ArrayList<String>  signatureList =
-                        purchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
-                String continuationToken =
-                        purchases.getString("INAPP_CONTINUATION_TOKEN");
-
-                for (int i = 0; i < purchaseDataList.size(); ++i) {
-                    String purchaseData = purchaseDataList.get(i);
-                    JSONObject data = new JSONObject(purchaseData);
-                    String signature = signatureList.get(i);
-                    String sku = ownedSkus.get(i);
-
-
-                    payFromServer(sku, data.optString("orderId"), data.optString("purchaseToken"));/*
-                    Bundle buyIntent = mService.getBuyIntent(3, getPackageName(), productId, "inapp", data.optString("developerPayload"));*/
-                    Log.d(TAG, "payFromGoogle: ");
-                }
+        int response = purchases.getInt("RESPONSE_CODE");
+        if (response == BillingUtils.BILLING_RESPONSE_RESULT_OK) {
+            ArrayList<String> ownedSkus =
+                    purchases.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+            ArrayList<String> purchaseDataList =
+                    purchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+            if(purchaseDataList == null){
+                return;
             }
 
-            return true;
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            for (int i = 0; i < purchaseDataList.size(); i++) {
+                String purchaseData = purchaseDataList.get(i);
+                try {
+                    JSONObject data = new JSONObject(purchaseData);
+                    String sku = ownedSkus.get(i);
+                    payFromServer(sku, data.optString("orderId"), data.optString("purchaseToken"), false);
+                } catch (JSONException e) {
+                    Log.e(TAG, "releaseAlreadyBought: ", e);
+                }
+            }
         }
-        return false;
     }
 }
