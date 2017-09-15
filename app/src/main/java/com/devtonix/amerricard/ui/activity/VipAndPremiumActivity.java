@@ -14,7 +14,6 @@ import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -26,7 +25,7 @@ import com.devtonix.amerricard.utils.BillingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.devtonix.amerricard.billing.IabHelper.BILLING_RESPONSE_RESULT_OK;
+import java.util.ArrayList;
 
 public class VipAndPremiumActivity extends DrawerActivity {
 
@@ -182,5 +181,43 @@ public class VipAndPremiumActivity extends DrawerActivity {
         }else {
             Toast.makeText(this, BillingUtils.getError(responseCode), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Deprecated
+    private boolean releaseAlreadyBought() {
+        try {
+            Bundle purchases = mService.getPurchases(3, getPackageName(), "inapp", null);
+
+            int response = purchases.getInt("RESPONSE_CODE");
+            if (response == 0) {
+                ArrayList<String> ownedSkus =
+                        purchases.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+                ArrayList<String>  purchaseDataList =
+                        purchases.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                ArrayList<String>  signatureList =
+                        purchases.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+                String continuationToken =
+                        purchases.getString("INAPP_CONTINUATION_TOKEN");
+
+                for (int i = 0; i < purchaseDataList.size(); ++i) {
+                    String purchaseData = purchaseDataList.get(i);
+                    JSONObject data = new JSONObject(purchaseData);
+                    String signature = signatureList.get(i);
+                    String sku = ownedSkus.get(i);
+
+
+                    payFromServer(sku, data.optString("orderId"), data.optString("purchaseToken"));/*
+                    Bundle buyIntent = mService.getBuyIntent(3, getPackageName(), productId, "inapp", data.optString("developerPayload"));*/
+                    Log.d(TAG, "payFromGoogle: ");
+                }
+            }
+
+            return true;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

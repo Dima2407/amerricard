@@ -353,12 +353,6 @@ public class CalendarFragment extends BaseFragment {
                     break;
                 case BaseEvent.TYPE_CONTACT:
                     final int birthdayCategoryId = settingsRepository.getCategoryIdFromStorage();
-                    int positionForCategory = -1;
-                    for (CategoryItem categoryItem : categories) {
-                        if (categoryItem.getId() == birthdayCategoryId) {
-                            positionForCategory = categoryItem.getOrder() - 1;
-                        }
-                    }
                     Intent intentForContact = new Intent(getActivity(), CategoryActivity.class);
                     intentForContact.setAction(CategoryActivity.ACTION_FROM_CONTACTS);
                     intentForContact.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, birthdayCategoryId);
