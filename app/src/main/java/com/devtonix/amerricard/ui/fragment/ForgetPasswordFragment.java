@@ -3,7 +3,9 @@ package com.devtonix.amerricard.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import com.devtonix.amerricard.repository.UserRepository;
 import com.devtonix.amerricard.ui.activity.auth.AuthActivity;
 import com.devtonix.amerricard.ui.activity.auth.AuthDelegate;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
+
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -48,16 +52,22 @@ public class ForgetPasswordFragment extends BaseFragment {
         final EditText editLogin = (EditText) view.findViewById(R.id.edit_name_forgot_password);
         final EditText editEmail = (EditText) view.findViewById(R.id.edit_email_forgot_password);
         forgotPassButton = (Button) view.findViewById(R.id.btn_forgot_password);
-        /*view.findViewById(R.id.btn_back_forgot_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOwnerActivity().cancel();
-            }
-        });*/
         forgotPassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRepository.forgotPassword(editLogin.getText().toString(), editEmail.getText().toString(), new ForgotPasswordCallbackImpl());
+                String login = editLogin.getText().toString();
+                String email = editEmail.getText().toString();
+                if (TextUtils.isEmpty(login) && TextUtils.isEmpty(email)) {
+                    Toast.makeText(getActivity(), R.string.invalid_login_email, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(login)) {
+                    if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                        Toast.makeText(getActivity(), R.string.invalid_login_email, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                userRepository.forgotPassword(login, email, new ForgotPasswordCallbackImpl());
                 forgotPassButton.setClickable(false);
                 Log.d("MyButton", "onClick: ");
             }
@@ -80,17 +90,16 @@ public class ForgetPasswordFragment extends BaseFragment {
             forgotPassButton.setClickable(true);
             switch (status) {
                 case "OK": {
-                    Toast.makeText(getActivity(), R.string.ok_forgot_pass, Toast.LENGTH_LONG).show();
-                    AuthActivity.login(getActivity(), AUTH_REQUEST_CODE);
-                    getOwnerActivity().close();
+                    Toast.makeText(getActivity(), R.string.ok_forgot_pass, Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
                     break;
                 }
                 case "invalidLoginEmail": {
-                    Toast.makeText(getActivity(), R.string.invalid_login_email, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.invalid_login_email, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case "generalError": {
-                    Toast.makeText(getActivity(), R.string.common_server_error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.common_server_error, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 default: {
