@@ -360,7 +360,8 @@ public class CalendarFragment extends BaseFragment {
                         }
                     }
                     Intent intentForContact = new Intent(getActivity(), CategoryActivity.class);
-                    intentForContact.putExtra(CategoryActivity.POSITION_FOR_CATEGORY, positionForCategory);
+                    intentForContact.setAction(CategoryActivity.ACTION_FROM_CONTACTS);
+                    intentForContact.putExtra(CategoryActivity.EXTRA_CATEGORY_ID, birthdayCategoryId);
                     startActivity(intentForContact);
                     break;
                 case BaseEvent.TYPE_CELEBRITY:

@@ -32,6 +32,7 @@ public class CategoryActivity extends BaseActivity {
     public static final String POSITION_FOR_CATEGORY = "position_for_category";
     public static final String ACTION_FROM_EVENTS = "action_from_events";
     public static final String EXTRA_CATEGORY_ID = "extra_category_id";
+    public static final String ACTION_FROM_CONTACTS = "action_from_contacts";
 
     @Inject
     CardRepository cardRepository;
