@@ -108,7 +108,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
                 int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
                 String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
 
-                if (responseCode == Activity.RESULT_OK) {
+                if (responseCode == BillingUtils.BILLING_RESPONSE_RESULT_OK && resultCode == RESULT_OK) {
                     try {
                         JSONObject jo = new JSONObject(purchaseData);
                         String productId = jo.optString("productId");
@@ -141,9 +141,8 @@ public class VipAndPremiumActivity extends DrawerActivity {
 
             @Override
             protected void onPostExecute(Integer integer) {
-                if (integer == BillingUtils.BILLING_RESPONSE_RESULT_OK) {
-                    adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
-                } else {
+                adapter.getActiveFragment(pager.getCurrentItem()).buy(productId, orderId, purchaseToken);
+                if (integer != BillingUtils.BILLING_RESPONSE_RESULT_OK) {
                     Toast.makeText(VipAndPremiumActivity.this, BillingUtils.getError(integer), Toast.LENGTH_LONG).show();
                 }
                 super.onPostExecute(integer);
