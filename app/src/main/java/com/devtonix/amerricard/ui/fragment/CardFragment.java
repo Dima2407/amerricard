@@ -75,7 +75,7 @@ public class CardFragment extends BaseFragment implements CardAdapter.OnFavorite
         Log.d("MyCatLog", "isFirstLaunchApplication: " + sharedHelper.isFirstLaunchApplication());
 
         if (sharedHelper.isFirstLaunchApplication()) {
-
+            srlContainer.setRefreshing(true);
             cardRepository.getCards(new MyCardGetCallback());
             Log.d("MyCatLog", "onViewCreated: -");
             sharedHelper.setFirstLaunchApplication(false);

@@ -3,6 +3,7 @@ package com.devtonix.amerricard.network;
 import android.text.TextUtils;
 
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
+import com.devtonix.amerricard.network.request.ChangePasswordRequest;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.request.ForgotPasswordRequest;
@@ -171,6 +172,14 @@ public class API {
             return server1.buyCredits(token, buyCreditRequest);
         } else {
             return server2.buyCredits(token, buyCreditRequest);
+        }
+    }
+
+    public Call<SimpleResponse> changePassword(String token, ChangePasswordRequest request){
+        if(helper.getCurrentServer()){
+            return server1.changePassword(token, request);
+        }else {
+            return server2.changePassword(token, request);
         }
     }
 }

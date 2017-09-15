@@ -6,6 +6,7 @@ import com.devtonix.amerricard.core.ACApplication;
 import com.devtonix.amerricard.network.API;
 import com.devtonix.amerricard.network.NetworkModule;
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
+import com.devtonix.amerricard.network.request.ChangePasswordRequest;
 import com.devtonix.amerricard.network.request.ForgotPasswordRequest;
 import com.devtonix.amerricard.network.request.LoginRequest;
 import com.devtonix.amerricard.network.request.RegistrationRequest;
@@ -14,6 +15,7 @@ import com.devtonix.amerricard.network.response.LoginResponse;
 import com.devtonix.amerricard.network.response.RegistrationResponse;
 import com.devtonix.amerricard.network.response.SimpleResponse;
 import com.devtonix.amerricard.storage.SharedHelper;
+import com.devtonix.amerricard.ui.callback.ChangePasswordCallback;
 import com.devtonix.amerricard.ui.callback.ForgotPasswordCallback;
 import com.devtonix.amerricard.ui.callback.GetCreditsCallback;
 import com.devtonix.amerricard.ui.callback.LoginCallback;
@@ -168,6 +170,29 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<CreditsResponse> call, Throwable t) {
+                if (t != null && t.getMessage() != null) {
+                    callback.onRetrofitError(t.getMessage());
+                } else {
+                    callback.onRetrofitError(NetworkModule.UNKNOWN_ERROR);
+                }
+            }
+        });
+    }
+
+    public void changePassword(String token , String oldPassword, String newPassword, final ChangePasswordCallback callback) {
+        Call<SimpleResponse> call = api.changePassword(token, new ChangePasswordRequest(oldPassword, newPassword));
+        call.enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body().getStatus());
+                } else {
+                    callback.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
                     callback.onRetrofitError(t.getMessage());
                 } else {

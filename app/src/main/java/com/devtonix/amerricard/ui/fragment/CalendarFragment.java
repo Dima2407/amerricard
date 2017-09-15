@@ -81,7 +81,6 @@ public class CalendarFragment extends BaseFragment {
     private int amountOfUpdate = 0;
     private ImageView imgWhiteBackground;
     private Setting settings;
-    private List<CategoryItem> categories;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,8 +104,6 @@ public class CalendarFragment extends BaseFragment {
         calendarAdapterNew = new CalendarAdapterNew(sharedHelper.getLanguage(), getContext(), new MyOnCalendarItemClickListener(), sharedHelper);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(calendarAdapterNew);
-
-        categories = cardRepository.getCardsFromStorage();
 
         fill();
 

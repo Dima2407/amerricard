@@ -100,14 +100,14 @@ public class CardRepository {
     public void getCards(final CardGetCallback callback) {
         Call<CardResponseNew> call = api.getCard();
 
-        Log.d("MyCatLog", "getCards: ");
+        Log.d(TAG, "getCards: ");
 
         call.enqueue(new Callback<CardResponseNew>() {
             @Override
             public void onResponse(Call<CardResponseNew> call, Response<CardResponseNew> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     final List<CategoryItem> categories = response.body().getCategories();
-                    Log.d("MyCatLog", "onResponse: " + Arrays.toString(categories.toArray()));
+                    Log.d(TAG, "onResponse: " + Arrays.toString(categories.toArray()));
 
                     Collections.sort(categories, new Comparator<CategoryItem>() {
                         @Override

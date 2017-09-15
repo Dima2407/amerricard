@@ -204,6 +204,33 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/password_container"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <ImageView
+                    android:id="@+id/setting_password_icon"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_padding"
+                    android:src="@drawable/ic_password"
+                    android:tint="@color/colorIconsActive" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/change_password"
+                    android:textColor="@color/colorTextDefault"
+                    android:textSize="@dimen/text_size_big" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

@@ -12,12 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
@@ -49,16 +45,12 @@ public class DrawerActivity extends BaseActivity implements View.OnClickListener
     private DrawerLayout drawer;
 
     private LinearLayout regLayout;
-    private DrawerItemView logoutButton;
     private ImageView unregLogoImageView;
     private ImageView isregLogoImageView;
     private TextView regNameTextView;
     private TextView regEmailTextView;
 
-    private String logInOut;
-
-    protected final static String PURCHASE_TRANSACTION_ID = "12345";
-    protected final static String APP_TYPE = "android";
+    private DrawerItemView logoutButton;
     private DrawerItemView vipButton;
     private DrawerItemView premiumButton;
 

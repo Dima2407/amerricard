@@ -2,6 +2,7 @@ package com.devtonix.amerricard.network;
 
 
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
+import com.devtonix.amerricard.network.request.ChangePasswordRequest;
 import com.devtonix.amerricard.network.request.CreateEventRequest;
 import com.devtonix.amerricard.network.request.EditEventRequest;
 import com.devtonix.amerricard.network.request.ForgotPasswordRequest;
@@ -95,5 +96,8 @@ public interface RequestApi {
 
     @POST("appuser/credit")
     Call<CreditsResponse> buyCredits(@Header("X-AMCA-APP-USER-TOKEN") String token, @Body BuyCreditRequest buyCreditRequest);
+
+    @POST("appuser/changePassword")
+    Call<SimpleResponse> changePassword(@Header("X-AMCA-APP-USER-TOKEN") String token, @Body ChangePasswordRequest request);
 
 }
