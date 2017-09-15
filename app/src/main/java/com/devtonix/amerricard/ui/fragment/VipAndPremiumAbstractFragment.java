@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import com.devtonix.amerricard.R;
 import com.devtonix.amerricard.core.ACApplication;
+import com.devtonix.amerricard.model.BillingProductType;
 import com.devtonix.amerricard.network.request.BuyCreditRequest;
 import com.devtonix.amerricard.network.response.CreditsResponse;
 import com.devtonix.amerricard.repository.UserRepository;
@@ -48,8 +49,8 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
         String accessToken = sharedHelper.getAccessToken();
         BuyCreditRequest request = new BuyCreditRequest();
-        request.setCreditType(getCreditsType());
-        request.setCredits(getAmountOfCredits());
+        request.setCreditType(getProductType().getType());
+        request.setCredits(getProductType().getCredits());
         request.setProductId(productId);
         request.setPurchaseTransactionId(orderId);
         request.setPurchaseToken(purchaseToken);
@@ -62,7 +63,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
             return;
         }
         VipAndPremiumActivity activity = (VipAndPremiumActivity) getActivity();
-        activity.payFromGoogle(getAmountOfCredits(), getCreditsType());
+        activity.payFromGoogle(getProductType().getProductId());
     }
 
     public final void buy(String productId, String orderId, String purchaseToken){
@@ -111,9 +112,7 @@ public abstract class VipAndPremiumAbstractFragment extends BaseFragment {
 
     }
 
-    protected abstract int getAmountOfCredits();
-
-    protected abstract String getCreditsType();
+    protected abstract BillingProductType getProductType();
 
     protected abstract void onCoinsUpdated(int vipCoinsCount, int premiumCoinsCount);
 }

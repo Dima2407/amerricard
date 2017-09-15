@@ -11,19 +11,19 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.devtonix.amerricard.R;
+import com.devtonix.amerricard.model.BillingProductType;
 
 
 public class VipFragment extends VipAndPremiumAbstractFragment {
 
     private static final String TAG = VipFragment.class.getSimpleName();
-    private static final String CREDIT_TYPE_VIP = "vip";
 
     private RadioButton radioButton_1;
     private RadioButton radioButton_3;
     private RadioButton radioButton_5;
     private RadioButton radioButton_10;
     private Button btnPay;
-    private int amountOfCredits = 10;
+    private BillingProductType productType = BillingProductType.VIP_10;
     private TextView coinsTextView;
 
 
@@ -67,7 +67,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    amountOfCredits = 1;
+                    productType = BillingProductType.VIP_1;
                     radioButton_3.setChecked(false);
                     radioButton_5.setChecked(false);
                     radioButton_10.setChecked(false);
@@ -78,7 +78,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    amountOfCredits = 3;
+                    productType = BillingProductType.VIP_3;
                     radioButton_1.setChecked(false);
                     radioButton_5.setChecked(false);
                     radioButton_10.setChecked(false);
@@ -89,7 +89,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    amountOfCredits = 5;
+                    productType = BillingProductType.VIP_5;
                     radioButton_1.setChecked(false);
                     radioButton_3.setChecked(false);
                     radioButton_10.setChecked(false);
@@ -100,7 +100,7 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    amountOfCredits = 10;
+                    productType = BillingProductType.VIP_10;
                     radioButton_3.setChecked(false);
                     radioButton_5.setChecked(false);
                     radioButton_1.setChecked(false);
@@ -111,14 +111,8 @@ public class VipFragment extends VipAndPremiumAbstractFragment {
 
     }
 
-    @Override
-    protected int getAmountOfCredits() {
-        return amountOfCredits;
-    }
-
-    @Override
-    protected String getCreditsType() {
-        return CREDIT_TYPE_VIP;
+    protected BillingProductType getProductType() {
+        return productType;
     }
 
     @Override

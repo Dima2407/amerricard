@@ -1,9 +1,5 @@
 package com.devtonix.amerricard.utils;
 
-/**
- * Created by nikolay on 14.09.17.
- */
-
 public class BillingUtils {
 
     public static final int BILLING_RESPONSE_RESULT_OK = 0;
@@ -38,6 +34,5 @@ public class BillingUtils {
 
         }
         return "OK";
-
     }
 }

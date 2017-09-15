@@ -153,9 +153,7 @@ public class VipAndPremiumActivity extends DrawerActivity {
     }
 
 
-    public void payFromGoogle(int count, String type) {
-
-        String productId = String.format("%s_%d", type, count);
+    public void payFromGoogle(String productId) {
 
         Bundle buyIntentBundle;
         try {
